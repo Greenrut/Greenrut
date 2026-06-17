@@ -1,0 +1,5 @@
+export { AdminDashboardPage } from './DashboardPage.jsx'
+export { AdminProductsPage } from './ProductsPage.jsx'
+export { AdminBlogPostPage } from './BlogPostPage.jsx'
+export { AdminUsersPage } from './UsersPage.jsx'
+export { AdminLoginPage } from './LoginPage.jsx'
