@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { publicRequest } from '../lib/publicApi.js'
 import { HeroBanner } from '../components/SiteChrome.jsx'
 import { SectionTitle } from './shared.jsx'
+import bannaImage from '../assets/banna.png'
 
 function getPostSummary(post) {
   return post.excerpt || post.content || 'A new blog post is ready.'
@@ -43,7 +44,11 @@ export function BlogPage({ onNavigate }) {
 
   return (
     <>
-      <HeroBanner title="BLOG" breadcrumb="Home  /  Blog" />
+      <HeroBanner
+        title="BLOG"
+        breadcrumb="Home  /  Blog"
+        backgroundPhoto={bannaImage}
+      />
       <section className="page-shell blog-grid">
         <SectionTitle title="Latest Posts" />
         {loading ? <p>Loading blog posts...</p> : null}

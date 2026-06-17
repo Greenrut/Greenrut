@@ -1,116 +1,122 @@
-import { useEffect, useState } from 'react'
-import { adminRequest } from '../../lib/adminApi.js'
-import { AdminCard, AdminPageHeader, AdminPill, AdminShell } from './shared.jsx'
+import { useEffect, useState } from "react";
+import { adminRequest } from "../../lib/adminApi.js";
+import {
+  AdminCard,
+  AdminPageHeader,
+  AdminPill,
+  AdminShell,
+} from "./shared.jsx";
 
 const initialForm = {
-  name: '',
-  sku: '',
-  description: '',
-  price: '',
-  stock: '',
-  category: 'Uncategorized',
-  status: 'draft',
+  name: "",
+  sku: "",
+  description: "",
+  price: "",
+  stock: "",
+  category: "Uncategorized",
+  status: "draft",
   images: [],
-}
+};
 
 function getImageUrl(image) {
-  if (!image) return ''
-  if (typeof image === 'string') return image
-  if (typeof image === 'object') return image.url || image.src || image.secureUrl || image.path || ''
-  return ''
+  if (!image) return "";
+  if (typeof image === "string") return image;
+  if (typeof image === "object")
+    return image.url || image.src || image.secureUrl || image.path || "";
+  return "";
 }
 
 export function AdminProductsPage({ pathname, onNavigate }) {
-  const [form, setForm] = useState(initialForm)
-  const [products, setProducts] = useState([])
-  const [selectedId, setSelectedId] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [uploadingImages, setUploadingImages] = useState(false)
-  const [listLoading, setListLoading] = useState(true)
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
+  const [form, setForm] = useState(initialForm);
+  const [products, setProducts] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const [listLoading, setListLoading] = useState(true);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const loadProducts = async () => {
     try {
-      setListLoading(true)
-      const response = await adminRequest('/admin/products')
-      setProducts(response.data || [])
+      setListLoading(true);
+      const response = await adminRequest("/admin/products");
+      setProducts(response.data || []);
     } catch (requestError) {
-      setError(requestError.message || 'Failed to load products')
+      setError(requestError.message || "Failed to load products");
     } finally {
-      setListLoading(false)
+      setListLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    loadProducts()
-  }, [])
+    loadProducts();
+  }, []);
 
   const updateField = (field) => (event) => {
-    setForm((current) => ({ ...current, [field]: event.target.value }))
-  }
+    setForm((current) => ({ ...current, [field]: event.target.value }));
+  };
 
   const resetForm = () => {
-    setForm(initialForm)
-    setSelectedId(null)
-  }
+    setForm(initialForm);
+    setSelectedId(null);
+  };
 
   const startEdit = (product) => {
-    setSelectedId(product.id)
+    setSelectedId(product.id);
     setForm({
-      name: product.name || '',
-      sku: product.sku || '',
-      description: product.description || '',
-      price: String(product.price ?? ''),
-      stock: String(product.stock ?? ''),
-      category: product.category || 'Uncategorized',
-      status: product.status || 'draft',
+      name: product.name || "",
+      sku: product.sku || "",
+      description: product.description || "",
+      price: String(product.price ?? ""),
+      stock: String(product.stock ?? ""),
+      category: product.category || "Uncategorized",
+      status: product.status || "draft",
       images: Array.isArray(product.images) ? product.images : [],
-    })
-  }
+    });
+  };
 
   const handleImageUpload = async (event) => {
-    const files = Array.from(event.target.files || [])
-    if (!files.length) return
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
 
-    setUploadingImages(true)
-    setMessage('')
-    setError('')
+    setUploadingImages(true);
+    setMessage("");
+    setError("");
 
     try {
-      const formData = new FormData()
-      files.forEach((file) => formData.append('images', file))
+      const formData = new FormData();
+      files.forEach((file) => formData.append("images", file, file.name));
 
-      const response = await adminRequest('/admin/uploads/images', {
-        method: 'POST',
+      const response = await adminRequest("/admin/uploads/images", {
+        method: "POST",
         body: formData,
-      })
+      });
 
       setForm((current) => ({
         ...current,
         images: [...current.images, ...(response.data || [])],
-      }))
-      setMessage('Images uploaded.')
+      }));
+      setMessage("Images uploaded.");
     } catch (requestError) {
-      setError(requestError.message || 'Failed to upload images')
+      setError(requestError.message || "Failed to upload images");
     } finally {
-      setUploadingImages(false)
-      event.target.value = ''
+      setUploadingImages(false);
+      event.target.value = "";
     }
-  }
+  };
 
   const removeImage = (index) => {
     setForm((current) => ({
       ...current,
       images: current.images.filter((_, imageIndex) => imageIndex !== index),
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
-    setLoading(true)
-    setMessage('')
-    setError('')
+    event.preventDefault();
+    setLoading(true);
+    setMessage("");
+    setError("");
 
     try {
       const payload = {
@@ -118,58 +124,66 @@ export function AdminProductsPage({ pathname, onNavigate }) {
         price: Number(form.price || 0),
         stock: Number(form.stock || 0),
         images: form.images,
-      }
+      };
 
       if (selectedId) {
         await adminRequest(`/admin/products/${selectedId}`, {
-          method: 'PUT',
+          method: "PUT",
           body: payload,
-        })
-        setMessage('Product updated.')
+        });
+        setMessage("Product updated.");
       } else {
-        await adminRequest('/admin/products', {
-          method: 'POST',
+        await adminRequest("/admin/products", {
+          method: "POST",
           body: payload,
-        })
-        setMessage('Product created.')
+        });
+        setMessage("Product created.");
       }
 
-      resetForm()
-      await loadProducts()
+      resetForm();
+      await loadProducts();
     } catch (requestError) {
-      setError(requestError.message || 'Failed to save product')
+      setError(requestError.message || "Failed to save product");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this product?')) return
+    if (!window.confirm("Delete this product?")) return;
 
-    setError('')
-    setMessage('')
+    setError("");
+    setMessage("");
     try {
-      await adminRequest(`/admin/products/${id}`, { method: 'DELETE' })
+      await adminRequest(`/admin/products/${id}`, { method: "DELETE" });
       if (selectedId === id) {
-        resetForm()
+        resetForm();
       }
-      await loadProducts()
-      setMessage('Product deleted.')
+      await loadProducts();
+      setMessage("Product deleted.");
     } catch (requestError) {
-      setError(requestError.message || 'Failed to delete product')
+      setError(requestError.message || "Failed to delete product");
     }
-  }
+  };
 
   return (
     <AdminShell pathname={pathname} onNavigate={onNavigate}>
       <AdminPageHeader
         backLabel="<- Back to Products"
-        onBack={() => onNavigate('/admin')}
-        title={selectedId ? 'Edit Product' : 'Add New Product'}
+        onBack={() => onNavigate("/admin")}
+        title={selectedId ? "Edit Product" : "Add New Product"}
         subtitle="Create a new product and add all the details."
         actions={
-          <button type="button" className="admin-primary-button" onClick={handleSubmit}>
-            {loading ? 'Saving...' : selectedId ? 'Update Product' : 'Publish Product'}
+          <button
+            type="button"
+            className="admin-primary-button"
+            onClick={handleSubmit}
+          >
+            {loading
+              ? "Saving..."
+              : selectedId
+                ? "Update Product"
+                : "Publish Product"}
           </button>
         }
       />
@@ -180,39 +194,82 @@ export function AdminProductsPage({ pathname, onNavigate }) {
             <div className="admin-form-grid">
               <label>
                 Product Name
-                <input value={form.name} onChange={updateField('name')} type="text" placeholder="Enter product name" />
+                <input
+                  value={form.name}
+                  onChange={updateField("name")}
+                  type="text"
+                  placeholder="Enter product name"
+                />
               </label>
               <label>
                 SKU (Stock Keeping Unit)
-                <input value={form.sku} onChange={updateField('sku')} type="text" placeholder="Enter SKU (optional)" />
+                <input
+                  value={form.sku}
+                  onChange={updateField("sku")}
+                  type="text"
+                  placeholder="Enter SKU (optional)"
+                />
               </label>
               <label className="admin-form-grid__full">
                 Description
-                <textarea value={form.description} onChange={updateField('description')} placeholder="Write a product description..." rows={8} />
+                <textarea
+                  value={form.description}
+                  onChange={updateField("description")}
+                  placeholder="Write a product description..."
+                  rows={8}
+                />
               </label>
             </div>
           </AdminCard>
 
-          <AdminCard title="Product Images" subtitle="Upload multiple photos. The first photo will be used as the main image on the storefront.">
+          <AdminCard
+            title="Product Images"
+            subtitle="Upload multiple photos. The first photo will be used as the main image on the storefront."
+          >
             <div className="admin-image-uploader">
               <label className="admin-image-uploader__dropzone">
-                <input type="file" accept="image/*" multiple onChange={handleImageUpload} />
-                <span>{uploadingImages ? 'Uploading...' : 'Choose multiple images'}</span>
-                <small>PNG, JPG, WebP. You can add several photos at once.</small>
+                <input
+                  name="images"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                />
+                <span>
+                  {uploadingImages ? "Uploading..." : "Choose multiple images"}
+                </span>
+                <small>
+                  PNG, JPG, WebP. You can add several photos at once.
+                </small>
               </label>
 
               {form.images.length ? (
                 <div className="admin-image-grid">
                   {form.images.map((image, index) => {
-                    const imageUrl = getImageUrl(image)
+                    const imageUrl = getImageUrl(image);
                     return (
-                      <figure key={imageUrl || index} className="admin-image-grid__item">
-                        {imageUrl ? <img src={imageUrl} alt={`Product image ${index + 1}`} /> : <div className="admin-image-grid__placeholder">No preview</div>}
-                        <button type="button" onClick={() => removeImage(index)}>
+                      <figure
+                        key={imageUrl || index}
+                        className="admin-image-grid__item"
+                      >
+                        {imageUrl ? (
+                          <img
+                            src={imageUrl}
+                            alt={`Product image ${index + 1}`}
+                          />
+                        ) : (
+                          <div className="admin-image-grid__placeholder">
+                            No preview
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                        >
                           Remove
                         </button>
                       </figure>
-                    )
+                    );
                   })}
                 </div>
               ) : (
@@ -225,22 +282,41 @@ export function AdminProductsPage({ pathname, onNavigate }) {
             <div className="admin-form-grid">
               <label>
                 Category
-                <input value={form.category} onChange={updateField('category')} type="text" placeholder="Herbal" />
+                <input
+                  value={form.category}
+                  onChange={updateField("category")}
+                  type="text"
+                  placeholder="Herbal"
+                />
               </label>
               <label>
                 Status
-                <select value={form.status} onChange={updateField('status')}>
+                <select value={form.status} onChange={updateField("status")}>
                   <option value="draft">Draft</option>
                   <option value="published">Published</option>
                 </select>
               </label>
               <label>
                 Price
-                <input value={form.price} onChange={updateField('price')} type="number" min="0" step="0.01" placeholder="0.00" />
+                <input
+                  value={form.price}
+                  onChange={updateField("price")}
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                />
               </label>
               <label>
                 Stock
-                <input value={form.stock} onChange={updateField('stock')} type="number" min="0" step="1" placeholder="0" />
+                <input
+                  value={form.stock}
+                  onChange={updateField("stock")}
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="0"
+                />
               </label>
             </div>
           </AdminCard>
@@ -248,14 +324,30 @@ export function AdminProductsPage({ pathname, onNavigate }) {
 
         <aside className="admin-form-layout__side">
           <AdminCard title="Publish">
-            <p className="admin-help-text">Save the product as draft or publish it right away.</p>
-            {message ? <p className="text-sm text-green-700">{message}</p> : null}
+            <p className="admin-help-text">
+              Save the product as draft or publish it right away.
+            </p>
+            {message ? (
+              <p className="text-sm text-green-700">{message}</p>
+            ) : null}
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
-            <button type="submit" className="admin-primary-button" disabled={loading || uploadingImages}>
-              {loading ? 'Saving...' : selectedId ? 'Update Product' : 'Save Product'}
+            <button
+              type="submit"
+              className="admin-primary-button"
+              disabled={loading || uploadingImages}
+            >
+              {loading
+                ? "Saving..."
+                : selectedId
+                  ? "Update Product"
+                  : "Save Product"}
             </button>
             {selectedId ? (
-              <button type="button" className="admin-secondary-button" onClick={resetForm}>
+              <button
+                type="button"
+                className="admin-secondary-button"
+                onClick={resetForm}
+              >
                 Cancel Edit
               </button>
             ) : null}
@@ -263,7 +355,10 @@ export function AdminProductsPage({ pathname, onNavigate }) {
         </aside>
       </form>
 
-      <AdminCard title="Existing Products" subtitle="Edit or delete products from the admin API.">
+      <AdminCard
+        title="Existing Products"
+        subtitle="Edit or delete products from the admin API."
+      >
         {listLoading ? <p>Loading products...</p> : null}
         <div className="admin-table">
           <div className="admin-table__head admin-table__head--products">
@@ -275,19 +370,38 @@ export function AdminProductsPage({ pathname, onNavigate }) {
           </div>
           <div className="admin-table__body">
             {products.map((item) => (
-              <div key={item.id || item.name} className="admin-table__row admin-table__row--products">
+              <div
+                key={item.id || item.name}
+                className="admin-table__row admin-table__row--products"
+              >
                 <div className="admin-table__product">
                   <span>{item.name}</span>
                 </div>
                 <span>{item.category}</span>
                 <span>NGN {item.price?.toLocaleString?.() ?? item.price}</span>
-                <span>{item.status === 'published' ? <AdminPill>Published</AdminPill> : <AdminPill tone="amber">Draft</AdminPill>}</span>
+                <span>
+                  {item.status === "published" ? (
+                    <AdminPill>Published</AdminPill>
+                  ) : (
+                    <AdminPill tone="amber">Draft</AdminPill>
+                  )}
+                </span>
                 <div className="admin-actions">
-                  <button type="button" aria-label="Edit" onClick={() => startEdit(item)}>
+                  <button
+                    type="button"
+                    aria-label="Edit"
+                    onClick={() => startEdit(item)}
+                  >
                     <span className="admin-action-icon">edit</span>
                   </button>
-                  <button type="button" aria-label="Delete" onClick={() => handleDelete(item.id)}>
-                    <span className="admin-action-icon admin-action-icon--danger">del</span>
+                  <button
+                    type="button"
+                    aria-label="Delete"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    <span className="admin-action-icon admin-action-icon--danger">
+                      del
+                    </span>
                   </button>
                 </div>
               </div>
@@ -296,5 +410,5 @@ export function AdminProductsPage({ pathname, onNavigate }) {
         </div>
       </AdminCard>
     </AdminShell>
-  )
+  );
 }

@@ -81,14 +81,13 @@ export function HeroBanner({ title, breadcrumb, subtle, backgroundPhoto }) {
         aria-hidden="true"
         style={backdropStyle}
       >
-        <div className="hero-banner__mug" />
-        <div className="hero-banner__leaf hero-banner__leaf--left" />
-        <div className="hero-banner__leaf hero-banner__leaf--right" />
+        
+       
       </div>
       <div className="hero-banner__content !w-full !px-3 xs:!px-4 sm:!px-6">
         {subtle ? <p className="eyebrow">{subtle}</p> : null}
         <h1>{title}</h1>
-        <p>{breadcrumb}</p>
+       
       </div>
     </section>
   );
@@ -101,19 +100,21 @@ export function ProductArt({ tone }) {
 }
 
 function getImageUrl(image) {
-  if (!image) return ''
-  if (typeof image === 'string') return image
-  if (typeof image === 'object') return image.url || image.src || image.secureUrl || image.path || ''
-  return ''
+  if (!image) return "";
+  if (typeof image === "string") return image;
+  if (typeof image === "object")
+    return image.url || image.src || image.secureUrl || image.path || "";
+  return "";
 }
 
 export function ProductCard({ name, price, badge, tone, image, images }) {
-  const imageUrl = getImageUrl(image) || getImageUrl(Array.isArray(images) ? images[0] : null)
+  const imageUrl =
+    getImageUrl(image) || getImageUrl(Array.isArray(images) ? images[0] : null);
   return (
     <article className="product-card">
       <div className="product-card__visual">
         {badge ? <span className="badge">{badge}</span> : null}
-        {imageUrl ? <img src={imageUrl} alt={name} /> : <ProductArt tone={tone} />}
+        {imageUrl ? <img src={imageUrl} alt={name} /> : <div className="product-card__empty" aria-label={`${name} has no image`} />}
       </div>
       <h3>{name}</h3>
       <p>{price}</p>

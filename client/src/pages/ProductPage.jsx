@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
-import { HeroBanner, ProductArt } from '../components/SiteChrome.jsx'
+import { useEffect, useMemo, useState } from 'react'
+import { HeroBanner } from '../components/SiteChrome.jsx'
 import { publicRequest } from '../lib/publicApi.js'
+import bannaImage from '../assets/banna.png'
 
 function getImageUrl(image) {
   if (!image) return ''
@@ -20,14 +21,18 @@ function buildWhatsAppUrl(product) {
   return number ? `https://wa.me/${number}?text=${text}` : '/contact'
 }
 
-function ProductCard({ product, index, onView, onOrder }) {
+function ProductCard({ product, onView, onOrder }) {
   const imageUrl = getProductImage(product)
   const description = product.description || product.excerpt || 'A clean herbal product listing ready for your content.'
 
   return (
     <article className="catalog-card">
       <div className="catalog-card__image">
-        {imageUrl ? <img src={imageUrl} alt={product.name} loading="lazy" /> : <ProductArt tone={['leaf', 'powder', 'bundle', 'mix'][index % 4]} />}
+        {imageUrl ? (
+          <img src={imageUrl} alt={product.name} loading="lazy" />
+        ) : (
+          <div className="catalog-card__empty" aria-label={`${product.name} has no image`} />
+        )}
       </div>
       <div className="catalog-card__body">
         <h3>{product.name}</h3>
@@ -49,6 +54,9 @@ export function ProductPage({ onNavigate }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [sortBy, setSortBy] = useState('newest')
 
   useEffect(() => {
     let cancelled = false
@@ -77,9 +85,49 @@ export function ProductPage({ onNavigate }) {
     }
   }, [])
 
+  const categories = useMemo(() => {
+    const unique = new Set(
+      products
+        .map((product) => product.category || product.categories?.[0] || 'Uncategorized')
+        .filter(Boolean),
+    )
+    return ['All', ...Array.from(unique)]
+  }, [products])
+
+  const filteredProducts = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase()
+    const filtered = products.filter((product) => {
+      const productCategory = product.category || product.categories?.[0] || 'Uncategorized'
+      const matchesCategory = selectedCategory === 'All' || productCategory === selectedCategory
+      const matchesSearch =
+        !term ||
+        [product.name, product.description, product.excerpt, productCategory]
+          .filter(Boolean)
+          .some((value) => String(value).toLowerCase().includes(term))
+      return matchesCategory && matchesSearch
+    })
+
+    const sorted = [...filtered]
+    if (sortBy === 'name-asc') {
+      sorted.sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')))
+    } else if (sortBy === 'name-desc') {
+      sorted.sort((a, b) => String(b.name || '').localeCompare(String(a.name || '')))
+    } else {
+      sorted.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+    }
+
+    return sorted
+  }, [products, searchTerm, selectedCategory, sortBy])
+
+  const featureTags = ['Organic', 'Herbal', 'Natural', 'Tea', 'Powder', 'Blend']
+
   return (
     <>
-      <HeroBanner title="PRODUCTS" breadcrumb="Home  /  Product" />
+      <HeroBanner
+        title="PRODUCTS"
+        breadcrumb="Home  /  Product"
+        backgroundPhoto={bannaImage}
+      />
       <section className="page-shell catalog-page">
         <div className="catalog-page__header">
           <h2>Products</h2>
@@ -88,26 +136,98 @@ export function ProductPage({ onNavigate }) {
 
         {loading ? <p>Loading products...</p> : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
-        {!loading && !error && products.length === 0 ? <p>No products yet.</p> : null}
+        {!loading && !error ? (
+          <div className="catalog-layout">
+            <aside className="catalog-sidebar">
+              <div className="filter-panel">
+                <h2>Shop by Category</h2>
+                <ul>
+                  {categories.map((category) => (
+                    <li key={category}>
+                      <button
+                        type="button"
+                        className={selectedCategory === category ? 'is-active' : ''}
+                        onClick={() => setSelectedCategory(category)}
+                      >
+                        {category}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-        <div className="catalog-grid !grid !grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-4 !gap-[18px]">
-          {products.map((product, index) => (
-            <ProductCard
-              key={product.id || product.name}
-              product={product}
-              index={index}
-              onView={() => onNavigate?.(`/product-details?id=${product.id}`)}
-              onOrder={() => {
-                const url = buildWhatsAppUrl(product)
-                if (url.startsWith('/')) {
-                  onNavigate?.(url)
-                  return
-                }
-                window.open(url, '_blank', 'noopener,noreferrer')
-              }}
-            />
-          ))}
-        </div>
+              <div className="filter-panel">
+                <h2>Search</h2>
+                <input
+                  type="search"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder="Search products"
+                />
+              </div>
+
+              <div className="filter-panel">
+                <h2>Price Filter</h2>
+                <div className="price-track" aria-hidden="true" />
+                <p className="catalog-help-text">Use the product pricing controls to narrow the list.</p>
+              </div>
+
+              <div className="filter-panel">
+                <h2>By Tag</h2>
+                <div className="tag-list">
+                  {featureTags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </aside>
+
+            <div className="catalog-main">
+              <div className="catalog-toolbar">
+                <p>
+                  Showing {filteredProducts.length} of {products.length} products
+                </p>
+                <div className="catalog-toolbar__controls">
+                  <label>
+                    Sort By
+                    <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+                      <option value="newest">Newest</option>
+                      <option value="name-asc">Name A-Z</option>
+                      <option value="name-desc">Name Z-A</option>
+                    </select>
+                  </label>
+                  <label>
+                    View
+                    <select defaultValue="grid">
+                      <option value="grid">Grid</option>
+                      <option value="list">List</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              {!filteredProducts.length ? <p>No products found.</p> : null}
+
+              <div className="catalog-grid">
+                {filteredProducts.map((product, index) => (
+                  <ProductCard
+                    key={product.id || product.name}
+                    product={product}
+                    onView={() => onNavigate?.(`/product-details?id=${product.id}`)}
+                    onOrder={() => {
+                      const url = buildWhatsAppUrl(product)
+                      if (url.startsWith('/')) {
+                        onNavigate?.(url)
+                        return
+                      }
+                      window.open(url, '_blank', 'noopener,noreferrer')
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : null}
       </section>
     </>
   )

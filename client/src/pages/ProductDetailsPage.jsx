@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import { HeroBanner, ProductArt, ProductCard } from '../components/SiteChrome.jsx'
+import { useEffect, useMemo, useState } from 'react'
+import { HeroBanner, ProductCard } from '../components/SiteChrome.jsx'
 import { publicRequest } from '../lib/publicApi.js'
 import { SectionTitle } from './shared.jsx'
+import bannaImage from '../assets/banna.png'
 
 function getProductId() {
   const params = new URLSearchParams(window.location.search)
@@ -23,6 +24,11 @@ function getImageUrl(image) {
   if (typeof image === 'string') return image
   if (typeof image === 'object') return image.url || image.src || image.secureUrl || image.path || ''
   return ''
+}
+
+function getProductImages(product) {
+  const images = Array.isArray(product?.images) ? product.images : []
+  return images.map((image) => getImageUrl(image)).filter(Boolean)
 }
 
 export function ProductDetailsPage({ onNavigate }) {
@@ -67,12 +73,43 @@ export function ProductDetailsPage({ onNavigate }) {
   }, [productId])
 
   const tabs = ['Description', 'Tags', 'Review']
-  const productImages = Array.isArray(product?.images) ? product.images : []
-  const mainImageUrl = selectedImage || getImageUrl(productImages[0]) || ''
+  const productImages = getProductImages(product)
+  const mainImageUrl = selectedImage || productImages[0] || ''
+  const displayPrice = product ? `NGN ${Number(product.price || 0).toLocaleString()}` : ''
+  const quickFacts = useMemo(
+    () => [
+      product?.category || 'Herbal blend',
+      product?.sku || 'Natural ingredients',
+      Number(product?.stock || 0) > 0 ? 'In stock' : 'Out of stock',
+    ],
+    [product],
+  )
+  const details = useMemo(
+    () => [
+      'A refined herbal product crafted for daily use, with a clean and natural presentation.',
+      'Made to feel premium on the page while still being simple to scan on mobile.',
+      'Use the gallery to switch between product variations and view each image clearly.',
+    ],
+    [],
+  )
+  const productTags = useMemo(
+    () => [
+      product?.category || 'Herbs',
+      product?.sku || 'Organic',
+      'Natural',
+      'Featured',
+    ],
+    [product],
+  )
+  const quantityOptions = ['1', '2', '3']
 
   return (
     <>
-      <HeroBanner title="SINGLE PRODUCT" breadcrumb="Home  /  Single Product" />
+      <HeroBanner
+        title="PRODUCT DETAILS"
+        breadcrumb={`Home  /  Product Details${product?.name ? `  /  ${product.name}` : ''}`}
+        backgroundPhoto={bannaImage}
+      />
 
       {!loading && !error && !product ? (
         <section className="page-shell">
@@ -85,37 +122,32 @@ export function ProductDetailsPage({ onNavigate }) {
 
       {product ? (
         <>
-          <section className="page-shell product-detail !grid !grid-cols-1 xl:!grid-cols-[minmax(360px,1fr)_minmax(0,1fr)] !gap-6 xl:!gap-8">
+          <section className="page-shell product-detail">
             <div className="product-detail__gallery">
               <div className="product-detail__main">
-                {mainImageUrl ? <img src={mainImageUrl} alt={product.name} /> : <ProductArt tone="leaf" />}
-                <span className="badge badge--floating">-29%</span>
+                {mainImageUrl ? (
+                  <img src={mainImageUrl} alt={product.name} />
+                ) : (
+                  <div className="product-detail__empty-image" aria-label={`${product.name} has no image`} />
+                )}
+                <span className="badge badge--floating">New</span>
               </div>
-              <div className="product-detail__thumbs !flex !flex-wrap !justify-center !gap-3">
+              <div className="product-detail__thumbs">
                 {productImages.length ? (
                   productImages.map((image, index) => {
-                    const imageUrl = getImageUrl(image)
                     return (
-                      <button key={imageUrl || index} type="button" onClick={() => setSelectedImage(imageUrl)}>
-                        {imageUrl ? <img src={imageUrl} alt={`${product.name} ${index + 1}`} /> : <ProductArt tone={['leaf', 'tea', 'powder', 'bundle'][index % 4]} />}
+                      <button
+                        key={image || index}
+                        type="button"
+                        className={selectedImage === image ? 'is-active' : ''}
+                        onClick={() => setSelectedImage(image)}
+                      >
+                        <img src={image} alt={`${product.name} ${index + 1}`} />
                       </button>
                     )
                   })
                 ) : (
-                  <>
-                    <button type="button">
-                      <ProductArt tone="leaf" />
-                    </button>
-                    <button type="button">
-                      <ProductArt tone="tea" />
-                    </button>
-                    <button type="button">
-                      <ProductArt tone="powder" />
-                    </button>
-                    <button type="button">
-                      <ProductArt tone="bundle" />
-                    </button>
-                  </>
+                  <p className="product-detail__empty-text">No product images uploaded yet.</p>
                 )}
               </div>
             </div>
@@ -124,41 +156,44 @@ export function ProductDetailsPage({ onNavigate }) {
               {error ? <p className="text-sm text-red-600">{error}</p> : null}
               <h2>{product.name}</h2>
               <p className="rating">32 Reviews | Add Your Reviews</p>
-              <strong className="price">NGN {Number(product.price || 0).toLocaleString()}</strong>
+              <div className="product-detail__meta-row">
+                {quickFacts.map((fact) => (
+                  <span key={fact}>{fact}</span>
+                ))}
+              </div>
+              <strong className="price">{displayPrice}</strong>
               <p className="available">
                 Available: <span>{Number(product.stock || 0) > 0 ? 'In stock' : 'Out of stock'}</span>
               </p>
-              <p className="summary">{product.description || ''}</p>
+              <p className="summary">
+                {product.description ||
+                  'A clean herbal product page with room for ingredients, benefits, and variation images.'}
+              </p>
               <ul className="feature-list">
-                <li>Protection Plan</li>
-                <li>Remote Holder</li>
-                <li>Amazon Basics HD Antenna</li>
+                <li>Premium herbal formulation</li>
+                <li>Multiple product images</li>
+                <li>Designed for easy browsing</li>
               </ul>
-              <div className="purchase-row !flex !flex-wrap !gap-3">
-                <label>
-                  Qty:
-                  <input type="text" defaultValue="02" />
-                </label>
-                <button type="button" className="icon-button icon-button--filled" aria-label="Add to cart">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M6 6h15l-2 8H8L6 6Z" fill="none" stroke="currentColor" strokeWidth="1.7" />
-                    <circle cx="9" cy="19" r="1.4" fill="currentColor" />
-                    <circle cx="17" cy="19" r="1.4" fill="currentColor" />
-                  </svg>
+              <div className="purchase-row">
+                <div className="product-detail__selector">
+                  <span>Qty</span>
+                  <div className="product-detail__qty">
+                    {quantityOptions.map((qty, index) => (
+                      <button key={qty} type="button" className={index === 1 ? 'is-active' : ''}>
+                        {qty}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <button type="button" className="primary-button">
+                  Add to Cart
                 </button>
-                <button type="button" className="icon-button icon-button--filled" aria-label="Wish list">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path
-                      d="M12 20s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.4-7 10-7 10Z"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                    />
-                  </svg>
+                <button type="button" className="secondary-button">
+                  Add to Wishlist
                 </button>
               </div>
               <p className="meta">Categories: {product.category || 'General'}</p>
-              <p className="meta">Tags: {product.sku || 'Featured'}</p>
+              <p className="meta">Tags: {productTags.join(', ')}</p>
               <div className="share-row">
                 {['Tweet', 'Share', 'Google+', 'Pinterest'].map((label) => (
                   <button type="button" key={label} className="share-button">
@@ -179,11 +214,29 @@ export function ProductDetailsPage({ onNavigate }) {
             </div>
             <div className="tabs-block__content">
               {tab === 'Description' ? (
-                <p>{product.description || 'No description added yet.'}</p>
+                <div className="product-description">
+                  <p>{product.description || 'No description added yet.'}</p>
+                  {details.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                  <h3>Important Information</h3>
+                  <ul>
+                    <li>Great for a clean, modern product presentation.</li>
+                    <li>Supports multiple product photos for variations.</li>
+                    <li>Designed to stay readable on mobile and desktop.</li>
+                  </ul>
+                </div>
               ) : tab === 'Tags' ? (
-                <p>No product tags yet.</p>
+                <div className="tag-list">
+                  {productTags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
               ) : (
-                <p>No reviews yet.</p>
+                <div className="product-reviews">
+                  <p>No reviews yet.</p>
+                  <p>Be the first to leave a review for this product.</p>
+                </div>
               )}
             </div>
           </section>
