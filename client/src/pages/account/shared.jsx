@@ -1,5 +1,5 @@
 import { HeroBanner } from '../../components/SiteChrome.jsx'
-import heroImage from '../../assets/hero.png'
+import bannaImage from '../../assets/banna.png'
 import { clearUserAuth } from '../../lib/auth.js'
 
 const accountItems = [
@@ -133,7 +133,7 @@ function AccountSidebar({ pathname, onNavigate }) {
 export function AccountPageShell({ pathname, onNavigate, title, breadcrumb, children }) {
   return (
     <>
-      <HeroBanner title={title} breadcrumb={breadcrumb} backgroundPhoto={heroImage} />
+      <HeroBanner title={title} breadcrumb={breadcrumb} backgroundPhoto={bannaImage} />
       <section className="page-shell account-layout">
         <AccountSidebar pathname={pathname} onNavigate={onNavigate} />
         <div className="account-layout__content">{children}</div>

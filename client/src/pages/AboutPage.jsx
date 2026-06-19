@@ -24,13 +24,13 @@ export function AboutPage() {
             </p>
           </div>
           <div className="about-media">
-            <ProductArt tone="tea" />
+            {/* <ProductArt tone="tea" /> */}
           </div>
         </article>
 
         <article className="about-row about-row--reverse !grid !grid-cols-1 lg:!grid-cols-2 !gap-6 xl:!gap-9 !items-center">
           <div className="about-media">
-            <ProductArt tone="bowl" />
+            {/* <ProductArt tone="bowl" /> */}
           </div>
           <div className="about-copy">
             <span className="eyebrow">Greenrut:</span>
@@ -52,7 +52,7 @@ export function AboutPage() {
             </p>
           </div>
           <div className="about-media">
-            <ProductArt tone="leaf" />
+            {/* <ProductArt tone="leaf" /> */}
           </div>
         </article>
       </section>

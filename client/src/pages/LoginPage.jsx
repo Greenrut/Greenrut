@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { HeroBanner } from '../components/SiteChrome.jsx'
 import { requestJson } from '../lib/api.js'
 import { saveUserAuth } from '../lib/auth.js'
+import bannaImage from '../assets/banna.png'
 
 export function LoginPage() {
   const [tab, setTab] = useState('Login')
@@ -51,7 +52,11 @@ export function LoginPage() {
 
   return (
     <>
-      <HeroBanner title="LOGIN" breadcrumb="Home  /  Login" />
+      <HeroBanner
+        title="LOGIN"
+        breadcrumb="Home  /  Login"
+        backgroundPhoto={bannaImage}
+      />
       <section className="login-shell !w-full xs:!w-[calc(100%-24px)] sm:!w-[calc(100%-48px)] !max-w-[1120px]">
         <div className="login-tabs">
           <button type="button" className={tab === 'Login' ? 'is-active' : ''} onClick={() => setTab('Login')}>

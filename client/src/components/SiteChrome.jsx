@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getCartCount } from "../lib/cart.js";
 import { navItems } from "../data.js";
 
 function IconCart() {
@@ -125,6 +126,13 @@ export function ProductCard({ name, price, badge, tone, image, images }) {
 export function SiteHeader({ pathname, onNavigate }) {
   const active = (href) => pathname === href;
   const [menuOpen, setMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(() => getCartCount());
+
+  useEffect(() => {
+    const onCartChanged = () => setCartCount(getCartCount());
+    window.addEventListener('cart-changed', onCartChanged);
+    return () => window.removeEventListener('cart-changed', onCartChanged);
+  }, []);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -175,12 +183,15 @@ export function SiteHeader({ pathname, onNavigate }) {
             NGN <IconChevronDown />
           </a>
           <button
-            className="icon-button"
+            className="icon-button cart-icon-button"
             type="button"
-            aria-label="Cart"
+            aria-label={`Cart (${cartCount} items)`}
             onClick={() => onNavigate("/cart")}
           >
             <IconCart />
+            {cartCount > 0 && (
+              <span className="cart-badge" aria-hidden="true">{cartCount}</span>
+            )}
           </button>
         </nav>
       </div>

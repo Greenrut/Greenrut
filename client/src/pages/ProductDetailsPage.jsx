@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { HeroBanner, ProductCard } from '../components/SiteChrome.jsx'
 import { publicRequest } from '../lib/publicApi.js'
+import { addToCart } from '../lib/cart.js'
 import { SectionTitle } from './shared.jsx'
 import bannaImage from '../assets/banna.png'
 
@@ -39,6 +40,8 @@ export function ProductDetailsPage({ onNavigate }) {
   const [tab, setTab] = useState('Description')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [selectedQty, setSelectedQty] = useState(1)
+  const [addedMessage, setAddedMessage] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -101,7 +104,14 @@ export function ProductDetailsPage({ onNavigate }) {
     ],
     [product],
   )
-  const quantityOptions = ['1', '2', '3']
+  const quantityOptions = [1, 2, 3]
+
+  function handleAddToCart() {
+    if (!product) return
+    addToCart(product, selectedQty)
+    setAddedMessage(`${product.name} added to cart!`)
+    setTimeout(() => setAddedMessage(''), 2500)
+  }
 
   return (
     <>
@@ -178,20 +188,26 @@ export function ProductDetailsPage({ onNavigate }) {
                 <div className="product-detail__selector">
                   <span>Qty</span>
                   <div className="product-detail__qty">
-                    {quantityOptions.map((qty, index) => (
-                      <button key={qty} type="button" className={index === 1 ? 'is-active' : ''}>
+                    {quantityOptions.map((qty) => (
+                      <button
+                        key={qty}
+                        type="button"
+                        className={selectedQty === qty ? 'is-active' : ''}
+                        onClick={() => setSelectedQty(qty)}
+                      >
                         {qty}
                       </button>
                     ))}
                   </div>
                 </div>
-                <button type="button" className="primary-button">
+                <button type="button" className="primary-button" onClick={handleAddToCart}>
                   Add to Cart
                 </button>
                 <button type="button" className="secondary-button">
                   Add to Wishlist
                 </button>
               </div>
+              {addedMessage ? <p className="text-sm" style={{ color: '#63ac18', marginTop: 8, fontWeight: 600 }}>{addedMessage}</p> : null}
               <p className="meta">Categories: {product.category || 'General'}</p>
               <p className="meta">Tags: {productTags.join(', ')}</p>
               <div className="share-row">

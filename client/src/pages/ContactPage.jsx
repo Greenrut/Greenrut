@@ -1,10 +1,15 @@
 import { HeroBanner } from '../components/SiteChrome.jsx'
 import { SectionTitle } from './shared.jsx'
+import bannaImage from '../assets/banna.png'
 
 export function ContactPage() {
   return (
     <>
-      <HeroBanner title="CONTACT US" breadcrumb="Home  /  Contact us" />
+      <HeroBanner
+        title="CONTACT US"
+        breadcrumb="Home  /  Contact us"
+        backgroundPhoto={bannaImage}
+      />
       <section className="page-shell contact-layout !grid !grid-cols-1 lg:!grid-cols-[minmax(0,1fr)_380px] !gap-6 xl:!gap-7">
         <div className="contact-form-panel">
           <SectionTitle

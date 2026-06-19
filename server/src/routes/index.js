@@ -6,6 +6,7 @@ import { listPosts, getPost, createPost, updatePost, deletePost } from '../contr
 import { listUsers } from '../controllers/userController.js'
 import { listCategories } from '../controllers/categoryController.js'
 import { listTags } from '../controllers/tagController.js'
+import { verifyPaystackPayment } from '../controllers/paymentController.js'
 import { upload } from '../middleware/upload.js'
 import { requireAuth, requireRole } from '../middleware/auth.js'
 import {
@@ -95,5 +96,7 @@ router.get('/account/wishlist', requireAuth, listWishlist)
 router.delete('/account/wishlist/:id', requireAuth, deleteWishlistItem)
 router.get('/account/inbox', requireAuth, listInbox)
 router.get('/account/orders', requireAuth, listOrders)
+
+router.post('/payments/paystack/verify', verifyPaystackPayment)
 
 export default router

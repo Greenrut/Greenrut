@@ -44,6 +44,18 @@ const accountSchema = new mongoose.Schema(
         date: Date,
         status: String,
         total: Number,
+        paymentReference: String,
+        paymentGateway: String,
+        currency: String,
+        customerEmail: String,
+        paidAt: Date,
+        items: [
+          {
+            name: String,
+            quantity: Number,
+            price: Number,
+          },
+        ],
       },
     ],
   },
