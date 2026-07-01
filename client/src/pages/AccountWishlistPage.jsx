@@ -37,8 +37,10 @@ export function AccountWishlistPage({ pathname }) {
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       <div className="account-wishlist">
         {wishlistItems.map((item) => (
-          <article key={item.id || item.name} className="account-wishlist__item">
-            <div className="account-wishlist__thumb" />
+          <article key={item._id || item.productId || item.name} className="account-wishlist__item">
+            <div className="account-wishlist__thumb">
+              {item.imageUrl ? <img src={item.imageUrl} alt={item.name} /> : null}
+            </div>
             <div className="account-wishlist__copy">
               <h3>{item.name}</h3>
               <div className="account-price-row">
@@ -52,7 +54,7 @@ export function AccountWishlistPage({ pathname }) {
               </div>
             </div>
             <div className="account-wishlist__actions">
-              <button type="button" className="account-wishlist__remove" onClick={() => handleRemove(item.id)}>
+              <button type="button" className="account-wishlist__remove" onClick={() => handleRemove(item._id || item.productId)}>
                 Remove
               </button>
               <button type="button" className={item.stock === 'in_stock' ? 'account-primary-button' : 'account-secondary-button'}>

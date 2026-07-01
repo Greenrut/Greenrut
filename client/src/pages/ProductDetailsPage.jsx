@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { HeroBanner, ProductCard } from '../components/SiteChrome.jsx'
 import { publicRequest } from '../lib/publicApi.js'
 import { addToCart } from '../lib/cart.js'
+import { accountRequest } from '../lib/accountApi.js'
+import { hasUserAuth } from '../lib/auth.js'
 import { SectionTitle } from './shared.jsx'
 import bannaImage from '../assets/banna.png'
 
@@ -42,6 +44,7 @@ export function ProductDetailsPage({ onNavigate }) {
   const [error, setError] = useState('')
   const [selectedQty, setSelectedQty] = useState(1)
   const [addedMessage, setAddedMessage] = useState('')
+  const [wishlistMessage, setWishlistMessage] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -111,6 +114,36 @@ export function ProductDetailsPage({ onNavigate }) {
     addToCart(product, selectedQty)
     setAddedMessage(`${product.name} added to cart!`)
     setTimeout(() => setAddedMessage(''), 2500)
+  }
+
+  async function handleAddToWishlist() {
+    if (!product) return
+    if (!hasUserAuth()) {
+      onNavigate?.('/login')
+      return
+    }
+
+    try {
+      const images = Array.isArray(product?.images) ? product.images : []
+      const imageUrl = getImageUrl(images[0]) || mainImageUrl || ''
+      await accountRequest('/account/wishlist', {
+        method: 'POST',
+        body: {
+          productId: product.id,
+          name: product.name,
+          price: Number(product.price || 0),
+          oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
+          stock: Number(product.stock || 0) > 0 ? 'in_stock' : 'out_of_stock',
+          imageUrl,
+        },
+      })
+
+      setWishlistMessage(`${product.name} saved to wishlist!`)
+      setTimeout(() => setWishlistMessage(''), 2500)
+    } catch (requestError) {
+      setWishlistMessage(requestError.message || 'Failed to add to wishlist')
+      setTimeout(() => setWishlistMessage(''), 3500)
+    }
   }
 
   return (
@@ -203,11 +236,12 @@ export function ProductDetailsPage({ onNavigate }) {
                 <button type="button" className="primary-button" onClick={handleAddToCart}>
                   Add to Cart
                 </button>
-                <button type="button" className="secondary-button">
+                <button type="button" className="secondary-button" onClick={handleAddToWishlist}>
                   Add to Wishlist
                 </button>
               </div>
               {addedMessage ? <p className="text-sm" style={{ color: '#63ac18', marginTop: 8, fontWeight: 600 }}>{addedMessage}</p> : null}
+              {wishlistMessage ? <p className="text-sm" style={{ color: '#0f766e', marginTop: 8, fontWeight: 600 }}>{wishlistMessage}</p> : null}
               <p className="meta">Categories: {product.category || 'General'}</p>
               <p className="meta">Tags: {productTags.join(', ')}</p>
               <div className="share-row">

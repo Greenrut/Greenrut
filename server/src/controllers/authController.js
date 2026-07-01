@@ -155,3 +155,35 @@ export async function getAuthUser(req, res, next) {
     next(error)
   }
 }
+
+export async function changePassword(req, res, next) {
+  try {
+    const { currentPassword, newPassword } = req.body || {}
+
+    if (!currentPassword || !newPassword) {
+      return next(createHttpError(400, 'Current password and new password are required'))
+    }
+
+    if (String(newPassword).length < 6) {
+      return next(createHttpError(400, 'New password must be at least 6 characters'))
+    }
+
+    const user = await User.findById(req.auth.sub).select('+passwordHash')
+    if (!user) {
+      return next(createHttpError(404, 'Account not found'))
+    }
+
+    const isValidPassword = verifyPassword(currentPassword, user.passwordHash)
+    if (!isValidPassword) {
+      return next(createHttpError(401, 'Current password is incorrect'))
+    }
+
+    user.passwordHash = hashPassword(String(newPassword))
+    user.lastActive = new Date()
+    await user.save()
+
+    res.json({ ok: true })
+  } catch (error) {
+    next(error)
+  }
+}

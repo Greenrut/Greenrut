@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AccountPageShell } from './account/shared.jsx'
 import { accountRequest } from '../lib/accountApi.js'
+import { clearUserAuth } from '../lib/auth.js'
 
 const initialForm = {
   firstName: '',
@@ -17,6 +18,10 @@ export function AccountDashboardPage({ pathname, onNavigate }) {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
+  const [passwordSaving, setPasswordSaving] = useState(false)
+  const [passwordMessage, setPasswordMessage] = useState('')
+  const [passwordError, setPasswordError] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -78,6 +83,43 @@ export function AccountDashboardPage({ pathname, onNavigate }) {
       setError(requestError.message || 'Failed to save account')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const updatePasswordField = (field) => (event) => {
+    setPasswordForm((current) => ({ ...current, [field]: event.target.value }))
+  }
+
+  const handlePasswordSubmit = async (event) => {
+    event.preventDefault()
+    setPasswordMessage('')
+    setPasswordError('')
+
+    if (!passwordForm.currentPassword || !passwordForm.newPassword) {
+      setPasswordError('Please enter your current password and a new password.')
+      return
+    }
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordError('New password and confirmation do not match.')
+      return
+    }
+
+    setPasswordSaving(true)
+    try {
+      await accountRequest('/auth/password', {
+        method: 'PATCH',
+        body: {
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        },
+      })
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+      setPasswordMessage('Password updated successfully.')
+    } catch (requestError) {
+      setPasswordError(requestError.message || 'Failed to update password')
+    } finally {
+      setPasswordSaving(false)
     }
   }
 
@@ -160,15 +202,41 @@ export function AccountDashboardPage({ pathname, onNavigate }) {
           </button>
           <div className="account-accordion__body">
             <p className="account-subtitle">PASSWORD SETTINGS</p>
-            <p className="account-subtitle account-subtitle--secondary">Update your login password from the security page.</p>
-            <div className="account-actions">
-              <button type="button" className="account-back-link" onClick={() => onNavigate?.('/login')}>
-                Logout
-              </button>
-              <button type="button" className="account-primary-button" onClick={() => onNavigate?.('/account')}>
-                Go to Profile
-              </button>
-            </div>
+            <p className="account-subtitle account-subtitle--secondary">Use your current password to set a new one.</p>
+            <div className="account-divider" />
+            <form className="account-form-grid" onSubmit={handlePasswordSubmit}>
+              <label className="account-form-grid__wide">
+                Current Password
+                <input value={passwordForm.currentPassword} onChange={updatePasswordField('currentPassword')} type="password" autoComplete="current-password" />
+              </label>
+              <label>
+                New Password
+                <input value={passwordForm.newPassword} onChange={updatePasswordField('newPassword')} type="password" autoComplete="new-password" />
+              </label>
+              <label>
+                Confirm New Password
+                <input value={passwordForm.confirmPassword} onChange={updatePasswordField('confirmPassword')} type="password" autoComplete="new-password" />
+              </label>
+
+              {passwordError ? <p className="text-sm text-red-600 account-form-grid__wide">{passwordError}</p> : null}
+              {passwordMessage ? <p className="text-sm text-green-700 account-form-grid__wide">{passwordMessage}</p> : null}
+
+              <div className="account-actions account-form-grid__wide">
+                <button
+                  type="button"
+                  className="account-back-link"
+                  onClick={() => {
+                    clearUserAuth()
+                    onNavigate?.('/login')
+                  }}
+                >
+                  Logout
+                </button>
+                <button type="submit" className="account-primary-button" disabled={passwordSaving}>
+                  {passwordSaving ? 'SAVING' : 'UPDATE PASSWORD'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 

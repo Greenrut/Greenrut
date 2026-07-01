@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { getHealth } from '../controllers/healthController.js'
-import { getAuthUser, loginAdmin, loginUser, signupAdmin, signupUser } from '../controllers/authController.js'
+import { changePassword, getAuthUser, loginAdmin, loginUser, signupAdmin, signupUser } from '../controllers/authController.js'
 import { listProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../controllers/productController.js'
 import { listPosts, getPost, createPost, updatePost, deletePost } from '../controllers/postController.js'
 import { listUsers } from '../controllers/userController.js'
@@ -40,6 +40,7 @@ import {
   listInbox,
   listOrders,
   listWishlist,
+  addWishlistItem,
   deleteWishlistItem,
   updateAddress,
   updateAccountProfile,
@@ -93,9 +94,12 @@ router.get('/account/addresses/:id', requireAuth, getAddressById)
 router.put('/account/addresses/:id', requireAuth, updateAddress)
 router.delete('/account/addresses/:id', requireAuth, deleteAddress)
 router.get('/account/wishlist', requireAuth, listWishlist)
+router.post('/account/wishlist', requireAuth, addWishlistItem)
 router.delete('/account/wishlist/:id', requireAuth, deleteWishlistItem)
 router.get('/account/inbox', requireAuth, listInbox)
 router.get('/account/orders', requireAuth, listOrders)
+
+router.patch('/auth/password', requireAuth, changePassword)
 
 router.post('/payments/paystack/verify', verifyPaystackPayment)
 

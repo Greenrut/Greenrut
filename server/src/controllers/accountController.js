@@ -220,11 +220,48 @@ export async function listWishlist(req, res, next) {
   }
 }
 
+export async function addWishlistItem(req, res, next) {
+  try {
+    const account = await getOrCreateAccount(getUserId(req))
+    const body = req.body || {}
+
+    const payload = {
+      productId: String(body.productId || body.id || '').trim(),
+      name: String(body.name || '').trim(),
+      price: Number(body.price ?? 0),
+      oldPrice: body.oldPrice === undefined || body.oldPrice === null || body.oldPrice === '' ? undefined : Number(body.oldPrice),
+      stock: String(body.stock || (Number(body.stockCount || body.stock || 0) > 0 ? 'in_stock' : 'out_of_stock')),
+      imageUrl: String(body.imageUrl || body.image || '').trim(),
+    }
+
+    if (!payload.name) {
+      return next(createHttpError(400, 'Wishlist item name is required'))
+    }
+
+    const existingIndex = account.wishlist.findIndex((item) => {
+      if (payload.productId) return String(item.productId || '') === payload.productId
+      return String(item.name || '').toLowerCase() === payload.name.toLowerCase()
+    })
+
+    if (existingIndex !== -1) {
+      account.wishlist.splice(existingIndex, 1, { ...account.wishlist[existingIndex].toObject?.(), ...payload })
+    } else {
+      account.wishlist.push(payload)
+    }
+
+    await account.save()
+    const savedItem = existingIndex !== -1 ? account.wishlist[existingIndex] : account.wishlist[account.wishlist.length - 1]
+    res.status(existingIndex === -1 ? 201 : 200).json({ ok: true, data: savedItem })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export async function deleteWishlistItem(req, res, next) {
   try {
     const account = await getOrCreateAccount(getUserId(req))
-    const id = Number(req.params.id)
-    const index = account.wishlist.findIndex((item, itemIndex) => Number(item.id ?? itemIndex + 1) === id)
+    const id = String(req.params.id || '').trim()
+    const index = account.wishlist.findIndex((item) => String(item?._id) === id || String(item?.productId || '') === id)
     if (index === -1) return next(createHttpError(404, 'Wishlist item not found'))
 
     const [removed] = account.wishlist.splice(index, 1)

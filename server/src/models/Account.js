@@ -24,10 +24,12 @@ const accountSchema = new mongoose.Schema(
     addresses: [addressSchema],
     wishlist: [
       {
+        productId: { type: String, default: '' },
         name: String,
         price: Number,
         oldPrice: Number,
         stock: String,
+        imageUrl: { type: String, default: '' },
       },
     ],
     inbox: [
