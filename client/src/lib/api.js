@@ -1,5 +1,8 @@
+const runtimeHost =
+  typeof window !== "undefined" ? window.location.hostname : "localhost";
+
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+  import.meta.env.VITE_API_BASE_URL || `http://${runtimeHost}:4000/api`;
 
 export async function requestJson(path, { method = "GET", body, token } = {}) {
   const isFormData =

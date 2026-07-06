@@ -16,6 +16,12 @@ function parseId(id) {
   return id.trim()
 }
 
+function getPublicBaseUrl(req) {
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim()
+  const protocol = forwardedProto || req.protocol
+  return `${protocol}://${req.get('host')}`
+}
+
 function serializeProduct(product) {
   return {
     id: product._id,
@@ -344,7 +350,7 @@ export async function uploadAdminImage(req, res, next) {
       return next(createHttpError(400, 'Image file is required'))
     }
 
-    const result = await uploadImage(req.file.buffer, { folder: config.cloudinary.folder })
+    const result = await uploadImage(req.file, { folder: config.cloudinary.folder, baseUrl: getPublicBaseUrl(req) })
     res.status(201).json({
       ok: true,
       data: {
@@ -365,10 +371,7 @@ export async function uploadAdminImages(req, res, next) {
       return next(createHttpError(400, 'Image files are required'))
     }
 
-    const results = await uploadImages(
-      req.files.map((file) => file.buffer),
-      { folder: config.cloudinary.folder }
-    )
+    const results = await uploadImages(req.files, { folder: config.cloudinary.folder, baseUrl: getPublicBaseUrl(req) })
 
     res.status(201).json({
       ok: true,
@@ -383,3 +386,7 @@ export async function uploadAdminImages(req, res, next) {
     next(error)
   }
 }
+
+
+
+

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { getCartCount } from "../lib/cart.js";
 import { navItems } from "../data.js";
 
@@ -87,8 +87,8 @@ export function HeroBanner({ title, breadcrumb, subtle, backgroundPhoto }) {
       </div>
       <div className="hero-banner__content !w-full !px-3 xs:!px-4 sm:!px-6">
         {subtle ? <p className="eyebrow">{subtle}</p> : null}
-        <h1>{title}</h1>
-       
+                <h1>{title}</h1>
+        {breadcrumb ? <p className="mt-2 text-[11px] xs:text-[12px] text-white/75">{breadcrumb}</p> : null}
       </div>
     </section>
   );
@@ -255,7 +255,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="site-footer__copy">
-        © 2026 Greenrut - All Rights Reserved
+        Â© 2026 Greenrut - All Rights Reserved
       </div>
     </footer>
   );
@@ -270,3 +270,4 @@ export function SiteFrame({ pathname, onNavigate, children }) {
     </div>
   );
 }
+

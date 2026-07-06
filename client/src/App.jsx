@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import {
   AboutPage,
   AccountAddressBookPage,
@@ -17,6 +17,7 @@ import {
   HomePage,
   LoginPage,
   BlogPage,
+  ResearchPage,
   ProductDetailsPage,
   ProductPage,
 } from './pages/index.js'
@@ -90,6 +91,7 @@ function App() {
   if (pathname === '/contact') page = <ContactPage />
   if (pathname === '/login') page = <LoginPage />
   if (pathname === '/blog') page = <BlogPage onNavigate={navigate} />
+  if (pathname === '/research') page = <ResearchPage onNavigate={navigate} />
   if (pathname === '/account' || pathname === '/account/dashboard') page = <AccountDashboardPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/account/address-book') page = <AccountAddressBookPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/account/address-book/edit') page = <AccountAddressEditPage pathname={pathname} onNavigate={navigate} />
@@ -117,3 +119,4 @@ function App() {
 }
 
 export default App
+
