@@ -24,4 +24,6 @@ export const config = {
     apiSecret: process.env.CLOUDINARY_API_SECRET || '',
     folder: process.env.CLOUDINARY_FOLDER || 'greenrut',
   },
+
+  
 }
