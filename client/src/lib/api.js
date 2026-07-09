@@ -8,6 +8,7 @@ const defaultApiBase =
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || defaultApiBase;
 
+
 export async function requestJson(path, { method = "GET", body, token } = {}) {
   const isFormData =
     typeof FormData !== "undefined" &&
