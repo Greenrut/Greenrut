@@ -2,8 +2,6 @@
 
 dotenv.config()
 
-const isProduction = String(process.env.NODE_ENV || '').toLowerCase() === 'production'
-
 function parseOrigins(value) {
   return String(value || '')
     .split(',')
@@ -11,9 +9,12 @@ function parseOrigins(value) {
     .filter(Boolean)
 }
 
-const defaultClientOrigins = isProduction
-  ? ['https://www.greenrut.com', 'https://greenrut.com']
-  : ['http://localhost:5173']
+const defaultClientOrigins = [
+  'https://www.greenrut.com',
+  'https://greenrut.com',
+  'https://greenrut.onrender.com',
+  'http://localhost:5173',
+]
 
 const clientOrigins = parseOrigins(process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN)
 

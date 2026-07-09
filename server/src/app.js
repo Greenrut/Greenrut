@@ -10,7 +10,11 @@ const app = express()
 
 const devLocalhostPattern = /^http:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/
 const uploadsDir = path.resolve(process.cwd(), 'uploads')
-const allowedOrigins = new Set(config.clientOrigins || [config.clientOrigin].filter(Boolean))
+const allowedOrigins = new Set(
+  (config.clientOrigins || [config.clientOrigin])
+    .filter(Boolean)
+    .map((origin) => String(origin).replace(/\/$/, '')),
+)
 
 app.use(
   cors({
@@ -19,7 +23,8 @@ app.use(
       if (config.nodeEnv !== 'production' && devLocalhostPattern.test(origin)) {
         return callback(null, true)
       }
-      if (allowedOrigins.has(origin)) return callback(null, true)
+      const normalizedOrigin = String(origin).replace(/\/$/, '')
+      if (allowedOrigins.has(normalizedOrigin)) return callback(null, true)
       return callback(new Error(`CORS: origin ${origin} not allowed`))
     },
     credentials: true,
