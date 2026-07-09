@@ -18,6 +18,7 @@ import {
   LoginPage,
   BlogPage,
   ResearchPage,
+  NotFoundPage,
   ProductDetailsPage,
   ProductPage,
 } from './pages/index.js'
@@ -107,6 +108,13 @@ function App() {
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   }
 
+  if (!isAdminRoute) {
+    const knownUserRoutes = new Set(['/', '/about-us', '/product', '/product-details', '/cart', '/contact', '/login', '/blog', '/research', '/account', '/account/dashboard', '/account/address-book', '/account/address-book/edit', '/account/wishlist', '/account/inbox', '/account/orders'])
+    if (!knownUserRoutes.has(pathname)) {
+      page = <NotFoundPage onNavigate={navigate} />
+    }
+  }
+
   if (isAdminRoute) {
     return page
   }
@@ -119,4 +127,6 @@ function App() {
 }
 
 export default App
+
+
 
