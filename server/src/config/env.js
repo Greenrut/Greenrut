@@ -1,10 +1,12 @@
-import dotenv from 'dotenv'
+﻿import dotenv from 'dotenv'
 
 dotenv.config()
 
+const isProduction = String(process.env.NODE_ENV || '').toLowerCase() === 'production'
+
 export const config = {
   port: Number(process.env.PORT || 4000),
-  clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  clientOrigin: process.env.CLIENT_ORIGIN || (isProduction ? 'https://greenrut.onrender.com' : 'http://localhost:5173'),
   nodeEnv: process.env.NODE_ENV || 'development',
   mongoUri: process.env.MONGODB_URI || '',
   mongoDbName: process.env.MONGODB_DB || '',

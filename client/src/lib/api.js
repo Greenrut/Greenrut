@@ -1,8 +1,12 @@
-const runtimeHost =
+﻿const runtimeHost =
   typeof window !== "undefined" ? window.location.hostname : "localhost";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || `http://${runtimeHost}:4000/api`;
+const defaultApiBase =
+  runtimeHost === 'localhost' || runtimeHost === '127.0.0.1' || runtimeHost === '[::1]'
+    ? `http://${runtimeHost}:4000/api`
+    : 'https://greenrut.onrender.com/api';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || defaultApiBase;
 
 export async function requestJson(path, { method = "GET", body, token } = {}) {
   const isFormData =

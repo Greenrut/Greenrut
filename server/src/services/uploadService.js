@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises'
+﻿import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { cloudinary, isCloudinaryConfigured } from '../config/cloudinary.js'
@@ -32,7 +32,7 @@ function toUploadFile(file, index = 0) {
 }
 
 function buildLocalUrl(baseUrl, folder, filename) {
-  const origin = String(baseUrl || 'http://localhost:4000').replace(/\/$/, '')
+  const origin = String(baseUrl || 'https://greenrut.onrender.com').replace(/\/$/, '')
   const safeFolder = String(folder || 'uploads').replace(/^\/+|\/+$/g, '')
   return `${origin}/uploads/${safeFolder}/${filename}`
 }
@@ -120,3 +120,5 @@ export async function uploadImages(files, options = {}) {
   const uploads = await Promise.all(files.map((file, index) => uploadImage(toUploadFile(file, index), options)))
   return uploads
 }
+
+
