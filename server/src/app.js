@@ -1,4 +1,4 @@
-import express from 'express'
+﻿import express from 'express'
 import cors from 'cors'
 import path from 'node:path'
 import { config } from './config/env.js'
@@ -10,6 +10,7 @@ const app = express()
 
 const devLocalhostPattern = /^http:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/
 const uploadsDir = path.resolve(process.cwd(), 'uploads')
+const allowedOrigins = new Set(config.clientOrigins || [config.clientOrigin].filter(Boolean))
 
 app.use(
   cors({
@@ -18,7 +19,7 @@ app.use(
       if (config.nodeEnv !== 'production' && devLocalhostPattern.test(origin)) {
         return callback(null, true)
       }
-      if (origin === config.clientOrigin) return callback(null, true)
+      if (allowedOrigins.has(origin)) return callback(null, true)
       return callback(new Error(`CORS: origin ${origin} not allowed`))
     },
     credentials: true,
