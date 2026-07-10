@@ -7,6 +7,7 @@ import { accountRequest } from '../lib/accountApi.js'
 import bannaImage from '../assets/banna.png'
 
 const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || ''
+const IS_PRODUCTION = import.meta.env.PROD
 
 function formatNGN(amount) {
   return `NGN ${Number(amount || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -201,8 +202,14 @@ export function CartPage({ onNavigate }) {
     const email = auth.user?.email || ''
     const amountKobo = Math.round(total * 100) // Paystack uses smallest currency unit
 
-    // No public key → use mock modal
+    // In development we keep a mock fallback, but production must use a real key.
     if (!PAYSTACK_PUBLIC_KEY) {
+      if (IS_PRODUCTION) {
+        setCheckoutState('error')
+        setCheckoutMessage('Paystack public key is not configured for this environment.')
+        return
+      }
+
       setMockEmail(email)
       setMockAmount(total)
       setShowMock(true)
