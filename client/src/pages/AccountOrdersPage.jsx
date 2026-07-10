@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AccountPageShell } from './account/shared.jsx'
 import { accountRequest } from '../lib/accountApi.js'
 
-export function AccountOrdersPage({ pathname }) {
+export function AccountOrdersPage({ pathname, onNavigate }) {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -35,7 +35,7 @@ export function AccountOrdersPage({ pathname }) {
   }, [])
 
   return (
-    <AccountPageShell pathname={pathname} title="ORDER HISTORY" breadcrumb="Home  /  Orders">
+    <AccountPageShell pathname={pathname} onNavigate={onNavigate} title="ORDER HISTORY" breadcrumb="Home  /  Orders">
       <div className="account-page-toolbar">
         <h2>Orders</h2>
       </div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AccountPageShell } from './account/shared.jsx'
 import { accountRequest } from '../lib/accountApi.js'
 
-export function AccountInboxPage({ pathname }) {
+export function AccountInboxPage({ pathname, onNavigate }) {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -35,7 +35,7 @@ export function AccountInboxPage({ pathname }) {
   }, [])
 
   return (
-    <AccountPageShell pathname={pathname} title="INBOX" breadcrumb="Home  /  inbox">
+    <AccountPageShell pathname={pathname} onNavigate={onNavigate} title="INBOX" breadcrumb="Home  /  inbox">
       <div className="account-page-toolbar">
         <h2>Inbox Messages</h2>
       </div>

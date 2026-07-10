@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AccountPageShell } from './account/shared.jsx'
 import { accountRequest } from '../lib/accountApi.js'
 
-export function AccountWishlistPage({ pathname }) {
+export function AccountWishlistPage({ pathname, onNavigate }) {
   const [wishlistItems, setWishlistItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -29,7 +29,7 @@ export function AccountWishlistPage({ pathname }) {
   }
 
   return (
-    <AccountPageShell pathname={pathname} title="WISHLIST" breadcrumb="Home  /  Wishlist">
+    <AccountPageShell pathname={pathname} onNavigate={onNavigate} title="WISHLIST" breadcrumb="Home  /  Wishlist">
       <div className="account-page-toolbar">
         <h2>Wishlist ({wishlistItems.length})</h2>
       </div>

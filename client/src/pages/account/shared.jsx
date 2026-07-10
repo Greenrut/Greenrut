@@ -7,9 +7,9 @@ const accountItems = [
   { label: 'Orders', href: '/account/orders', icon: 'orders' },
   { label: 'Inbox', href: '/account/inbox', icon: 'inbox' },
   { label: 'Wishlist', href: '/account/wishlist', icon: 'wishlist' },
-  { label: 'Payment Settings', href: null, icon: 'settings' },
+  { label: 'Payment Settings', href: '/account/payment-settings', icon: 'settings' },
   { label: 'Address Book', href: '/account/address-book', icon: 'address' },
-  { label: 'Close Account', href: null, icon: 'close' },
+  { label: 'Close Account', href: '/account/close-account', icon: 'close' },
 ]
 
 function AccountIcon({ type }) {

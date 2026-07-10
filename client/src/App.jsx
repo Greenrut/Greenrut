@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   AboutPage,
   AccountAddressBookPage,
@@ -6,6 +6,8 @@ import {
   AccountDashboardPage,
   AccountInboxPage,
   AccountOrdersPage,
+  AccountPaymentSettingsPage,
+  AccountCloseAccountPage,
   AccountWishlistPage,
   AdminBlogPostPage,
   AdminDashboardPage,
@@ -99,6 +101,8 @@ function App() {
   if (pathname === '/account/wishlist') page = <AccountWishlistPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/account/inbox') page = <AccountInboxPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/account/orders') page = <AccountOrdersPage pathname={pathname} onNavigate={navigate} />
+  if (pathname === '/account/payment-settings') page = <AccountPaymentSettingsPage pathname={pathname} onNavigate={navigate} />
+  if (pathname === '/account/close-account') page = <AccountCloseAccountPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/login') page = <AdminLoginPage onNavigate={navigate} />
   if (pathname === '/admin' || pathname === '/admin/dashboard') page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/products/new') page = <AdminProductsPage pathname={pathname} onNavigate={navigate} />
@@ -109,7 +113,7 @@ function App() {
   }
 
   if (!isAdminRoute) {
-    const knownUserRoutes = new Set(['/', '/about-us', '/product', '/product-details', '/cart', '/contact', '/login', '/blog', '/research', '/account', '/account/dashboard', '/account/address-book', '/account/address-book/edit', '/account/wishlist', '/account/inbox', '/account/orders'])
+    const knownUserRoutes = new Set(['/', '/about-us', '/product', '/product-details', '/cart', '/contact', '/login', '/blog', '/research', '/account', '/account/dashboard', '/account/address-book', '/account/address-book/edit', '/account/wishlist', '/account/inbox', '/account/orders', '/account/payment-settings', '/account/close-account'])
     if (!knownUserRoutes.has(pathname)) {
       page = <NotFoundPage onNavigate={navigate} />
     }
