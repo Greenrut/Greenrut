@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
-import { cloudinary, isCloudinaryConfigured } from '../config/cloudinary.js'
+import { cloudinary } from '../config/cloudinary.js'
 import { config } from '../config/env.js'
 import { createHttpError } from '../utils/httpError.js'
 
@@ -65,7 +65,6 @@ function uploadBuffer(buffer, options = {}) {
       {
         folder: options.folder,
         resource_type: options.resource_type || 'image',
-        ...(options.upload_preset ? { upload_preset: options.upload_preset } : {}),
       },
       (error, result) => {
         if (error) return reject(error)
@@ -96,24 +95,44 @@ async function uploadWithCloudinarySigned(file, options = {}) {
 }
 
 async function uploadWithCloudinaryUnsigned(file, options = {}) {
+  const cloudName = config.cloudinary.cloudName
   const uploadPreset = options.uploadPreset || options.upload_preset || config.cloudinary.uploadPreset || process.env.CLOUDINARY_UPLOAD_PRESET || ''
+
+  if (!cloudName) {
+    throw createHttpError(500, 'Cloudinary cloud name is not configured')
+  }
+
   if (!uploadPreset) {
     throw createHttpError(500, 'Cloudinary upload preset is not configured')
   }
 
-  const result = await uploadBuffer(file.buffer, {
-    folder: options.folder,
-    resource_type: 'image',
-    upload_preset: uploadPreset,
+  const formData = new FormData()
+  formData.append('file', new Blob([file.buffer], { type: file.mimetype || 'application/octet-stream' }), file.originalname || `upload-${Date.now()}`)
+  formData.append('upload_preset', uploadPreset)
+  if (options.folder) {
+    formData.append('folder', options.folder)
+  }
+
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+    method: 'POST',
+    body: formData,
   })
 
+  const payload = await response.json().catch(() => null)
+  if (!response.ok) {
+    throw createHttpError(
+      response.status || 502,
+      payload?.error?.message || payload?.message || 'Cloudinary unsigned upload failed'
+    )
+  }
+
   return {
-    secure_url: result.secure_url,
-    public_id: result.public_id,
-    width: result.width,
-    height: result.height,
-    resource_type: result.resource_type,
-    format: result.format,
+    secure_url: payload.secure_url,
+    public_id: payload.public_id,
+    width: payload.width,
+    height: payload.height,
+    resource_type: payload.resource_type,
+    format: payload.format,
     provider: 'cloudinary',
   }
 }
@@ -129,27 +148,18 @@ export async function uploadImage(file, options = {}) {
   }
 
   const uploadPreset = getCloudinaryUploadPreset(options)
+  const hasSignedCredentials = Boolean(config.cloudinary.cloudName && config.cloudinary.apiKey && config.cloudinary.apiSecret)
 
-  if (isCloudinaryConfigured()) {
-    try {
-      const hasSignedCredentials = Boolean(config.cloudinary.apiKey && config.cloudinary.apiSecret)
-
-      if (hasSignedCredentials) {
-        return await uploadWithCloudinarySigned(uploadFile, options)
-      }
-
+  try {
+    if (uploadPreset) {
       return await uploadWithCloudinaryUnsigned(uploadFile, { ...options, uploadPreset })
-    } catch (error) {
-      if (uploadPreset) {
-        try {
-          return await uploadWithCloudinaryUnsigned(uploadFile, { ...options, uploadPreset })
-        } catch (unsignedError) {
-          if (process.env.NODE_ENV === 'production') {
-            throw createHttpError(502, `Cloudinary upload failed: ${unsignedError?.message || error?.message || 'Unknown error'}`)
-          }
-        }
-      }
+    }
 
+    if (hasSignedCredentials) {
+      return await uploadWithCloudinarySigned(uploadFile, options)
+    }
+  } catch (error) {
+    if (uploadPreset) {
       if (process.env.NODE_ENV === 'production') {
         throw createHttpError(502, `Cloudinary upload failed: ${error?.message || 'Unknown error'}`)
       }
@@ -157,6 +167,13 @@ export async function uploadImage(file, options = {}) {
       console.warn('Cloudinary upload failed, using local fallback:', error?.message || error)
       return uploadToLocal(uploadFile, options)
     }
+
+    if (process.env.NODE_ENV === 'production') {
+      throw createHttpError(502, `Cloudinary upload failed: ${error?.message || 'Unknown error'}`)
+    }
+
+    console.warn('Cloudinary upload failed, using local fallback:', error?.message || error)
+    return uploadToLocal(uploadFile, options)
   }
 
   if (process.env.NODE_ENV === 'production') {
