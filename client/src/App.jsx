@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import {
   AboutPage,
   AccountAddressBookPage,
@@ -13,6 +13,8 @@ import {
   AdminDashboardPage,
   AdminLoginPage,
   AdminProductsPage,
+  AdminResearchPage,
+  AdminLibraryPage,
   AdminUsersPage,
   CartPage,
   ContactPage,
@@ -20,6 +22,7 @@ import {
   LoginPage,
   BlogPage,
   ResearchPage,
+  LibraryPage,
   NotFoundPage,
   ProductDetailsPage,
   ProductPage,
@@ -94,6 +97,7 @@ function App() {
   if (pathname === '/contact') page = <ContactPage />
   if (pathname === '/login') page = <LoginPage />
   if (pathname === '/blog') page = <BlogPage onNavigate={navigate} />
+  if (pathname === '/library') page = <LibraryPage onNavigate={navigate} />
   if (pathname === '/research') page = <ResearchPage onNavigate={navigate} />
   if (pathname === '/account' || pathname === '/account/dashboard') page = <AccountDashboardPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/account/address-book') page = <AccountAddressBookPage pathname={pathname} onNavigate={navigate} />
@@ -107,13 +111,15 @@ function App() {
   if (pathname === '/admin' || pathname === '/admin/dashboard') page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/products/new') page = <AdminProductsPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/blog/new') page = <AdminBlogPostPage pathname={pathname} onNavigate={navigate} />
+  if (pathname === '/admin/research/new') page = <AdminResearchPage pathname={pathname} onNavigate={navigate} />
+  if (pathname === '/admin/library/new') page = <AdminLibraryPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/users') page = <AdminUsersPage pathname={pathname} onNavigate={navigate} />
-  if (pathname.startsWith('/admin/') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/admin/products/new') && !pathname.startsWith('/admin/blog/new') && !pathname.startsWith('/admin/users')) {
+  if (pathname.startsWith('/admin/') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/admin/products/new') && !pathname.startsWith('/admin/blog/new') && !pathname.startsWith('/admin/research/new') && !pathname.startsWith('/admin/library/new') && !pathname.startsWith('/admin/users')) {
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   }
 
   if (!isAdminRoute) {
-    const knownUserRoutes = new Set(['/', '/about-us', '/product', '/product-details', '/cart', '/contact', '/login', '/blog', '/research', '/account', '/account/dashboard', '/account/address-book', '/account/address-book/edit', '/account/wishlist', '/account/inbox', '/account/orders', '/account/payment-settings', '/account/close-account'])
+    const knownUserRoutes = new Set(['/', '/about-us', '/product', '/product-details', '/cart', '/contact', '/login', '/blog', '/library', '/research', '/account', '/account/dashboard', '/account/address-book', '/account/address-book/edit', '/account/wishlist', '/account/inbox', '/account/orders', '/account/payment-settings', '/account/close-account'])
     if (!knownUserRoutes.has(pathname)) {
       page = <NotFoundPage onNavigate={navigate} />
     }
@@ -131,6 +137,3 @@ function App() {
 }
 
 export default App
-
-
-

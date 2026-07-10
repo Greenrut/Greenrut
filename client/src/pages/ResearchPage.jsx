@@ -1,10 +1,20 @@
 ﻿import { useEffect, useMemo, useState } from 'react'
 import { publicRequest } from '../lib/publicApi.js'
+import heroImage from '../assets/hero.png'
+import bannerImage from '../assets/banna.png'
 
 const researchPhases = [
   { key: 'ongoing', label: 'Ongoing Research' },
   { key: 'concluded', label: 'Concluded Research' },
   { key: 'future', label: 'Future Research' },
+]
+
+const fallbackProducts = [
+  { id: 'fallback-1', name: 'Nature Close Tea', phase: 'ongoing', image: heroImage },
+  { id: 'fallback-2', name: 'Pink wave Cup', phase: 'ongoing', image: bannerImage },
+  { id: 'fallback-3', name: 'Tea and Chai', phase: 'ongoing', image: heroImage },
+  { id: 'fallback-4', name: 'Green Rut Formula', phase: 'concluded', image: bannerImage },
+  { id: 'fallback-5', name: 'Future Wellness Blend', phase: 'future', image: heroImage },
 ]
 
 function getImageUrl(image) {
@@ -27,21 +37,9 @@ function normalizeStage(value) {
 }
 
 function inferStage(product, index, total) {
-  const explicit = normalizeStage(
-    product.researchStage || product.research_status || product.researchPhase || product.phase || product.status,
-  )
+  const explicit = normalizeStage(product.phase || product.researchStage || product.research_status || product.researchPhase || product.status)
 
-  if (
-    explicit !== 'ongoing' ||
-    String(
-      product.researchStage ||
-        product.research_status ||
-        product.researchPhase ||
-        product.phase ||
-        product.status ||
-        '',
-    ).trim()
-  ) {
+  if (explicit !== 'ongoing' || String(product.phase || product.researchStage || product.research_status || product.researchPhase || product.status || '').trim()) {
     return explicit
   }
 
@@ -80,12 +78,7 @@ function ResearchCard({ product, onOpen }) {
   const imageUrl = getProductImage(product)
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="block w-full text-left"
-      aria-label={`Open research details for ${product.name}`}
-    >
+    <button type="button" onClick={onOpen} className="block w-full text-left" aria-label={`Open research details for ${product.name}`}>
       <article className="w-full">
         <div className="flex h-[132px] items-center justify-center border border-[#efefef] bg-white px-3 py-2">
           {imageUrl ? (
@@ -116,7 +109,7 @@ export function ResearchPage({ onNavigate }) {
     async function loadProducts() {
       try {
         setLoading(true)
-        const response = await publicRequest('/products')
+        const response = await publicRequest('/research-items')
         if (!cancelled) setProducts(response.data || [])
       } catch (requestError) {
         if (!cancelled) setError(requestError.message || 'Failed to load research items')
@@ -132,25 +125,39 @@ export function ResearchPage({ onNavigate }) {
   }, [])
 
   const researchItems = useMemo(() => {
-    const normalized = products.map((product, index) => ({
-      product,
-      stage: inferStage(product, index, products.length),
-    }))
-
+    const source = products.length ? products : fallbackProducts
+    const normalized = source.map((product, index) => ({ product, stage: inferStage(product, index, source.length) }))
     const filtered = normalized.filter((item) => item.stage === selectedPhase)
     const sorted = [...filtered]
 
-    if (sortBy === 'name-asc') sorted.sort((a, b) => String(a.product.name || '').localeCompare(String(b.product.name || '')))
-    if (sortBy === 'name-desc') sorted.sort((a, b) => String(b.product.name || '').localeCompare(String(a.product.name || '')))
+    if (sortBy === 'name-asc') sorted.sort((a, b) => String(a.product.title || a.product.name || '').localeCompare(String(b.product.title || b.product.name || '')))
+    if (sortBy === 'name-desc') sorted.sort((a, b) => String(b.product.title || b.product.name || '').localeCompare(String(a.product.title || a.product.name || '')))
 
     return sorted.slice(0, 3)
   }, [products, selectedPhase, sortBy])
 
-  const totalResults = Math.max(products.length, 30)
+  const totalResults = Math.max(products.length || fallbackProducts.length, 30)
 
   return (
-    <section className="page-shell py-4 xs:py-5">
-      <div className="mx-auto w-full max-w-[548px] lg:max-w-[548px]">
+    <section className="page-shell py-6 xs:py-8 lg:py-10">
+      <div className="mb-5 overflow-hidden border border-[#efefef] bg-white">
+        <div
+          className="flex min-h-[180px] items-center justify-center px-4 text-center"
+          style={{
+            backgroundImage: `linear-gradient(rgba(10, 20, 10, 0.52), rgba(10, 20, 10, 0.52)), url('${heroImage}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <div className="max-w-[520px] text-white">
+            <p className="text-[10px] uppercase tracking-[0.24em] text-white/70">Research</p>
+            <h1 className="mt-2 font-serif text-[30px] leading-none xs:text-[34px]">Our Research</h1>
+            <p className="mt-3 text-[12px] leading-6 text-white/80 xs:text-[13px]">Browse the research catalog and open any product to view its details.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto w-full max-w-[820px]">
         <div className="grid gap-[16px] sm:grid-cols-[112px_minmax(0,1fr)] sm:items-start">
           <aside className="w-full border border-[#efefef] bg-white">
             {researchPhases.map((phase, index) => (
@@ -159,9 +166,7 @@ export function ResearchPage({ onNavigate }) {
                 type="button"
                 onClick={() => setSelectedPhase(phase.key)}
                 className={`block h-[28px] w-full border-b border-[#f2f2f2] px-3 text-left text-[10px] leading-[28px] text-[#3f3d39] last:border-b-0 ${
-                  selectedPhase === phase.key || (index === 0 && selectedPhase === 'ongoing')
-                    ? 'bg-[#d3d3d3]'
-                    : 'bg-white'
+                  selectedPhase === phase.key || (index === 0 && selectedPhase === 'ongoing') ? 'bg-[#d3d3d3]' : 'bg-white'
                 }`}
               >
                 {phase.label}
@@ -172,32 +177,20 @@ export function ResearchPage({ onNavigate }) {
           <div className="min-w-0">
             <div className="flex h-[28px] items-center border border-[#efefef] bg-white px-2">
               <div className="flex items-center gap-1.5">
-                <button type="button" className="grid h-4 w-4 place-items-center" aria-label="Grid view">
-                  <GridIcon />
-                </button>
-                <button type="button" className="grid h-4 w-4 place-items-center" aria-label="List view">
-                  <ListIcon />
-                </button>
+                <button type="button" className="grid h-4 w-4 place-items-center" aria-label="Grid view"><GridIcon /></button>
+                <button type="button" className="grid h-4 w-4 place-items-center" aria-label="List view"><ListIcon /></button>
               </div>
 
-              <p className="ml-5 hidden text-[9px] leading-none text-[#59534b] sm:block">
-                Showing 1 - 20 of {totalResults} results
-              </p>
+              <p className="ml-5 hidden text-[9px] leading-none text-[#59534b] sm:block">Showing 1 - 20 of {totalResults} results</p>
 
               <div className="ml-auto flex items-center gap-2 text-[9px] text-[#5a544c]">
                 <label className="flex items-center gap-1">
                   <span>View:</span>
-                  <select value="grid" readOnly className="h-[17px] w-[46px] border border-[#ece8df] bg-white px-1 text-[9px] text-[#5a544c]">
-                    <option value="grid">20</option>
-                  </select>
+                  <select value="grid" readOnly className="h-[17px] w-[46px] border border-[#ece8df] bg-white px-1 text-[9px] text-[#5a544c]"><option value="grid">20</option></select>
                 </label>
                 <label className="flex items-center gap-1">
                   <span>Sort by:</span>
-                  <select
-                    value={sortBy}
-                    onChange={(event) => setSortBy(event.target.value)}
-                    className="h-[17px] w-[109px] border border-[#ece8df] bg-white px-1 text-[9px] text-[#5a544c]"
-                  >
+                  <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="h-[17px] w-[109px] border border-[#ece8df] bg-white px-1 text-[9px] text-[#5a544c]">
                     <option value="default">Default</option>
                     <option value="name-asc">Name A-Z</option>
                     <option value="name-desc">Name Z-A</option>
@@ -206,17 +199,17 @@ export function ResearchPage({ onNavigate }) {
               </div>
             </div>
 
-            {loading ? <p className="py-4 text-sm text-[#6f6b64]">Loading research products...</p> : null}
+            {loading ? <p className="py-4 text-sm text-[#6f6b64]">Loading research items...</p> : null}
             {error ? <p className="py-4 text-sm text-red-600">{error}</p> : null}
 
             {!loading && !error ? (
               <div className="pt-3">
                 <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-3">
-                  {researchItems.map((product) => (
+                  {researchItems.map((item) => (
                     <ResearchCard
-                      key={product.id || product.name}
-                      product={product}
-                      onOpen={() => onNavigate?.(`/product-details?id=${product.id}`)}
+                      key={item.id || item.slug || item.name}
+                      product={item}
+                      onOpen={() => onNavigate?.(item.linkedProductId ? `/product-details?id=${item.linkedProductId}` : '/research')}
                     />
                   ))}
                 </div>

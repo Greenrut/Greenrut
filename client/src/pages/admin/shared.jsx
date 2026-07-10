@@ -1,10 +1,12 @@
-import { clearAdminAuth } from '../../lib/auth.js'
+﻿import { clearAdminAuth } from '../../lib/auth.js'
 
 const adminNav = [
   { label: 'Dashboard', href: '/admin', icon: 'dashboard' },
   { section: 'Content' },
   { label: 'Blog Posts', href: '/admin/blog/new', icon: 'blog' },
   { label: 'Products', href: '/admin/products/new', icon: 'products' },
+  { label: 'Research', href: '/admin/research/new', icon: 'research' },
+  { label: 'Library', href: '/admin/library/new', icon: 'library' },
   { section: 'Store' },
   { label: 'Categories', href: '/admin/categories', icon: 'categories' },
   { label: 'Tags', href: '/admin/tags', icon: 'tags' },
@@ -146,6 +148,8 @@ export function AdminShell({ pathname, onNavigate, children }) {
       !pathname.startsWith('/admin/login') &&
       !pathname.startsWith('/admin/products/new') &&
       !pathname.startsWith('/admin/blog/new') &&
+      !pathname.startsWith('/admin/research/new') &&
+      !pathname.startsWith('/admin/library/new') &&
       !pathname.startsWith('/admin/users'))
 
   const isActive = (href) => pathname === href || (href === '/admin' && isDashboardPath)
@@ -206,7 +210,7 @@ export function AdminShell({ pathname, onNavigate, children }) {
             <button type="button" className="admin-user-pill">
               <span className="admin-user-pill__avatar">A</span>
               <span>Admin</span>
-              <span className="admin-user-pill__caret">⌄</span>
+              <span className="admin-user-pill__caret">âŒ„</span>
             </button>
           </div>
         </header>
@@ -284,3 +288,5 @@ export function AdminTable({ columns, rows, rowRenderer }) {
 }
 
 export { Icon as AdminIcon }
+
+
