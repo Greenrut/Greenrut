@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../components/SiteChrome.jsx";
 import { publicRequest } from "../lib/publicApi.js";
-import { SectionTitle } from "./shared.jsx";
-import heroImage from "../assets/hero.png"; // Assuming hero.png is in the assets folder
+import { NewsletterBand, SectionTitle } from "./shared.jsx";
+import heroImage from '../assets/hero.png'
+import bannerImage from '../assets/banna.png'
 
 function mapProduct(product, index = 0) {
   return {
@@ -14,6 +15,25 @@ function mapProduct(product, index = 0) {
   };
 }
 
+const heroSlides = [
+  {
+    eyebrow: '100% herbal',
+    title: 'Scientifically Proven,',
+    text:
+      'Explore our range of herbal products with a calm, modern presentation that keeps the layout close to the supplied references.',
+    image: heroImage,
+    alt: 'Herbal products hero',
+  },
+  {
+    eyebrow: 'Greenrut',
+    title: 'Nature Powered Wellness',
+    text:
+      'Discover a cleaner storefront experience built around thoughtful product storytelling and a premium visual rhythm.',
+    image: bannerImage,
+    alt: 'Greenrut wellness banner',
+  },
+]
+
 function getPostSummary(post) {
   return post.excerpt || post.content || "A new blog post is ready.";
 }
@@ -23,6 +43,7 @@ export function HomePage({ onNavigate }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [activeHero, setActiveHero] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -55,21 +76,26 @@ export function HomePage({ onNavigate }) {
     };
   }, []);
 
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveHero((current) => (current + 1) % heroSlides.length);
+    }, 5500);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
   const bestsellers = products.slice(0, 8);
+  const heroSlide = heroSlides[activeHero];
 
   return (
     <>
       <section className="home-hero page-shell">
         <div className="home-hero__copy">
+          <p className="home-hero__eyebrow">{heroSlide.eyebrow}</p>
           <h1>
-            100% <span>herbal:</span>
-            <br />
-            Scientifically Proven,
+            {heroSlide.title}
           </h1>
-          <p>
-            Explore our range of herbal products with a calm, modern
-            presentation that keeps the layout close to the supplied references.
-          </p>
+          <p>{heroSlide.text}</p>
           <div className="actions">
             <button
               type="button"
@@ -86,13 +112,41 @@ export function HomePage({ onNavigate }) {
               Read Blog
             </button>
           </div>
+          <div className="home-hero__dots" aria-label="Hero slides">
+            {heroSlides.map((slide, index) => (
+              <button
+                key={slide.title}
+                type="button"
+                className={index === activeHero ? 'is-active' : ''}
+                aria-label={`Show slide ${index + 1}`}
+                aria-pressed={index === activeHero}
+                onClick={() => setActiveHero(index)}
+              />
+            ))}
+          </div>
         </div>
         <div className="home-hero__art">
+          <button
+            type="button"
+            className="home-hero__nav home-hero__nav--prev"
+            aria-label="Previous slide"
+            onClick={() => setActiveHero((current) => (current - 1 + heroSlides.length) % heroSlides.length)}
+          >
+            &#8249;
+          </button>
           <img
-            src={heroImage}
-            alt="Herbal products hero"
+            src={heroSlide.image}
+            alt={heroSlide.alt}
             className="home-hero__image"
           />
+          <button
+            type="button"
+            className="home-hero__nav home-hero__nav--next"
+            aria-label="Next slide"
+            onClick={() => setActiveHero((current) => (current + 1) % heroSlides.length)}
+          >
+            &#8250;
+          </button>
         </div>
       </section>
 
@@ -149,6 +203,8 @@ export function HomePage({ onNavigate }) {
           ))}
         </div>
       </section>
+
+      <NewsletterBand />
     </>
   );
 }

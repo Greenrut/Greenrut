@@ -427,6 +427,70 @@
   display: block;
   object-fit: cover;
 }
+.home-hero__art img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.home-hero__copy h1 {
+  min-height: 92px;
+}
+
+.home-hero__eyebrow {
+  margin: 0;
+  color: #63ac18;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.home-hero__dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.home-hero__dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 0;
+  background: #c8c2b7;
+  padding: 0;
+}
+
+.home-hero__dots button.is-active {
+  background: #63ac18;
+}
+
+.home-hero__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(17, 17, 17, 0.32);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.home-hero__nav--prev {
+  left: 14px;
+}
+
+.home-hero__nav--next {
+  right: 14px;
+}
 
 .home-hero__art .product-art {
   width: min(100%, 520px);
@@ -843,6 +907,75 @@
 
 
 
+.newsletter-band {
+  margin-top: 24px;
+  padding: 44px 0 28px;
+  background: #f8f8f6;
+  border-top: 1px solid #efede6;
+  border-bottom: 1px solid #efede6;
+}
+
+.newsletter-band__inner {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+
+.newsletter-band h2 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+  color: #36322d;
+  text-align: center;
+}
+
+.newsletter-form {
+  width: min(100%, 520px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  border: 1px solid #ece7de;
+  background: #fff;
+}
+
+.newsletter-form input,
+.contact-form-panel input,
+.contact-form-panel textarea,
+.catalog-toolbar select,
+.product-detail__content input,
+.cart-table input,
+.login-form input,
+.panel input {
+  width: 100%;
+  border: 1px solid #e5e2db;
+  padding: 12px 14px;
+  font: inherit;
+  color: #423d36;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.newsletter-form input {
+  border: 0;
+  min-width: 0;
+}
+
+.newsletter-form button {
+  border: 0;
+  background: #111;
+  color: #fff;
+  padding: 0 22px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.badge-row {
+  margin-top: 34px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
 .badge-row div {
   display: grid;
   justify-items: center;
@@ -850,33 +983,19 @@
   text-align: center;
 }
 
+.badge-row img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  display: block;
+}
+
 .badge-row p {
   margin: 0;
   color: #47423c;
   font-size: 14px;
+  line-height: 1.4;
 }
-
-.badge-icon {
-  width: 36px;
-  height: 36px;
-  display: inline-grid;
-  place-items: center;
-  border-radius: 8px;
-}
-
-.badge-icon--medal {
-  background: linear-gradient(180deg, #ffcc58, #efad18);
-}
-.badge-icon--lab {
-  background: linear-gradient(180deg, #5bb0ff, #1f6bb8);
-}
-.badge-icon--microscope {
-  background: linear-gradient(180deg, #5f8dd3, #2951a8);
-}
-.badge-icon--flag {
-  background: linear-gradient(90deg, #15ae63 0 50%, #efefef 50% 100%);
-}
-
 
 
 .promo-card {
@@ -987,62 +1106,6 @@
   margin-top: 16px;
   color: #44403a;
   text-decoration: none;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.newsletter-band {
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
-    linear-gradient(90deg, #e8ece9, #ffffff);
-  padding: clamp(34px, 5vw, 42px) 0;
-}
-
-.newsletter-band__inner {
-  display: grid;
-  justify-items: center;
-  gap: 18px;
-}
-
-.newsletter-band h2 {
-  margin: 0;
-  font-size: 28px;
-  color: #36322d;
-}
-
-.newsletter-form {
-  width: min(100%, 520px);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  border: 1px solid #ece7de;
-}
-
-.newsletter-form input,
-.contact-form-panel input,
-.contact-form-panel textarea,
-.catalog-toolbar select,
-.product-detail__content input,
-.cart-table input,
-.login-form input,
-.panel input {
-  width: 100%;
-  border: 1px solid #e5e2db;
-  padding: 12px 14px;
-  font: inherit;
-  color: #423d36;
-  background: #fff;
-  box-sizing: border-box;
-}
-
-.newsletter-form input {
-  border: 0;
-}
-
-.newsletter-form button {
-  border: 0;
-  background: #111;
-  color: #fff;
-  padding: 0 22px;
   font-size: 12px;
   font-weight: 700;
 }
