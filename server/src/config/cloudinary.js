@@ -11,5 +11,8 @@ cloudinary.config({
 export { cloudinary }
 
 export function isCloudinaryConfigured() {
-  return Boolean(config.cloudinary.cloudName && config.cloudinary.apiKey && config.cloudinary.apiSecret)
+  const hasCloudName = Boolean(config.cloudinary.cloudName)
+  const hasSignedCredentials = Boolean(config.cloudinary.apiKey && config.cloudinary.apiSecret)
+  const hasUnsignedPreset = Boolean(config.cloudinary.uploadPreset)
+  return hasCloudName && (hasSignedCredentials || hasUnsignedPreset)
 }

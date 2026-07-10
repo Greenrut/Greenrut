@@ -1,4 +1,4 @@
-﻿import dotenv from 'dotenv'
+import dotenv from 'dotenv'
 
 dotenv.config()
 
@@ -16,12 +16,13 @@ const defaultClientOrigins = [
   'http://localhost:5173',
 ]
 
-const clientOrigins = parseOrigins(process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN)
+const configuredClientOrigins = parseOrigins(process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN)
+const clientOrigins = Array.from(new Set([...defaultClientOrigins, ...configuredClientOrigins]))
 
 export const config = {
   port: Number(process.env.PORT || 4000),
   clientOrigin: clientOrigins[0] || defaultClientOrigins[0],
-  clientOrigins: clientOrigins.length ? clientOrigins : defaultClientOrigins,
+  clientOrigins,
   nodeEnv: process.env.NODE_ENV || 'development',
   mongoUri: process.env.MONGODB_URI || '',
   mongoDbName: process.env.MONGODB_DB || '',
@@ -38,5 +39,6 @@ export const config = {
     apiKey: process.env.CLOUDINARY_API_KEY || '',
     apiSecret: process.env.CLOUDINARY_API_SECRET || '',
     folder: process.env.CLOUDINARY_FOLDER || 'greenrut',
+    uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET || '',
   },
 }

@@ -1,7 +1,9 @@
-﻿import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { cloudinary, isCloudinaryConfigured } from '../config/cloudinary.js'
+import { config } from '../config/env.js'
+import { createHttpError } from '../utils/httpError.js'
 
 function getExtension(filename = '', mimetype = '') {
   const ext = path.extname(filename).toLowerCase()
@@ -63,6 +65,7 @@ function uploadBuffer(buffer, options = {}) {
       {
         folder: options.folder,
         resource_type: options.resource_type || 'image',
+        ...(options.upload_preset ? { upload_preset: options.upload_preset } : {}),
       },
       (error, result) => {
         if (error) return reject(error)
@@ -75,7 +78,7 @@ function uploadBuffer(buffer, options = {}) {
   })
 }
 
-async function uploadWithCloudinary(file, options = {}) {
+async function uploadWithCloudinarySigned(file, options = {}) {
   const result = await uploadBuffer(file.buffer, {
     folder: options.folder,
     resource_type: 'image',
@@ -92,21 +95,72 @@ async function uploadWithCloudinary(file, options = {}) {
   }
 }
 
+async function uploadWithCloudinaryUnsigned(file, options = {}) {
+  const uploadPreset = options.uploadPreset || options.upload_preset || config.cloudinary.uploadPreset || process.env.CLOUDINARY_UPLOAD_PRESET || ''
+  if (!uploadPreset) {
+    throw createHttpError(500, 'Cloudinary upload preset is not configured')
+  }
+
+  const result = await uploadBuffer(file.buffer, {
+    folder: options.folder,
+    resource_type: 'image',
+    upload_preset: uploadPreset,
+  })
+
+  return {
+    secure_url: result.secure_url,
+    public_id: result.public_id,
+    width: result.width,
+    height: result.height,
+    resource_type: result.resource_type,
+    format: result.format,
+    provider: 'cloudinary',
+  }
+}
+
+function getCloudinaryUploadPreset(options = {}) {
+  return options.uploadPreset || options.upload_preset || config.cloudinary.uploadPreset || process.env.CLOUDINARY_UPLOAD_PRESET || ''
+}
+
 export async function uploadImage(file, options = {}) {
   const uploadFile = toUploadFile(file)
   if (!uploadFile?.buffer) {
-    const error = new Error('Image file is required')
-    error.status = 400
-    throw error
+    throw createHttpError(400, 'Image file is required')
   }
+
+  const uploadPreset = getCloudinaryUploadPreset(options)
 
   if (isCloudinaryConfigured()) {
     try {
-      return await uploadWithCloudinary(uploadFile, options)
+      const hasSignedCredentials = Boolean(config.cloudinary.apiKey && config.cloudinary.apiSecret)
+
+      if (hasSignedCredentials) {
+        return await uploadWithCloudinarySigned(uploadFile, options)
+      }
+
+      return await uploadWithCloudinaryUnsigned(uploadFile, { ...options, uploadPreset })
     } catch (error) {
+      if (uploadPreset) {
+        try {
+          return await uploadWithCloudinaryUnsigned(uploadFile, { ...options, uploadPreset })
+        } catch (unsignedError) {
+          if (process.env.NODE_ENV === 'production') {
+            throw createHttpError(502, `Cloudinary upload failed: ${unsignedError?.message || error?.message || 'Unknown error'}`)
+          }
+        }
+      }
+
+      if (process.env.NODE_ENV === 'production') {
+        throw createHttpError(502, `Cloudinary upload failed: ${error?.message || 'Unknown error'}`)
+      }
+
       console.warn('Cloudinary upload failed, using local fallback:', error?.message || error)
       return uploadToLocal(uploadFile, options)
     }
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    throw createHttpError(500, 'Cloudinary is not configured on the server')
   }
 
   return uploadToLocal(uploadFile, options)
@@ -120,5 +174,3 @@ export async function uploadImages(files, options = {}) {
   const uploads = await Promise.all(files.map((file, index) => uploadImage(toUploadFile(file, index), options)))
   return uploads
 }
-
-
