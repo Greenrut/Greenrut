@@ -1,8 +1,10 @@
-import { Router } from 'express'
+﻿import { Router } from 'express'
 import { getHealth } from '../controllers/healthController.js'
 import { changePassword, getAuthUser, loginAdmin, loginUser, signupAdmin, signupUser } from '../controllers/authController.js'
 import { listProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../controllers/productController.js'
 import { listPosts, getPost, createPost, updatePost, deletePost } from '../controllers/postController.js'
+import { listResearchItems, createAdminResearchItem, deleteAdminResearchItem, listAdminResearchItems, updateAdminResearchItem } from '../controllers/researchController.js'
+import { listLibraryItems, createAdminLibraryItem, deleteAdminLibraryItem, listAdminLibraryItems, updateAdminLibraryItem } from '../controllers/libraryController.js'
 import { listUsers } from '../controllers/userController.js'
 import { listCategories } from '../controllers/categoryController.js'
 import { listTags } from '../controllers/tagController.js'
@@ -63,6 +65,10 @@ router.route('/admin/products').get(requireAuth, requireRole('Administrator'), l
 router.route('/admin/products/:id').get(requireAuth, requireRole('Administrator'), getAdminProduct).put(requireAuth, requireRole('Administrator'), updateAdminProduct).delete(requireAuth, requireRole('Administrator'), deleteAdminProduct)
 router.route('/admin/posts').get(requireAuth, requireRole('Administrator'), listAdminPosts).post(requireAuth, requireRole('Administrator'), createAdminPost)
 router.route('/admin/posts/:id').get(requireAuth, requireRole('Administrator'), getAdminPost).put(requireAuth, requireRole('Administrator'), updateAdminPost).delete(requireAuth, requireRole('Administrator'), deleteAdminPost)
+router.route('/admin/research-items').get(requireAuth, requireRole('Administrator'), listAdminResearchItems).post(requireAuth, requireRole('Administrator'), createAdminResearchItem)
+router.route('/admin/research-items/:id').put(requireAuth, requireRole('Administrator'), updateAdminResearchItem).delete(requireAuth, requireRole('Administrator'), deleteAdminResearchItem)
+router.route('/admin/library-items').get(requireAuth, requireRole('Administrator'), listAdminLibraryItems).post(requireAuth, requireRole('Administrator'), createAdminLibraryItem)
+router.route('/admin/library-items/:id').put(requireAuth, requireRole('Administrator'), updateAdminLibraryItem).delete(requireAuth, requireRole('Administrator'), deleteAdminLibraryItem)
 router.route('/admin/users').get(requireAuth, requireRole('Administrator'), listAdminUsers).post(requireAuth, requireRole('Administrator'), createAdminUser)
 router.route('/admin/users/:id').put(requireAuth, requireRole('Administrator'), updateAdminUser).delete(requireAuth, requireRole('Administrator'), deleteAdminUser)
 router.get('/admin/categories', requireAuth, requireRole('Administrator'), listAdminCategories)
@@ -71,10 +77,11 @@ router.get('/admin/tags', requireAuth, requireRole('Administrator'), listAdminTa
 router.route('/products').get(listProducts).post(requireAuth, requireRole('Administrator'), createProduct)
 router.get('/products/:id', getProduct)
 router.route('/products/:id').put(requireAuth, requireRole('Administrator'), updateProduct).delete(requireAuth, requireRole('Administrator'), deleteProduct)
-
 router.route('/posts').get(listPosts).post(requireAuth, requireRole('Administrator'), createPost)
 router.get('/posts/:id', getPost)
 router.route('/posts/:id').put(requireAuth, requireRole('Administrator'), updatePost).delete(requireAuth, requireRole('Administrator'), deletePost)
+router.get('/research-items', listResearchItems)
+router.get('/library-items', listLibraryItems)
 
 router.get('/users', requireAuth, requireRole('Administrator'), listUsers)
 router.get('/categories', listCategories)
