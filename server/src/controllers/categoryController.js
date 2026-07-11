@@ -8,4 +8,5 @@ export async function listCategories(_req, res, next) {
     ])
 
     const data = results
+      .filter((row) => row._id)
 }
