@@ -23,6 +23,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
       const response = await adminRequest('/admin/dashboard')
       setStats(response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0 })
       setProducts(response.products || [])
+      setRecentPosts(response.recentPosts || [])
 
     async function loadDashboard() {
       try {
