@@ -36,6 +36,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
   }, [])
 
   const handleDeleteProduct = async (id) => {
+    if (!id || !window.confirm('Delete this product?')) return
     }
 
     loadDashboard()
