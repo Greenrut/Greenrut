@@ -15,6 +15,7 @@ export function BadgeRow() {
         <p>Products Certified</p>
       </div>
       <div>
+        <span className="badge-row__icon"><BadgeIconVerified /></span>
         <p>Scientifically Verified</p>
       </div>
       <div>
