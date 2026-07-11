@@ -989,6 +989,7 @@
 }
 
 .badge-row__icon svg {
+  height: 32px;
   display: block;
 }
 
