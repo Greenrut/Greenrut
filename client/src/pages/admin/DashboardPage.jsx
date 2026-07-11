@@ -124,7 +124,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                 <span>{post.status === 'published' ? <AdminPill>Published</AdminPill> : <AdminPill tone="amber">Draft</AdminPill>}</span>
                 <span>{post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}</span>
                 <div className="admin-actions">
-                  <button type="button" aria-label="Edit">
                     <span className="admin-action-icon">âœŽ</span>
                   </button>
                   <button type="button" aria-label="Delete">
