@@ -226,7 +226,7 @@ export function ResearchPage({ onNavigate }) {
             {!loading && !error ? (
               <div className="pt-3">
                 <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-3">
-                  {researchItems.map((item) => (
+                  {researchItems.map(({ product, stage }) => (
                     <ResearchCard
                       key={item.id || item.slug || item.name}
                       product={item}
