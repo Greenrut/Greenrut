@@ -22,6 +22,10 @@ function BadgeIconVerified() {
     <svg viewBox="0 0 44 44" aria-hidden="true">
       <path
         d="M22 4c5 3 8.5 4 13 4 0 16-4.5 24-13 32C13.5 32 9 24 9 8c4.5 0 8-1 13-4Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
 export function BadgeRow() {
   return (
     <section className="badge-row">
