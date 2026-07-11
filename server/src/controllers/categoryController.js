@@ -7,4 +7,5 @@ export async function listCategories(_req, res, next) {
       { $sort: { _id: 1 } },
     ])
 
+    const data = results
 }
