@@ -20,7 +20,6 @@ export function BadgeRow() {
       </div>
       <div>
         <img src={development} alt="12 Years Of Research & Development" />
-        <p>12 Years Of Research & Development</p>
       </div>
       <div>
         <span className="badge-row__icon"><BadgeIconNigeria /></span>
