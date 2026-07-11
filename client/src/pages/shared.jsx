@@ -15,6 +15,7 @@ function BadgeIconCertified() {
       <path d="M16 27.5 14 40l8-4 8 4-2-12.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
     </svg>
   )
+}
 export function BadgeRow() {
   return (
     <section className="badge-row">
