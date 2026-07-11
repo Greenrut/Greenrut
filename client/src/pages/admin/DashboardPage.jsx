@@ -38,6 +38,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
   const handleDeleteProduct = async (id) => {
     if (!id || !window.confirm('Delete this product?')) return
     try {
+      await adminRequest(`/admin/products/${id}`, { method: 'DELETE' })
     }
   }
 
