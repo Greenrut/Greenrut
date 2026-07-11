@@ -207,7 +207,7 @@ export function ResearchPage({ onNavigate }) {
               <div className="ml-auto flex items-center gap-3 text-[11px] text-[#5a544c]">
                 <label className="flex items-center gap-1.5">
                   <span>View:</span>
-                  <select value="grid" readOnly className="h-[17px] w-[46px] border border-[#ece8df] bg-white px-1 text-[9px] text-[#5a544c]"><option value="grid">20</option></select>
+                  <select value="grid" readOnly className="h-[26px] w-[56px] border border-[#ece8df] bg-white px-1.5 text-[11px] text-[#5a544c]"><option value="grid">20</option></select>
                 </label>
                 <label className="flex items-center gap-1">
                   <span>Sort by:</span>
