@@ -31,6 +31,7 @@ function BadgeIconVerified() {
     </svg>
   )
 }
+
 function BadgeIconResearch() {
     <svg viewBox="0 0 44 44" aria-hidden="true">
     <svg viewBox="0 0 44 44" aria-hidden="true">
