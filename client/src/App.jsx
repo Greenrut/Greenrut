@@ -17,6 +17,7 @@ import {
   AdminLibraryPage,
   AdminUsersPage,
   AdminCategoriesPage,
+  AdminTagsPage,
   CartPage,
   ContactPage,
   HomePage,
