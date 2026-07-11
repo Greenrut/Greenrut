@@ -5,4 +5,5 @@ export async function listCategories(_req, res, next) {
     const results = await Product.aggregate([
       { $group: { _id: '$category', count: { $sum: 1 } } },
       { $sort: { _id: 1 } },
+    ])
 }
