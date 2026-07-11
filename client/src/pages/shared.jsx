@@ -1,4 +1,3 @@
-import verified from '../assets/verified.png'
 import development from '../assets/devloment.png'
 import nigeria from '../assets/nigeria.png'
 
