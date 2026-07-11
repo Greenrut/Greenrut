@@ -414,6 +414,7 @@
 
 .home-hero__art {
   position: relative;
+  height: clamp(240px, 34vw, 340px);
   overflow: hidden;
   border-radius: 28px;
   background: linear-gradient(180deg, #f8f8f4 0%, #ece8dd 100%);
