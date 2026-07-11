@@ -43,6 +43,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     loadDashboard()
     return () => {
       cancelled = true
+      setError(requestError.message || 'Failed to delete blog post')
     }
   }
 
