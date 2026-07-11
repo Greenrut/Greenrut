@@ -36,6 +36,7 @@ function BadgeIconResearch() {
   return (
     <svg viewBox="0 0 44 44" aria-hidden="true">
       <path d="M18 6h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M19 6v9.5L11.5 30a4 4 0 0 0 3.6 5.8h13.8a4 4 0 0 0 3.6-5.8L25 15.5V6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
     <svg viewBox="0 0 44 44" aria-hidden="true">
 
 export function BadgeRow() {
