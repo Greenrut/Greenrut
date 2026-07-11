@@ -125,6 +125,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                 <span>{post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}</span>
                 <div className="admin-actions">
                   <button type="button" aria-label="Edit" onClick={() => onNavigate('/admin/blog/new')}>
+                    <span className="admin-action-icon">edit</span>
                   </button>
                   <button type="button" aria-label="Delete">
                     <span className="admin-action-icon admin-action-icon--danger">ðŸ—‘</span>
