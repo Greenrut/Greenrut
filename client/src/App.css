@@ -1080,6 +1080,7 @@
   position: relative;
 }
 
+.blog-card__image::after {
 .blog-card__image--1 {
   background: linear-gradient(135deg, #c89d8e, #746057);
 }
