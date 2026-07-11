@@ -11,7 +11,6 @@ export function BadgeRow() {
   return (
     <section className="badge-row">
       <div>
-        <img src={certified} alt="Products Certified" />
         <p>Products Certified</p>
       </div>
       <div>
