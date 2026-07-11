@@ -86,6 +86,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                 <div className="admin-actions">
                   <button type="button" aria-label="Edit">
                     <span className="admin-action-icon">âœŽ</span>
+                  <button type="button" aria-label="Edit" onClick={() => onNavigate('/admin/products/new')}>
                   </button>
                   <button type="button" aria-label="Delete">
                     <span className="admin-action-icon admin-action-icon--danger">ðŸ—‘</span>
