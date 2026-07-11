@@ -1,4 +1,3 @@
-import development from '../assets/devloment.png'
 import nigeria from '../assets/nigeria.png'
 
 export function SectionTitle({ title, subtitle }) {
