@@ -24,6 +24,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
       setStats(response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0 })
       setProducts(response.products || [])
       setRecentPosts(response.recentPosts || [])
+    } catch (requestError) {
 
     async function loadDashboard() {
       try {
