@@ -35,7 +35,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     loadDashboard()
   }, [])
 
-        setProducts(response.products || [])
         setRecentPosts(response.recentPosts || [])
       } catch (requestError) {
         if (!cancelled) {
