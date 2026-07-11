@@ -28,6 +28,7 @@ function BadgeIconVerified() {
         strokeLinejoin="round"
       />
 function BadgeIconResearch() {
+    <svg viewBox="0 0 44 44" aria-hidden="true">
 
 export function BadgeRow() {
   return (
