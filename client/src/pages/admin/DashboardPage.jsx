@@ -43,6 +43,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
 
   const handleDeletePost = async (id) => {
     if (!id || !window.confirm('Delete this blog post?')) return
+    try {
       setError(requestError.message || 'Failed to delete blog post')
     }
   }
