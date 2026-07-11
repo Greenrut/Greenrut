@@ -29,6 +29,7 @@ function BadgeIconVerified() {
       />
       <path d="M15.5 22.5 20 27l9-11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  )
 function BadgeIconResearch() {
     <svg viewBox="0 0 44 44" aria-hidden="true">
     <svg viewBox="0 0 44 44" aria-hidden="true">
