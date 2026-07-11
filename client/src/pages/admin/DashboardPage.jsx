@@ -46,6 +46,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     try {
       await adminRequest(`/admin/posts/${id}`, { method: 'DELETE' })
       await loadDashboard()
+    } catch (requestError) {
       setError(requestError.message || 'Failed to delete blog post')
     }
   }
