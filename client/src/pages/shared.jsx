@@ -15,7 +15,6 @@ export function BadgeRow() {
         <p>Products Certified</p>
       </div>
       <div>
-        <img src={verified} alt="Scientifically Verified" />
         <p>Scientifically Verified</p>
       </div>
       <div>
