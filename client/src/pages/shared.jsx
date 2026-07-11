@@ -27,6 +27,7 @@ function BadgeIconVerified() {
         strokeWidth="2"
         strokeLinejoin="round"
       />
+
 export function BadgeRow() {
   return (
     <section className="badge-row">
