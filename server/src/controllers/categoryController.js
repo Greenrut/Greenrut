@@ -11,4 +11,5 @@ export async function listCategories(_req, res, next) {
       .filter((row) => row._id)
       .map((row) => ({ name: row._id, productCount: row.count }))
 
+    res.json({ ok: true, data })
 }
