@@ -35,7 +35,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     loadDashboard()
   }, [])
 
-        setStats(response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0 })
         setProducts(response.products || [])
         setRecentPosts(response.recentPosts || [])
       } catch (requestError) {
