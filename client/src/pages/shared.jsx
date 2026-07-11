@@ -20,6 +20,7 @@ function BadgeIconCertified() {
 function BadgeIconVerified() {
   return (
     <svg viewBox="0 0 44 44" aria-hidden="true">
+      <path
 export function BadgeRow() {
   return (
     <section className="badge-row">
