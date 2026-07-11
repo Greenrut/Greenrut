@@ -118,6 +118,7 @@ function App() {
   if (pathname === '/admin/library/new') page = <AdminLibraryPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/users') page = <AdminUsersPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/categories') page = <AdminCategoriesPage pathname={pathname} onNavigate={navigate} />
+  if (pathname === '/admin/tags') page = <AdminTagsPage pathname={pathname} onNavigate={navigate} />
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   }
 
