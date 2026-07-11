@@ -152,6 +152,7 @@ export function AdminShell({ pathname, onNavigate, children }) {
       !pathname.startsWith('/admin/library/new') &&
       !pathname.startsWith('/admin/users') &&
       !pathname.startsWith('/admin/categories') &&
+      !pathname.startsWith('/admin/tags') &&
 
   const isActive = (href) => pathname === href || (href === '/admin' && isDashboardPath)
 
