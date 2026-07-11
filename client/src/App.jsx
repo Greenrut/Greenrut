@@ -123,6 +123,7 @@ function App() {
   if (
     pathname.startsWith('/admin/') &&
     !pathname.startsWith('/admin/login') &&
+    !pathname.startsWith('/admin/products/new') &&
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   }
 
