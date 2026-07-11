@@ -14,4 +14,5 @@ export async function listCategories(_req, res, next) {
     res.json({ ok: true, data })
   } catch (error) {
     next(error)
+  }
 }
