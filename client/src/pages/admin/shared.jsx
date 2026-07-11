@@ -213,6 +213,7 @@ export function AdminShell({ pathname, onNavigate, children }) {
             <button type="button" className="admin-user-pill">
               <span className="admin-user-pill__avatar">A</span>
               <span>Admin</span>
+              <span className="admin-user-pill__caret">&#9662;</span>
             </button>
           </div>
         </header>
