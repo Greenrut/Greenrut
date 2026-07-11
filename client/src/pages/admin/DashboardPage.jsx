@@ -129,6 +129,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                   </button>
                   <button type="button" aria-label="Delete">
                     <span className="admin-action-icon admin-action-icon--danger">ðŸ—‘</span>
+                  <button type="button" aria-label="Delete" onClick={() => handleDeletePost(post.id)}>
                     <span className="admin-action-icon admin-action-icon--danger">del</span>
                   </button>
                 </div>
