@@ -163,6 +163,19 @@ export function ResearchPage({ onNavigate }) {
         </div>
       </div>
 
+      {selectedItem ? (
+        <div className="mx-auto mb-5 w-full max-w-[820px] border border-[#efefef] bg-white p-5">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">{selectedItem.phase || 'Research'}</p>
+          <h2 className="mt-2 font-serif text-[22px] text-[#2e2a26]">{selectedItem.title || selectedItem.name}</h2>
+          <p className="mt-3 text-[13px] leading-6 text-[#4a453f]">
+            {selectedItem.content || selectedItem.excerpt || 'No further details have been published for this research item yet.'}
+          </p>
+          <button type="button" className="mt-4 text-[11px] font-semibold text-[#1f1c19] underline" onClick={() => onNavigate?.('/research')}>
+            BACK TO RESEARCH
+          </button>
+        </div>
+      ) : null}
+
       <div className="mx-auto w-full max-w-[820px]">
         <div className="grid gap-[16px] sm:grid-cols-[112px_minmax(0,1fr)] sm:items-start">
           <aside className="w-full border border-[#efefef] bg-white">
