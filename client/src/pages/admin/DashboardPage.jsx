@@ -27,6 +27,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     } catch (requestError) {
       setError(requestError.message || 'Failed to load dashboard')
     } finally {
+      setLoading(false)
 
     async function loadDashboard() {
       try {
