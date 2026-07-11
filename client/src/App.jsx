@@ -127,6 +127,7 @@ function App() {
     !pathname.startsWith('/admin/blog/new') &&
     !pathname.startsWith('/admin/research/new') &&
     !pathname.startsWith('/admin/library/new') &&
+    !pathname.startsWith('/admin/users') &&
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   }
 
