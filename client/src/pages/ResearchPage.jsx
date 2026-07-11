@@ -102,6 +102,7 @@ export function ResearchPage({ onNavigate }) {
   const [error, setError] = useState('')
   const [selectedPhase, setSelectedPhase] = useState('ongoing')
   const [sortBy, setSortBy] = useState('default')
+  const selectedId = new URLSearchParams(window.location.search).get('id')
 
   useEffect(() => {
     let cancelled = false
