@@ -1077,6 +1077,7 @@
   height: 200px;
   border: 1px solid #ece8df;
   background: linear-gradient(180deg, #fdfbf6, #ece6db);
+  position: relative;
 }
 
 .blog-card__image--1 {
