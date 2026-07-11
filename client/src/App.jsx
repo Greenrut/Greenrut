@@ -130,6 +130,7 @@ function App() {
     !pathname.startsWith('/admin/users') &&
     !pathname.startsWith('/admin/categories') &&
     !pathname.startsWith('/admin/tags') &&
+    !pathname.startsWith('/admin/settings')
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   }
 
