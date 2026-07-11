@@ -29,6 +29,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     } finally {
       setLoading(false)
     }
+  }
 
     async function loadDashboard() {
       try {
