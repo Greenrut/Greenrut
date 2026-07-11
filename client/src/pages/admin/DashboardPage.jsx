@@ -35,7 +35,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     loadDashboard()
   }, [])
 
-          setError(requestError.message || 'Failed to load dashboard')
         }
       } finally {
         if (!cancelled) {
