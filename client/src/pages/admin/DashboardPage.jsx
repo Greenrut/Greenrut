@@ -40,6 +40,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     try {
       await adminRequest(`/admin/products/${id}`, { method: 'DELETE' })
       await loadDashboard()
+    } catch (requestError) {
     }
   }
 
