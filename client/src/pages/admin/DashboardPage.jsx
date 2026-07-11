@@ -45,6 +45,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     if (!id || !window.confirm('Delete this blog post?')) return
     try {
       await adminRequest(`/admin/posts/${id}`, { method: 'DELETE' })
+      await loadDashboard()
       setError(requestError.message || 'Failed to delete blog post')
     }
   }
