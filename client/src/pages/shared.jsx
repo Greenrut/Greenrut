@@ -18,6 +18,7 @@ function BadgeIconCertified() {
 }
 
 function BadgeIconVerified() {
+  return (
 export function BadgeRow() {
   return (
     <section className="badge-row">
