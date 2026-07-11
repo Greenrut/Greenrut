@@ -16,6 +16,7 @@ function BadgeIconCertified() {
     </svg>
   )
 }
+
 export function BadgeRow() {
   return (
     <section className="badge-row">
