@@ -13,6 +13,7 @@ function BadgeIconCertified() {
       <circle cx="22" cy="18" r="12" fill="none" stroke="currentColor" strokeWidth="2" />
       <path d="M22 11.5l2.1 4.3 4.7.7-3.4 3.3.8 4.7-4.2-2.2-4.2 2.2.8-4.7-3.4-3.3 4.7-.7L22 11.5Z" fill="currentColor" />
       <path d="M16 27.5 14 40l8-4 8 4-2-12.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    </svg>
 export function BadgeRow() {
   return (
     <section className="badge-row">
