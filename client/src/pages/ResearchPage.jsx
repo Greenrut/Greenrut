@@ -177,7 +177,7 @@ export function ResearchPage({ onNavigate }) {
       ) : null}
 
       <div className="mx-auto w-full max-w-[820px]">
-        <div className="grid gap-[16px] sm:grid-cols-[112px_minmax(0,1fr)] sm:items-start">
+        <div className="grid gap-[16px] sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start">
           <aside className="w-full border border-[#efefef] bg-white">
             {researchPhases.map((phase, index) => (
               <button
