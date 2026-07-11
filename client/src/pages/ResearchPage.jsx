@@ -184,8 +184,10 @@ export function ResearchPage({ onNavigate }) {
                 key={phase.key}
                 type="button"
                 onClick={() => setSelectedPhase(phase.key)}
-                className={`block h-[28px] w-full border-b border-[#f2f2f2] px-3 text-left text-[10px] leading-[28px] text-[#3f3d39] last:border-b-0 ${
-                  selectedPhase === phase.key || (index === 0 && selectedPhase === 'ongoing') ? 'bg-[#d3d3d3]' : 'bg-white'
+                className={`block w-full border-b border-[#f2f2f2] px-4 py-3 text-left text-[13px] leading-5 transition-colors last:border-b-0 ${
+                  selectedPhase === phase.key || (index === 0 && selectedPhase === 'ongoing')
+                    ? 'border-l-[3px] border-l-[#63ac18] bg-[#f3f8ec] font-semibold text-[#2e2a26] pl-[13px]'
+                    : 'text-[#5a544c] hover:bg-[#faf9f6]'
                 }`}
               >
                 {phase.label}
