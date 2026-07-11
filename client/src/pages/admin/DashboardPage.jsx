@@ -84,7 +84,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                 <span>NGN {item.price?.toLocaleString?.() ?? item.price}</span>
                 <span>{item.status === 'published' ? <AdminPill>Published</AdminPill> : <AdminPill tone="amber">Draft</AdminPill>}</span>
                 <div className="admin-actions">
-                  <button type="button" aria-label="Edit">
                   <button type="button" aria-label="Edit" onClick={() => onNavigate('/admin/products/new')}>
                   </button>
                   <button type="button" aria-label="Delete">
