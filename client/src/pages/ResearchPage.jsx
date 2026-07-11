@@ -202,7 +202,7 @@ export function ResearchPage({ onNavigate }) {
                 <button type="button" className="grid h-6 w-6 place-items-center rounded hover:bg-[#f3f8ec]" aria-label="List view"><ListIcon /></button>
               </div>
 
-              <p className="ml-5 hidden text-[9px] leading-none text-[#59534b] sm:block">Showing 1 - 20 of {totalResults} results</p>
+              <p className="ml-3 hidden text-[11px] leading-none text-[#59534b] sm:block">Showing 1 - 20 of {totalResults} results</p>
 
               <div className="ml-auto flex items-center gap-2 text-[9px] text-[#5a544c]">
                 <label className="flex items-center gap-1">
