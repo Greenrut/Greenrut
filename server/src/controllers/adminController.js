@@ -338,6 +338,7 @@ export async function deleteAdminUser(req, res, next) {
 }
 
 export async function listAdminCategories(req, res, next) {
+  return listCategories(req, res, next)
 }
 
 export async function listAdminTags(_req, res) {
