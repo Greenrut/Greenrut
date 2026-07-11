@@ -45,6 +45,12 @@ function BadgeIconResearch() {
 function BadgeIconNigeria() {
   return (
     <svg viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="6" y="14" width="32" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
+      <rect x="6" y="14" width="10.6" height="16" fill="currentColor" />
+      <rect x="27.3" y="14" width="10.6" height="16" fill="currentColor" />
+    </svg>
+  )
+}
 
 export function BadgeRow() {
   return (
