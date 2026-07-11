@@ -19,7 +19,6 @@ export function BadgeRow() {
         <p>Scientifically Verified</p>
       </div>
       <div>
-        <img src={development} alt="12 Years Of Research & Development" />
       </div>
       <div>
         <span className="badge-row__icon"><BadgeIconNigeria /></span>
