@@ -8,6 +8,7 @@ export function SectionTitle({ title, subtitle }) {
 }
 
 function BadgeIconCertified() {
+  return (
 export function BadgeRow() {
   return (
     <section className="badge-row">
