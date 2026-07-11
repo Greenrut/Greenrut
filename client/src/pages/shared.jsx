@@ -27,6 +27,7 @@ function BadgeIconVerified() {
         strokeWidth="2"
         strokeLinejoin="round"
       />
+function BadgeIconResearch() {
 
 export function BadgeRow() {
   return (
