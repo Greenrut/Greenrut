@@ -137,6 +137,11 @@ export function ResearchPage({ onNavigate }) {
     return sorted.slice(0, 3)
   }, [products, selectedPhase, sortBy])
 
+  const selectedItem = useMemo(() => {
+    if (!selectedId) return null
+    return products.find((product) => String(product.id) === String(selectedId)) || null
+  }, [products, selectedId])
+
   const totalResults = Math.max(products.length || fallbackProducts.length, 30)
 
   return (
