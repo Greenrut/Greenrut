@@ -196,10 +196,10 @@ export function ResearchPage({ onNavigate }) {
           </aside>
 
           <div className="min-w-0">
-            <div className="flex h-[28px] items-center border border-[#efefef] bg-white px-2">
-              <div className="flex items-center gap-1.5">
-                <button type="button" className="grid h-4 w-4 place-items-center" aria-label="Grid view"><GridIcon /></button>
-                <button type="button" className="grid h-4 w-4 place-items-center" aria-label="List view"><ListIcon /></button>
+            <div className="flex flex-wrap gap-2 items-center border border-[#efefef] bg-white px-3 py-2.5">
+              <div className="flex items-center gap-2">
+                <button type="button" className="grid h-6 w-6 place-items-center rounded hover:bg-[#f3f8ec]" aria-label="Grid view"><GridIcon /></button>
+                <button type="button" className="grid h-6 w-6 place-items-center rounded hover:bg-[#f3f8ec]" aria-label="List view"><ListIcon /></button>
               </div>
 
               <p className="ml-5 hidden text-[9px] leading-none text-[#59534b] sm:block">Showing 1 - 20 of {totalResults} results</p>
