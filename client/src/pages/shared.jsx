@@ -11,6 +11,7 @@ export function BadgeRow() {
   return (
     <section className="badge-row">
       <div>
+        <span className="badge-row__icon"><BadgeIconCertified /></span>
         <p>Products Certified</p>
       </div>
       <div>
