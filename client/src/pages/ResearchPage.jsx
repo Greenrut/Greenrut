@@ -211,7 +211,7 @@ export function ResearchPage({ onNavigate }) {
                 </label>
                 <label className="flex items-center gap-1.5">
                   <span>Sort by:</span>
-                  <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="h-[17px] w-[109px] border border-[#ece8df] bg-white px-1 text-[9px] text-[#5a544c]">
+                  <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="h-[26px] w-[124px] border border-[#ece8df] bg-white px-1.5 text-[11px] text-[#5a544c]">
                     <option value="default">Default</option>
                     <option value="name-asc">Name A-Z</option>
                     <option value="name-desc">Name Z-A</option>
