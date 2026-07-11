@@ -31,7 +31,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     }
   }
 
-        const response = await adminRequest('/admin/dashboard')
         if (cancelled) return
 
         setStats(response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0 })
