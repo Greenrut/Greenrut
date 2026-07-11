@@ -988,6 +988,7 @@
   color: #63ac18;
 }
 
+.badge-row__icon svg {
   display: block;
 }
 
