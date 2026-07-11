@@ -20,6 +20,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
   const loadDashboard = async () => {
     try {
       setLoading(true)
+      const response = await adminRequest('/admin/dashboard')
       setStats(response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0 })
 
     async function loadDashboard() {
