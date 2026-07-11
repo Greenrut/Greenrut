@@ -40,6 +40,10 @@ function BadgeIconResearch() {
       <path d="M14.5 27h15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   )
+}
+
+function BadgeIconNigeria() {
+  return (
     <svg viewBox="0 0 44 44" aria-hidden="true">
 
 export function BadgeRow() {
