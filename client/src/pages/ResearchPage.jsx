@@ -228,7 +228,15 @@ export function ResearchPage({ onNavigate }) {
                 <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-3">
                   {researchItems.map(({ product, stage }) => (
                     <ResearchCard
-                      onOpen={() => onNavigate?.(item.linkedProductId ? `/product-details?id=${item.linkedProductId}` : '/research')}
+                      key={product.id || product.slug || product.name}
+                      product={product}
+                      onOpen={() =>
+                        onNavigate?.(
+                          product.linkedProductId
+                            ? `/product-details?id=${product.linkedProductId}`
+                            : `/research?id=${product.id || product.slug || ''}`
+                        )
+                      }
                     />
                   ))}
                 </div>
