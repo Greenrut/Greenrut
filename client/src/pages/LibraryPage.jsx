@@ -67,9 +67,11 @@ function LibraryCard({ item, onOpen }) {
         </div>
         <div className="p-4">
           <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">{item.type || item.section}</p>
-          <h3 className="mt-2 text-[14px] font-medium text-[#2e2a26]">{item.title}</h3>
-          <p className="mt-2 text-[12px] leading-6 text-[#645f59]">{item.excerpt}</p>
-          <span className="mt-3 inline-block text-[11px] font-semibold text-[#1f1c19]">Open resource</span>
+          <h3 className="mt-2 text-[15px] font-medium text-[#2e2a26]">{item.title}</h3>
+          <p className="mt-2 text-[13px] leading-6 text-[#645f59]">{item.excerpt}</p>
+          <span className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-[#1f1c19]">
+            Open resource <span aria-hidden="true">&rarr;</span>
+          </span>
         </div>
       </article>
     </button>
@@ -81,6 +83,7 @@ export function LibraryPage({ onNavigate }) {
   const [activeSection, setActiveSection] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const selectedId = new URLSearchParams(window.location.search).get('id')
 
   useEffect(() => {
     let cancelled = false
@@ -119,6 +122,11 @@ export function LibraryPage({ onNavigate }) {
 
   const filteredResources = useMemo(() => libraryItems.filter((item) => item.section === activeSection), [libraryItems, activeSection])
 
+  const selectedItem = useMemo(() => {
+    if (!selectedId) return null
+    return libraryItems.find((item) => String(item.id) === String(selectedId)) || null
+  }, [libraryItems, selectedId])
+
   return (
     <section className="page-shell py-6 xs:py-8 lg:py-10">
       <div className="mb-5 overflow-hidden border border-[#efefef] bg-white">
@@ -138,14 +146,29 @@ export function LibraryPage({ onNavigate }) {
         </div>
       </div>
 
-      <div className="mx-auto grid w-full max-w-[980px] gap-5 lg:grid-cols-[180px_minmax(0,1fr)]">
-        <aside className="border border-[#efefef] bg-white">
+      {selectedItem ? (
+        <div className="mx-auto mb-5 w-full max-w-[980px] border border-[#efefef] bg-white p-5">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">{selectedItem.type || selectedItem.section}</p>
+          <h2 className="mt-2 font-serif text-[22px] text-[#2e2a26]">{selectedItem.title}</h2>
+          <p className="mt-3 text-[13px] leading-6 text-[#4a453f]">{selectedItem.excerpt || 'No further details have been published for this resource yet.'}</p>
+          <button type="button" className="mt-4 text-[11px] font-semibold text-[#1f1c19] underline" onClick={() => onNavigate?.('/library')}>
+            BACK TO LIBRARY
+          </button>
+        </div>
+      ) : null}
+
+      <div className="mx-auto grid w-full max-w-[980px] gap-5 lg:grid-cols-[200px_minmax(0,1fr)]">
+        <aside className="h-fit border border-[#efefef] bg-white">
           {sections.map((section) => (
             <button
               key={section}
               type="button"
               onClick={() => setActiveSection(section)}
-              className={`block h-[34px] w-full border-b border-[#f2f2f2] px-3 text-left text-[11px] leading-[34px] text-[#3f3d39] last:border-b-0 ${activeSection === section ? 'bg-[#d3d3d3]' : 'bg-white'}`}
+              className={`block w-full border-b border-[#f2f2f2] px-4 py-3 text-left text-[13px] leading-5 transition-colors last:border-b-0 ${
+                activeSection === section
+                  ? 'border-l-[3px] border-l-[#63ac18] bg-[#f3f8ec] font-semibold text-[#2e2a26] pl-[13px]'
+                  : 'text-[#5a544c] hover:bg-[#faf9f6]'
+              }`}
             >
               {section}
             </button>
@@ -153,8 +176,8 @@ export function LibraryPage({ onNavigate }) {
         </aside>
 
         <div>
-          <div className="mb-3 flex items-center justify-between border border-[#efefef] bg-white px-3 py-2 text-[10px] text-[#5a544c]">
-            <span>{activeSection || sections[0]}</span>
+          <div className="mb-3 flex items-center justify-between border border-[#efefef] bg-white px-4 py-3 text-[13px] text-[#5a544c]">
+            <span className="font-semibold text-[#2e2a26]">{activeSection || sections[0]}</span>
             <span>{filteredResources.length} resources</span>
           </div>
 
@@ -167,7 +190,7 @@ export function LibraryPage({ onNavigate }) {
                 <LibraryCard
                   key={item.id || item.slug || item.title}
                   item={item}
-                  onOpen={() => onNavigate?.(item.linkedProductId ? `/product-details?id=${item.linkedProductId}` : '/research')}
+                  onOpen={() => onNavigate?.(item.linkedProductId ? `/product-details?id=${item.linkedProductId}` : `/library?id=${item.id}`)}
                 />
               ))}
             </div>

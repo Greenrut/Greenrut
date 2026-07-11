@@ -14,36 +14,69 @@ export function AdminUsersPage({ pathname, onNavigate }) {
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'Viewer' })
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
+  const [editingId, setEditingId] = useState(null)
+  const [editForm, setEditForm] = useState({ name: '', email: '', role: 'Viewer' })
+
+  const loadUsers = async () => {
+    try {
+      setLoading(true)
+      const response = await adminRequest('/admin/users')
+      setUsers(response.data || [])
+    } catch (requestError) {
+      setError(requestError.message || 'Failed to load users')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    let cancelled = false
-
-    async function loadUsers() {
-      try {
-        setLoading(true)
-        const response = await adminRequest('/admin/users')
-        if (!cancelled) {
-          setUsers(response.data || [])
-        }
-      } catch (requestError) {
-        if (!cancelled) {
-          setError(requestError.message || 'Failed to load users')
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false)
-        }
-      }
-    }
-
     loadUsers()
-    return () => {
-      cancelled = true
-    }
   }, [])
 
   const updateField = (field) => (event) => {
     setForm((current) => ({ ...current, [field]: event.target.value }))
+  }
+
+  const startEditUser = (user) => {
+    setEditingId(user.id)
+    setEditForm({ name: user.name || '', email: user.email || '', role: user.role || 'Viewer' })
+  }
+
+  const cancelEditUser = () => {
+    setEditingId(null)
+  }
+
+  const updateEditField = (field) => (event) => {
+    setEditForm((current) => ({ ...current, [field]: event.target.value }))
+  }
+
+  const handleSaveUser = async (id) => {
+    setSaving(true)
+    setMessage('')
+    setError('')
+    try {
+      await adminRequest(`/admin/users/${id}`, { method: 'PUT', body: editForm })
+      setMessage('User updated.')
+      setEditingId(null)
+      await loadUsers()
+    } catch (requestError) {
+      setError(requestError.message || 'Failed to update user')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDeleteUser = async (id) => {
+    if (!window.confirm('Delete this user?')) return
+    setMessage('')
+    setError('')
+    try {
+      await adminRequest(`/admin/users/${id}`, { method: 'DELETE' })
+      setMessage('User deleted.')
+      await loadUsers()
+    } catch (requestError) {
+      setError(requestError.message || 'Failed to delete user')
+    }
   }
 
   const handleCreateUser = async (event) => {
@@ -121,10 +154,10 @@ export function AdminUsersPage({ pathname, onNavigate }) {
         <div className="admin-toolbar">
           <div className="admin-search">
             <input type="search" placeholder="Search users..." />
-            <span>âŒ•</span>
+            <span aria-hidden="true">Search</span>
           </div>
           <button type="button" className="admin-secondary-button">
-            Filter <span className="admin-inline-icon">âŒ„</span>
+            Filter <span className="admin-inline-icon">v</span>
           </button>
         </div>
 
@@ -144,38 +177,68 @@ export function AdminUsersPage({ pathname, onNavigate }) {
           <div className="admin-table__body">
             {users.map((user) => (
               <div key={user.id || user.email} className="admin-table__row admin-table__row--users">
-                <div className="admin-user-cell">
-                  <Avatar label={user.name.split(' ').map((part) => part[0]).join('').slice(0, 2)} />
-                  <div>
-                    <strong>{user.name}</strong>
-                    {user.email === 'admin@shop.com' || user.role === 'Administrator' ? <span className="admin-self-tag">You</span> : null}
-                  </div>
-                </div>
-                <span>{user.email}</span>
-                <span>
-                  <AdminPill tone={user.role === 'Administrator' ? 'purple' : user.role === 'Editor' ? 'blue' : 'amber'}>{user.role}</AdminPill>
-                </span>
-                <span>
-                  <AdminPill tone={user.status === 'active' ? 'green' : 'gray'}>{user.status}</AdminPill>
-                </span>
-                <span>{user.lastActive ? new Date(user.lastActive).toLocaleString() : ''}</span>
-                <div className="admin-actions">
-                  <button type="button" aria-label="Edit">
-                    <span className="admin-action-icon">âœŽ</span>
-                  </button>
-                  <button type="button" aria-label="Delete">
-                    <span className="admin-action-icon admin-action-icon--danger">ðŸ—‘</span>
-                  </button>
-                </div>
+                {editingId === user.id ? (
+                  <>
+                    <div className="admin-user-cell">
+                      <Avatar label={user.name.split(' ').map((part) => part[0]).join('').slice(0, 2)} />
+                      <input value={editForm.name} onChange={updateEditField('name')} type="text" placeholder="Name" />
+                    </div>
+                    <input value={editForm.email} onChange={updateEditField('email')} type="email" placeholder="Email" />
+                    <select value={editForm.role} onChange={updateEditField('role')}>
+                      <option value="Viewer">Viewer</option>
+                      <option value="Author">Author</option>
+                      <option value="Editor">Editor</option>
+                      <option value="Administrator">Administrator</option>
+                    </select>
+                    <span>
+                      <AdminPill tone={user.status === 'active' ? 'green' : 'gray'}>{user.status}</AdminPill>
+                    </span>
+                    <span>{user.lastActive ? new Date(user.lastActive).toLocaleString() : ''}</span>
+                    <div className="admin-actions">
+                      <button type="button" onClick={() => handleSaveUser(user.id)} disabled={saving}>
+                        <span className="admin-action-icon">save</span>
+                      </button>
+                      <button type="button" onClick={cancelEditUser}>
+                        <span className="admin-action-icon">cancel</span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="admin-user-cell">
+                      <Avatar label={user.name.split(' ').map((part) => part[0]).join('').slice(0, 2)} />
+                      <div>
+                        <strong>{user.name}</strong>
+                        {user.email === 'admin@shop.com' || user.role === 'Administrator' ? <span className="admin-self-tag">You</span> : null}
+                      </div>
+                    </div>
+                    <span>{user.email}</span>
+                    <span>
+                      <AdminPill tone={user.role === 'Administrator' ? 'purple' : user.role === 'Editor' ? 'blue' : 'amber'}>{user.role}</AdminPill>
+                    </span>
+                    <span>
+                      <AdminPill tone={user.status === 'active' ? 'green' : 'gray'}>{user.status}</AdminPill>
+                    </span>
+                    <span>{user.lastActive ? new Date(user.lastActive).toLocaleString() : ''}</span>
+                    <div className="admin-actions">
+                      <button type="button" aria-label="Edit" onClick={() => startEditUser(user)}>
+                        <span className="admin-action-icon">edit</span>
+                      </button>
+                      <button type="button" aria-label="Delete" onClick={() => handleDeleteUser(user.id)}>
+                        <span className="admin-action-icon admin-action-icon--danger">del</span>
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
           <div className="admin-table__footer">
             <span>Showing {users.length} users</span>
             <div className="admin-pagination">
-              <button type="button">â€¹</button>
+              <button type="button">&lt;</button>
               <button type="button" className="is-active">1</button>
-              <button type="button">â€º</button>
+              <button type="button">&gt;</button>
             </div>
           </div>
         </div>

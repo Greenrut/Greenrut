@@ -17,34 +17,43 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const loadDashboard = async () => {
+    try {
+      setLoading(true)
+      const response = await adminRequest('/admin/dashboard')
+      setStats(response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0 })
+      setProducts(response.products || [])
+      setRecentPosts(response.recentPosts || [])
+    } catch (requestError) {
+      setError(requestError.message || 'Failed to load dashboard')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    let cancelled = false
-
-    async function loadDashboard() {
-      try {
-        setLoading(true)
-        const response = await adminRequest('/admin/dashboard')
-        if (cancelled) return
-
-        setStats(response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0 })
-        setProducts(response.products || [])
-        setRecentPosts(response.recentPosts || [])
-      } catch (requestError) {
-        if (!cancelled) {
-          setError(requestError.message || 'Failed to load dashboard')
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false)
-        }
-      }
-    }
-
     loadDashboard()
-    return () => {
-      cancelled = true
-    }
   }, [])
+
+  const handleDeleteProduct = async (id) => {
+    if (!id || !window.confirm('Delete this product?')) return
+    try {
+      await adminRequest(`/admin/products/${id}`, { method: 'DELETE' })
+      await loadDashboard()
+    } catch (requestError) {
+      setError(requestError.message || 'Failed to delete product')
+    }
+  }
+
+  const handleDeletePost = async (id) => {
+    if (!id || !window.confirm('Delete this blog post?')) return
+    try {
+      await adminRequest(`/admin/posts/${id}`, { method: 'DELETE' })
+      await loadDashboard()
+    } catch (requestError) {
+      setError(requestError.message || 'Failed to delete blog post')
+    }
+  }
 
   return (
     <AdminShell pathname={pathname} onNavigate={onNavigate}>
@@ -84,11 +93,11 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                 <span>NGN {item.price?.toLocaleString?.() ?? item.price}</span>
                 <span>{item.status === 'published' ? <AdminPill>Published</AdminPill> : <AdminPill tone="amber">Draft</AdminPill>}</span>
                 <div className="admin-actions">
-                  <button type="button" aria-label="Edit">
-                    <span className="admin-action-icon">âœŽ</span>
+                  <button type="button" aria-label="Edit" onClick={() => onNavigate('/admin/products/new')}>
+                    <span className="admin-action-icon">edit</span>
                   </button>
-                  <button type="button" aria-label="Delete">
-                    <span className="admin-action-icon admin-action-icon--danger">ðŸ—‘</span>
+                  <button type="button" aria-label="Delete" onClick={() => handleDeleteProduct(item.id)}>
+                    <span className="admin-action-icon admin-action-icon--danger">del</span>
                   </button>
                 </div>
               </div>
@@ -124,11 +133,11 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                 <span>{post.status === 'published' ? <AdminPill>Published</AdminPill> : <AdminPill tone="amber">Draft</AdminPill>}</span>
                 <span>{post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}</span>
                 <div className="admin-actions">
-                  <button type="button" aria-label="Edit">
-                    <span className="admin-action-icon">âœŽ</span>
+                  <button type="button" aria-label="Edit" onClick={() => onNavigate('/admin/blog/new')}>
+                    <span className="admin-action-icon">edit</span>
                   </button>
-                  <button type="button" aria-label="Delete">
-                    <span className="admin-action-icon admin-action-icon--danger">ðŸ—‘</span>
+                  <button type="button" aria-label="Delete" onClick={() => handleDeletePost(post.id)}>
+                    <span className="admin-action-icon admin-action-icon--danger">del</span>
                   </button>
                 </div>
               </div>

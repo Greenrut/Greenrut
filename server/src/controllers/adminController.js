@@ -2,7 +2,8 @@ import { Account } from '../models/Account.js'
 import { Post } from '../models/Post.js'
 import { Product } from '../models/Product.js'
 import { User } from '../models/User.js'
-import { categories, tags } from '../data/mockDb.js'
+import { tags } from '../data/mockDb.js'
+import { listCategories } from './categoryController.js'
 import { createHttpError } from '../utils/httpError.js'
 import { hashPassword } from '../utils/auth.js'
 import { uploadImage, uploadImages } from '../services/uploadService.js'
@@ -336,8 +337,8 @@ export async function deleteAdminUser(req, res, next) {
   }
 }
 
-export async function listAdminCategories(_req, res) {
-  res.json({ ok: true, data: categories })
+export async function listAdminCategories(req, res, next) {
+  return listCategories(req, res, next)
 }
 
 export async function listAdminTags(_req, res) {

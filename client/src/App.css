@@ -414,7 +414,7 @@
 
 .home-hero__art {
   position: relative;
-  min-height: clamp(240px, 34vw, 340px);
+  height: clamp(240px, 34vw, 340px);
   overflow: hidden;
   border-radius: 28px;
   background: linear-gradient(180deg, #f8f8f4 0%, #ece8dd 100%);
@@ -422,16 +422,13 @@
 }
 
 .home-hero__art img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
-}
-.home-hero__art img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
+  object-position: center;
   transition: opacity 240ms ease, transform 240ms ease;
 }
 
@@ -983,10 +980,17 @@
   text-align: center;
 }
 
-.badge-row img {
+.badge-row__icon {
   width: 44px;
   height: 44px;
-  object-fit: contain;
+  display: grid;
+  place-items: center;
+  color: #63ac18;
+}
+
+.badge-row__icon svg {
+  width: 32px;
+  height: 32px;
   display: block;
 }
 
@@ -1073,6 +1077,19 @@
   height: 200px;
   border: 1px solid #ece8df;
   background: linear-gradient(180deg, #fdfbf6, #ece6db);
+  position: relative;
+}
+
+.blog-card__image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.75);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c5 3 8.5 4 10 4 0 12-4 18-10 22C6 24 2 18 2 6c1.5 0 5-1 10-4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c5 3 8.5 4 10 4 0 12-4 18-10 22C6 24 2 18 2 6c1.5 0 5-1 10-4Z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .blog-card__image--1 {

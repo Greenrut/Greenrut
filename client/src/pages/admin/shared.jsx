@@ -150,7 +150,10 @@ export function AdminShell({ pathname, onNavigate, children }) {
       !pathname.startsWith('/admin/blog/new') &&
       !pathname.startsWith('/admin/research/new') &&
       !pathname.startsWith('/admin/library/new') &&
-      !pathname.startsWith('/admin/users'))
+      !pathname.startsWith('/admin/users') &&
+      !pathname.startsWith('/admin/categories') &&
+      !pathname.startsWith('/admin/tags') &&
+      !pathname.startsWith('/admin/settings'))
 
   const isActive = (href) => pathname === href || (href === '/admin' && isDashboardPath)
 
@@ -210,7 +213,7 @@ export function AdminShell({ pathname, onNavigate, children }) {
             <button type="button" className="admin-user-pill">
               <span className="admin-user-pill__avatar">A</span>
               <span>Admin</span>
-              <span className="admin-user-pill__caret">âŒ„</span>
+              <span className="admin-user-pill__caret">&#9662;</span>
             </button>
           </div>
         </header>
