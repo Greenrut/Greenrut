@@ -44,7 +44,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     return () => {
       cancelled = true
     }
-  }, [])
 
   return (
     <AdminShell pathname={pathname} onNavigate={onNavigate}>
