@@ -23,7 +23,6 @@ export function BadgeRow() {
         <p>12 Years Of Research & Development</p>
       </div>
       <div>
-        <img src={nigeria} alt="Made In Nigeria" />
         <p>Made In Nigeria</p>
       </div>
     </section>
