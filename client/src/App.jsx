@@ -121,6 +121,7 @@ function App() {
   if (pathname === '/admin/tags') page = <AdminTagsPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/settings') page = <AdminSettingsPage pathname={pathname} onNavigate={navigate} />
   if (
+    pathname.startsWith('/admin/') &&
     !pathname.startsWith('/admin/login') &&
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   }
