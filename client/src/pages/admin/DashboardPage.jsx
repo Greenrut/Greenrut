@@ -31,7 +31,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     }
   }
 
-    async function loadDashboard() {
       try {
         setLoading(true)
         const response = await adminRequest('/admin/dashboard')
