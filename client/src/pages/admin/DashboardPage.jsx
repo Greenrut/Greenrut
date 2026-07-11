@@ -41,6 +41,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
       await adminRequest(`/admin/products/${id}`, { method: 'DELETE' })
       await loadDashboard()
     } catch (requestError) {
+      setError(requestError.message || 'Failed to delete product')
     }
   }
 
