@@ -127,7 +127,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                   <button type="button" aria-label="Edit" onClick={() => onNavigate('/admin/blog/new')}>
                     <span className="admin-action-icon">edit</span>
                   </button>
-                  <button type="button" aria-label="Delete">
                     <span className="admin-action-icon admin-action-icon--danger">ðŸ—‘</span>
                   <button type="button" aria-label="Delete" onClick={() => handleDeletePost(post.id)}>
                     <span className="admin-action-icon admin-action-icon--danger">del</span>
