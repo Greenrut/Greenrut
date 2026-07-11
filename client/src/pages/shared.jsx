@@ -11,6 +11,7 @@ function BadgeIconCertified() {
   return (
     <svg viewBox="0 0 44 44" aria-hidden="true">
       <circle cx="22" cy="18" r="12" fill="none" stroke="currentColor" strokeWidth="2" />
+      <path d="M22 11.5l2.1 4.3 4.7.7-3.4 3.3.8 4.7-4.2-2.2-4.2 2.2.8-4.7-3.4-3.3 4.7-.7L22 11.5Z" fill="currentColor" />
 export function BadgeRow() {
   return (
     <section className="badge-row">
