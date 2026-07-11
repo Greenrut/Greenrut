@@ -39,6 +39,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     if (!id || !window.confirm('Delete this product?')) return
     try {
       await adminRequest(`/admin/products/${id}`, { method: 'DELETE' })
+      await loadDashboard()
     }
   }
 
