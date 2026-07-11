@@ -10,6 +10,7 @@ export function SectionTitle({ title, subtitle }) {
 function BadgeIconCertified() {
   return (
     <svg viewBox="0 0 44 44" aria-hidden="true">
+      <circle cx="22" cy="18" r="12" fill="none" stroke="currentColor" strokeWidth="2" />
 export function BadgeRow() {
   return (
     <section className="badge-row">
