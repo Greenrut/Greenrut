@@ -204,8 +204,8 @@ export function ResearchPage({ onNavigate }) {
 
               <p className="ml-3 hidden text-[11px] leading-none text-[#59534b] sm:block">Showing 1 - 20 of {totalResults} results</p>
 
-              <div className="ml-auto flex items-center gap-2 text-[9px] text-[#5a544c]">
-                <label className="flex items-center gap-1">
+              <div className="ml-auto flex items-center gap-3 text-[11px] text-[#5a544c]">
+                <label className="flex items-center gap-1.5">
                   <span>View:</span>
                   <select value="grid" readOnly className="h-[17px] w-[46px] border border-[#ece8df] bg-white px-1 text-[9px] text-[#5a544c]"><option value="grid">20</option></select>
                 </label>
