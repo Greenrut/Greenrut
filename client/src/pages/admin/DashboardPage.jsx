@@ -88,7 +88,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                     <span className="admin-action-icon">edit</span>
                   </button>
                   <button type="button" aria-label="Delete">
-                    <span className="admin-action-icon admin-action-icon--danger">ðŸ—‘</span>
                   </button>
                 </div>
               </div>
