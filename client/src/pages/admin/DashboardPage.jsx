@@ -35,7 +35,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     loadDashboard()
   }, [])
 
-          setLoading(false)
         }
       }
     }
