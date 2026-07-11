@@ -25,6 +25,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
       setProducts(response.products || [])
       setRecentPosts(response.recentPosts || [])
     } catch (requestError) {
+      setError(requestError.message || 'Failed to load dashboard')
 
     async function loadDashboard() {
       try {
