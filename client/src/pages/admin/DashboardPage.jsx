@@ -88,6 +88,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                     <span className="admin-action-icon">edit</span>
                   </button>
                   <button type="button" aria-label="Delete" onClick={() => handleDeleteProduct(item.id)}>
+                    <span className="admin-action-icon admin-action-icon--danger">del</span>
                   </button>
                 </div>
               </div>
