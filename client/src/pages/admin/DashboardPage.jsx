@@ -19,6 +19,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
 
   const loadDashboard = async () => {
     try {
+      setLoading(true)
 
     async function loadDashboard() {
       try {
