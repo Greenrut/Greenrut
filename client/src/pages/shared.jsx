@@ -39,6 +39,7 @@ function BadgeIconResearch() {
       <path d="M19 6v9.5L11.5 30a4 4 0 0 0 3.6 5.8h13.8a4 4 0 0 0 3.6-5.8L25 15.5V6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
       <path d="M14.5 27h15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
+  )
     <svg viewBox="0 0 44 44" aria-hidden="true">
 
 export function BadgeRow() {
