@@ -33,6 +33,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
 
   useEffect(() => {
     loadDashboard()
+  }, [])
 
         setStats(response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0 })
         setProducts(response.products || [])
