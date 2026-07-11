@@ -255,7 +255,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="site-footer__copy">
-        Â© 2026 Greenrut - All Rights Reserved
+        © 2026 Greenrut - All Rights Reserved
       </div>
     </footer>
   );

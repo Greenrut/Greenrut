@@ -88,8 +88,8 @@ function ResearchCard({ product, onOpen }) {
           )}
         </div>
         <div className="px-1 pt-3">
-          <h3 className="text-[12px] font-normal leading-4 text-[#5d5a56]">{product.name}</h3>
-          <p className="mt-1 text-[10px] font-semibold leading-4 text-[#1f1c19]">View Research</p>
+          <h3 className="text-[13px] font-normal leading-5 text-[#5d5a56]">{product.name}</h3>
+          <p className="mt-1 text-[11px] font-semibold leading-4 text-[#63ac18]">View Research</p>
         </div>
       </article>
     </button>
@@ -102,6 +102,7 @@ export function ResearchPage({ onNavigate }) {
   const [error, setError] = useState('')
   const [selectedPhase, setSelectedPhase] = useState('ongoing')
   const [sortBy, setSortBy] = useState('default')
+  const selectedId = new URLSearchParams(window.location.search).get('id')
 
   useEffect(() => {
     let cancelled = false
@@ -136,6 +137,11 @@ export function ResearchPage({ onNavigate }) {
     return sorted.slice(0, 3)
   }, [products, selectedPhase, sortBy])
 
+  const selectedItem = useMemo(() => {
+    if (!selectedId) return null
+    return products.find((product) => String(product.id) === String(selectedId)) || null
+  }, [products, selectedId])
+
   const totalResults = Math.max(products.length || fallbackProducts.length, 30)
 
   return (
@@ -157,16 +163,31 @@ export function ResearchPage({ onNavigate }) {
         </div>
       </div>
 
+      {selectedItem ? (
+        <div className="mx-auto mb-5 w-full max-w-[820px] border border-[#efefef] bg-white p-5">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">{selectedItem.phase || 'Research'}</p>
+          <h2 className="mt-2 font-serif text-[22px] text-[#2e2a26]">{selectedItem.title || selectedItem.name}</h2>
+          <p className="mt-3 text-[13px] leading-6 text-[#4a453f]">
+            {selectedItem.content || selectedItem.excerpt || 'No further details have been published for this research item yet.'}
+          </p>
+          <button type="button" className="mt-4 text-[11px] font-semibold text-[#1f1c19] underline" onClick={() => onNavigate?.('/research')}>
+            BACK TO RESEARCH
+          </button>
+        </div>
+      ) : null}
+
       <div className="mx-auto w-full max-w-[820px]">
-        <div className="grid gap-[16px] sm:grid-cols-[112px_minmax(0,1fr)] sm:items-start">
+        <div className="grid gap-[16px] sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start">
           <aside className="w-full border border-[#efefef] bg-white">
             {researchPhases.map((phase, index) => (
               <button
                 key={phase.key}
                 type="button"
                 onClick={() => setSelectedPhase(phase.key)}
-                className={`block h-[28px] w-full border-b border-[#f2f2f2] px-3 text-left text-[10px] leading-[28px] text-[#3f3d39] last:border-b-0 ${
-                  selectedPhase === phase.key || (index === 0 && selectedPhase === 'ongoing') ? 'bg-[#d3d3d3]' : 'bg-white'
+                className={`block w-full border-b border-[#f2f2f2] px-4 py-3 text-left text-[13px] leading-5 transition-colors last:border-b-0 ${
+                  selectedPhase === phase.key || (index === 0 && selectedPhase === 'ongoing')
+                    ? 'border-l-[3px] border-l-[#63ac18] bg-[#f3f8ec] font-semibold text-[#2e2a26] pl-[13px]'
+                    : 'text-[#5a544c] hover:bg-[#faf9f6]'
                 }`}
               >
                 {phase.label}
@@ -175,22 +196,22 @@ export function ResearchPage({ onNavigate }) {
           </aside>
 
           <div className="min-w-0">
-            <div className="flex h-[28px] items-center border border-[#efefef] bg-white px-2">
-              <div className="flex items-center gap-1.5">
-                <button type="button" className="grid h-4 w-4 place-items-center" aria-label="Grid view"><GridIcon /></button>
-                <button type="button" className="grid h-4 w-4 place-items-center" aria-label="List view"><ListIcon /></button>
+            <div className="flex flex-wrap gap-2 items-center border border-[#efefef] bg-white px-3 py-2.5">
+              <div className="flex items-center gap-2">
+                <button type="button" className="grid h-6 w-6 place-items-center rounded hover:bg-[#f3f8ec]" aria-label="Grid view"><GridIcon /></button>
+                <button type="button" className="grid h-6 w-6 place-items-center rounded hover:bg-[#f3f8ec]" aria-label="List view"><ListIcon /></button>
               </div>
 
-              <p className="ml-5 hidden text-[9px] leading-none text-[#59534b] sm:block">Showing 1 - 20 of {totalResults} results</p>
+              <p className="ml-3 hidden text-[11px] leading-none text-[#59534b] sm:block">Showing 1 - 20 of {totalResults} results</p>
 
-              <div className="ml-auto flex items-center gap-2 text-[9px] text-[#5a544c]">
-                <label className="flex items-center gap-1">
+              <div className="ml-auto flex items-center gap-3 text-[11px] text-[#5a544c]">
+                <label className="flex items-center gap-1.5">
                   <span>View:</span>
-                  <select value="grid" readOnly className="h-[17px] w-[46px] border border-[#ece8df] bg-white px-1 text-[9px] text-[#5a544c]"><option value="grid">20</option></select>
+                  <select value="grid" readOnly className="h-[26px] w-[56px] border border-[#ece8df] bg-white px-1.5 text-[11px] text-[#5a544c]"><option value="grid">20</option></select>
                 </label>
-                <label className="flex items-center gap-1">
+                <label className="flex items-center gap-1.5">
                   <span>Sort by:</span>
-                  <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="h-[17px] w-[109px] border border-[#ece8df] bg-white px-1 text-[9px] text-[#5a544c]">
+                  <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="h-[26px] w-[124px] border border-[#ece8df] bg-white px-1.5 text-[11px] text-[#5a544c]">
                     <option value="default">Default</option>
                     <option value="name-asc">Name A-Z</option>
                     <option value="name-desc">Name Z-A</option>
@@ -205,11 +226,17 @@ export function ResearchPage({ onNavigate }) {
             {!loading && !error ? (
               <div className="pt-3">
                 <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-3">
-                  {researchItems.map((item) => (
+                  {researchItems.map(({ product, stage }) => (
                     <ResearchCard
-                      key={item.id || item.slug || item.name}
-                      product={item}
-                      onOpen={() => onNavigate?.(item.linkedProductId ? `/product-details?id=${item.linkedProductId}` : '/research')}
+                      key={product.id || product.slug || product.name}
+                      product={product}
+                      onOpen={() =>
+                        onNavigate?.(
+                          product.linkedProductId
+                            ? `/product-details?id=${product.linkedProductId}`
+                            : `/research?id=${product.id || product.slug || ''}`
+                        )
+                      }
                     />
                   ))}
                 </div>
