@@ -1,4 +1,3 @@
-
 export function SectionTitle({ title, subtitle }) {
   return (
     <div className="section-title">
