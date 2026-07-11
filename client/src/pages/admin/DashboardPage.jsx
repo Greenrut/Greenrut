@@ -17,7 +17,6 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-    let cancelled = false
 
     async function loadDashboard() {
       try {
