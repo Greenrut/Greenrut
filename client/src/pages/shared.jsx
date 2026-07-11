@@ -1,4 +1,3 @@
-import nigeria from '../assets/nigeria.png'
 
 export function SectionTitle({ title, subtitle }) {
   return (
