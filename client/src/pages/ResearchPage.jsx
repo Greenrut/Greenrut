@@ -88,8 +88,8 @@ function ResearchCard({ product, onOpen }) {
           )}
         </div>
         <div className="px-1 pt-3">
-          <h3 className="text-[12px] font-normal leading-4 text-[#5d5a56]">{product.name}</h3>
-          <p className="mt-1 text-[10px] font-semibold leading-4 text-[#1f1c19]">View Research</p>
+          <h3 className="text-[13px] font-normal leading-5 text-[#5d5a56]">{product.name}</h3>
+          <p className="mt-1 text-[11px] font-semibold leading-4 text-[#63ac18]">View Research</p>
         </div>
       </article>
     </button>
