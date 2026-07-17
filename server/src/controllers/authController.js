@@ -1,4 +1,4 @@
-﻿import crypto from 'node:crypto'
+import crypto from 'node:crypto'
 import { User } from '../models/User.js'
 import { config } from '../config/env.js'
 import { seedAccountForUser } from './accountController.js'
@@ -66,12 +66,20 @@ async function sendPasswordResetEmail({ user, token, role }) {
     <p>This link expires in 1 hour.</p>
   `
 
-  await sendEmail({
-    to: user.email,
-    subject,
-    text,
-    html,
-  })
+  try {
+    await sendEmail({
+      to: user.email,
+      subject,
+      text,
+      html,
+    })
+  } catch (error) {
+    console.error('Password reset email failed:', {
+      email: user.email,
+      role,
+      message: error?.message,
+    })
+  }
 
   return resetLink
 }
