@@ -18,7 +18,7 @@ const defaultClientOrigins = [
 
 const configuredClientOrigins = parseOrigins(process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN)
 const clientOrigins = Array.from(new Set([...defaultClientOrigins, ...configuredClientOrigins]))
-const defaultSmtpRejectUnauthorized = String(process.env.NODE_ENV || 'development').toLowerCase() !== 'production'
+const defaultSmtpRejectUnauthorized = String(process.env.NODE_ENV || 'development').toLowerCase() === 'production'
 
 export const config = {
   port: Number(process.env.PORT || 4000),

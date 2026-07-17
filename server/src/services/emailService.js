@@ -35,13 +35,13 @@ export async function sendEmail({ to, subject, text, html }) {
     return { provider: 'console' }
   }
 
-    return transporter.sendMail({
-    from: config.smtp.from || config.smtp.user,
+  return transporter.sendMail({
+    from: config.smtp.user,
     envelope: {
       from: config.smtp.user,
       to,
     },
-    replyTo: config.smtp.user,
+    replyTo: config.smtp.from || config.smtp.user,
     to,
     subject,
     text,
