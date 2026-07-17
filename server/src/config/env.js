@@ -18,6 +18,7 @@ const defaultClientOrigins = [
 
 const configuredClientOrigins = parseOrigins(process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN)
 const clientOrigins = Array.from(new Set([...defaultClientOrigins, ...configuredClientOrigins]))
+const defaultSmtpRejectUnauthorized = String(process.env.NODE_ENV || 'development').toLowerCase() !== 'production'
 
 export const config = {
   port: Number(process.env.PORT || 4000),
@@ -34,7 +35,7 @@ export const config = {
     host: process.env.SMTP_HOST || '',
     port: Number(process.env.SMTP_PORT || 587),
     secure: String(process.env.SMTP_SECURE || '').toLowerCase() === 'true',
-    rejectUnauthorized: String(process.env.SMTP_REJECT_UNAUTHORIZED || 'true').toLowerCase() !== 'false',
+    rejectUnauthorized: String(process.env.SMTP_REJECT_UNAUTHORIZED || String(defaultSmtpRejectUnauthorized)).toLowerCase() !== 'false',
     user: process.env.SMTP_USER || '',
     pass: process.env.SMTP_PASS || '',
     from: process.env.SMTP_FROM || process.env.MAIL_FROM || 'Greenrut <no-reply@greenrut.com>',
