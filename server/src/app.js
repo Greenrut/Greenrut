@@ -1,4 +1,4 @@
-﻿import express from 'express'
+import express from 'express'
 import cors from 'cors'
 import path from 'node:path'
 import { config } from './config/env.js'
@@ -16,20 +16,22 @@ const allowedOrigins = new Set(
     .map((origin) => String(origin).replace(/\/$/, '')),
 )
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true)
-      if (config.nodeEnv !== 'production' && devLocalhostPattern.test(origin)) {
-        return callback(null, true)
-      }
-      const normalizedOrigin = String(origin).replace(/\/$/, '')
-      if (allowedOrigins.has(normalizedOrigin)) return callback(null, true)
-      return callback(new Error(`CORS: origin ${origin} not allowed`))
-    },
-    credentials: true,
-  })
-)
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true)
+    if (config.nodeEnv !== 'production' && devLocalhostPattern.test(origin)) {
+      return callback(null, true)
+    }
+    const normalizedOrigin = String(origin).replace(/\/$/, '')
+    if (allowedOrigins.has(normalizedOrigin)) return callback(null, true)
+    return callback(null, false)
+  },
+  credentials: true,
+  optionsSuccessStatus: 204,
+}
+
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 app.use(express.json({ limit: '2mb' }))
 app.use('/uploads', express.static(uploadsDir))
 
