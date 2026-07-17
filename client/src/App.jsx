@@ -16,11 +16,9 @@ import {
   AdminResearchPage,
   AdminLibraryPage,
   AdminUsersPage,
-  AdminCategoriesPage,
-  AdminTagsPage,
-  AdminSettingsPage,
   CartPage,
   ContactPage,
+  ForgotPasswordPage,
   HomePage,
   LoginPage,
   BlogPage,
@@ -29,6 +27,7 @@ import {
   NotFoundPage,
   ProductDetailsPage,
   ProductPage,
+  ResetPasswordPage,
 } from './pages/index.js'
 import { SiteFrame } from './components/SiteChrome.jsx'
 import { hasAdminAuth, hasUserAuth } from './lib/auth.js'
@@ -98,7 +97,9 @@ function App() {
   if (pathname === '/product-details') page = <ProductDetailsPage onNavigate={navigate} />
   if (pathname === '/cart') page = <CartPage onNavigate={navigate} />
   if (pathname === '/contact') page = <ContactPage />
-  if (pathname === '/login') page = <LoginPage />
+  if (pathname === '/login') page = <LoginPage onNavigate={navigate} />
+  if (pathname === '/forgot-password') page = <ForgotPasswordPage onNavigate={navigate} />
+  if (pathname === '/reset-password') page = <ResetPasswordPage onNavigate={navigate} />
   if (pathname === '/blog') page = <BlogPage onNavigate={navigate} />
   if (pathname === '/library') page = <LibraryPage onNavigate={navigate} />
   if (pathname === '/research') page = <ResearchPage onNavigate={navigate} />
@@ -117,26 +118,12 @@ function App() {
   if (pathname === '/admin/research/new') page = <AdminResearchPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/library/new') page = <AdminLibraryPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/users') page = <AdminUsersPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/categories') page = <AdminCategoriesPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/tags') page = <AdminTagsPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/settings') page = <AdminSettingsPage pathname={pathname} onNavigate={navigate} />
-  if (
-    pathname.startsWith('/admin/') &&
-    !pathname.startsWith('/admin/login') &&
-    !pathname.startsWith('/admin/products/new') &&
-    !pathname.startsWith('/admin/blog/new') &&
-    !pathname.startsWith('/admin/research/new') &&
-    !pathname.startsWith('/admin/library/new') &&
-    !pathname.startsWith('/admin/users') &&
-    !pathname.startsWith('/admin/categories') &&
-    !pathname.startsWith('/admin/tags') &&
-    !pathname.startsWith('/admin/settings')
-  ) {
+  if (pathname.startsWith('/admin/') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/admin/products/new') && !pathname.startsWith('/admin/blog/new') && !pathname.startsWith('/admin/research/new') && !pathname.startsWith('/admin/library/new') && !pathname.startsWith('/admin/users')) {
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   }
 
   if (!isAdminRoute) {
-    const knownUserRoutes = new Set(['/', '/about-us', '/product', '/product-details', '/cart', '/contact', '/login', '/blog', '/library', '/research', '/account', '/account/dashboard', '/account/address-book', '/account/address-book/edit', '/account/wishlist', '/account/inbox', '/account/orders', '/account/payment-settings', '/account/close-account'])
+    const knownUserRoutes = new Set(['/', '/about-us', '/product', '/product-details', '/cart', '/contact', '/login', '/forgot-password', '/reset-password', '/blog', '/library', '/research', '/account', '/account/dashboard', '/account/address-book', '/account/address-book/edit', '/account/wishlist', '/account/inbox', '/account/orders', '/account/payment-settings', '/account/close-account'])
     if (!knownUserRoutes.has(pathname)) {
       page = <NotFoundPage onNavigate={navigate} />
     }
