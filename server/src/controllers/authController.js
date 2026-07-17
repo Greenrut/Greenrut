@@ -1,8 +1,10 @@
+﻿import crypto from 'node:crypto'
 import { User } from '../models/User.js'
 import { config } from '../config/env.js'
 import { seedAccountForUser } from './accountController.js'
 import { createHttpError } from '../utils/httpError.js'
 import { createToken, hashPassword, serializeUser, verifyPassword } from '../utils/auth.js'
+import { sendEmail } from '../services/emailService.js'
 
 function buildAuthResponse(user) {
   const token = createToken(
@@ -22,13 +24,56 @@ function buildAuthResponse(user) {
   }
 }
 
-async function findUserByEmail(email, includePassword = false) {
-  const query = User.findOne({ email: String(email).trim().toLowerCase() })
+async function findUserByEmail(email, includePassword = false, role = '') {
+  const query = User.findOne({ email: String(email).trim().toLowerCase(), ...(role ? { role } : {}) })
   if (includePassword) {
-    query.select('+passwordHash')
+    query.select('+passwordHash +resetPasswordTokenHash +resetPasswordExpires')
   }
 
   return query
+}
+
+function hashResetToken(token) {
+  return crypto.createHash('sha256').update(String(token || '')).digest('hex')
+}
+
+function buildResetLink({ token, email, role }) {
+  const params = new URLSearchParams({ token, email, role })
+  return `${config.clientUrl}/reset-password?${params.toString()}`
+}
+
+async function sendPasswordResetEmail({ user, token, role }) {
+  const resetLink = buildResetLink({ token, email: user.email, role })
+  const appName = 'Greenrut'
+
+  const subject = `${appName} password reset`
+  const text = [
+    `Hi ${user.name || 'there'},`,
+    '',
+    `We received a request to reset your ${appName} password.`,
+    `Reset your password here: ${resetLink}`,
+    '',
+    'If you did not request this, you can ignore this email.',
+    '',
+    'This link expires in 1 hour.',
+  ].join('\n')
+
+  const html = `
+    <p>Hi ${user.name || 'there'},</p>
+    <p>We received a request to reset your ${appName} password.</p>
+    <p><a href="${resetLink}">Reset your password</a></p>
+    <p>If you did not request this, you can ignore this email.</p>
+    <p>This link expires in 1 hour.</p>
+  `
+
+  await sendEmail({
+    to: user.email,
+    subject,
+    text,
+    html,
+  })
+
+  return resetLink
 }
 
 async function loginWithRole(req, res, next, allowedRole) {
@@ -39,13 +84,9 @@ async function loginWithRole(req, res, next, allowedRole) {
       return next(createHttpError(400, 'Email and password are required'))
     }
 
-    const user = await findUserByEmail(email, true)
+    const user = await findUserByEmail(email, true, allowedRole)
     if (!user) {
       return next(createHttpError(401, 'Invalid credentials'))
-    }
-
-    if (allowedRole && user.role !== allowedRole) {
-      return next(createHttpError(403, 'You do not have access to this account'))
     }
 
     if (user.status !== 'active') {
@@ -186,4 +227,89 @@ export async function changePassword(req, res, next) {
   } catch (error) {
     next(error)
   }
+}
+
+async function requestPasswordResetWithRole(req, res, next, role) {
+  try {
+    const { email } = req.body || {}
+    const normalizedEmail = String(email || '').trim().toLowerCase()
+
+    if (!normalizedEmail) {
+      return next(createHttpError(400, 'Email is required'))
+    }
+
+    const user = await findUserByEmail(normalizedEmail, true, role)
+    if (!user || user.status !== 'active') {
+      return res.json({ ok: true, message: 'If the account exists, a reset link will be sent shortly.' })
+    }
+
+    const token = crypto.randomBytes(32).toString('hex')
+    user.resetPasswordTokenHash = hashResetToken(token)
+    user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000)
+    await user.save()
+
+    const resetLink = await sendPasswordResetEmail({ user, token, role: role === 'Administrator' ? 'admin' : 'user' })
+
+    res.json({
+      ok: true,
+      message: 'If the account exists, a reset link will be sent shortly.',
+      ...(config.nodeEnv !== 'production' ? { debugResetLink: resetLink } : {}),
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+async function resetPasswordWithRole(req, res, next, role) {
+  try {
+    const { email, token, newPassword } = req.body || {}
+    const normalizedEmail = String(email || '').trim().toLowerCase()
+
+    if (!normalizedEmail || !token || !newPassword) {
+      return next(createHttpError(400, 'Email, token, and new password are required'))
+    }
+
+    if (String(newPassword).length < 6) {
+      return next(createHttpError(400, 'New password must be at least 6 characters'))
+    }
+
+    const user = await findUserByEmail(normalizedEmail, true, role)
+    if (!user || !user.resetPasswordTokenHash || !user.resetPasswordExpires) {
+      return next(createHttpError(400, 'The reset link is invalid or has expired'))
+    }
+
+    if (user.resetPasswordExpires.getTime() < Date.now()) {
+      return next(createHttpError(400, 'The reset link is invalid or has expired'))
+    }
+
+    if (user.resetPasswordTokenHash !== hashResetToken(token)) {
+      return next(createHttpError(400, 'The reset link is invalid or has expired'))
+    }
+
+    user.passwordHash = hashPassword(String(newPassword))
+    user.resetPasswordTokenHash = ''
+    user.resetPasswordExpires = null
+    user.lastActive = new Date()
+    await user.save()
+
+    res.json({ ok: true, message: 'Password updated successfully.' })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export function forgotPassword(req, res, next) {
+  return requestPasswordResetWithRole(req, res, next, 'Viewer')
+}
+
+export function adminForgotPassword(req, res, next) {
+  return requestPasswordResetWithRole(req, res, next, 'Administrator')
+}
+
+export function resetPassword(req, res, next) {
+  return resetPasswordWithRole(req, res, next, 'Viewer')
+}
+
+export function adminResetPassword(req, res, next) {
+  return resetPasswordWithRole(req, res, next, 'Administrator')
 }

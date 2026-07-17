@@ -1,6 +1,17 @@
 ﻿import { Router } from 'express'
 import { getHealth } from '../controllers/healthController.js'
-import { changePassword, getAuthUser, loginAdmin, loginUser, signupAdmin, signupUser } from '../controllers/authController.js'
+import {
+  adminForgotPassword,
+  adminResetPassword,
+  changePassword,
+  forgotPassword,
+  getAuthUser,
+  loginAdmin,
+  loginUser,
+  resetPassword,
+  signupAdmin,
+  signupUser,
+} from '../controllers/authController.js'
 import { listProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../controllers/productController.js'
 import { listPosts, getPost, createPost, updatePost, deletePost } from '../controllers/postController.js'
 import { listResearchItems, createAdminResearchItem, deleteAdminResearchItem, listAdminResearchItems, updateAdminResearchItem } from '../controllers/researchController.js'
@@ -54,10 +65,14 @@ router.get('/health', getHealth)
 
 router.post('/auth/signup', signupUser)
 router.post('/auth/login', loginUser)
+router.post('/auth/forgot-password', forgotPassword)
+router.post('/auth/reset-password', resetPassword)
 router.get('/auth/me', requireAuth, getAuthUser)
 
 router.post('/admin/auth/signup', signupAdmin)
 router.post('/admin/auth/login', loginAdmin)
+router.post('/admin/auth/forgot-password', adminForgotPassword)
+router.post('/admin/auth/reset-password', adminResetPassword)
 router.get('/admin/auth/me', requireAuth, requireRole('Administrator'), getAuthUser)
 
 router.get('/admin/dashboard', requireAuth, requireRole('Administrator'), getDashboard)
