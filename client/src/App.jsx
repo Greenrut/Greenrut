@@ -15,6 +15,7 @@ import {
   AdminProductsPage,
   AdminResearchPage,
   AdminLibraryPage,
+  AdminReviewsPage,
   AdminUsersPage,
   CartPage,
   ContactPage,
@@ -117,8 +118,9 @@ function App() {
   if (pathname === '/admin/blog/new') page = <AdminBlogPostPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/research/new') page = <AdminResearchPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/library/new') page = <AdminLibraryPage pathname={pathname} onNavigate={navigate} />
+  if (pathname === '/admin/reviews') page = <AdminReviewsPage pathname={pathname} onNavigate={navigate} />
   if (pathname === '/admin/users') page = <AdminUsersPage pathname={pathname} onNavigate={navigate} />
-  if (pathname.startsWith('/admin/') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/admin/products/new') && !pathname.startsWith('/admin/blog/new') && !pathname.startsWith('/admin/research/new') && !pathname.startsWith('/admin/library/new') && !pathname.startsWith('/admin/users')) {
+  if (pathname.startsWith('/admin/') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/admin/products/new') && !pathname.startsWith('/admin/blog/new') && !pathname.startsWith('/admin/research/new') && !pathname.startsWith('/admin/library/new') && !pathname.startsWith('/admin/reviews') && !pathname.startsWith('/admin/users')) {
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
   }
 

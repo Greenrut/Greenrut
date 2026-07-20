@@ -41,6 +41,7 @@ function getPostSummary(post) {
 export function HomePage({ onNavigate }) {
   const [products, setProducts] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeHero, setActiveHero] = useState(0);
@@ -51,14 +52,16 @@ export function HomePage({ onNavigate }) {
     async function loadHomeData() {
       try {
         setLoading(true);
-        const [productsResponse, postsResponse] = await Promise.all([
+        const [productsResponse, postsResponse, reviewsResponse] = await Promise.all([
           publicRequest("/products"),
           publicRequest("/posts"),
+          publicRequest("/reviews"),
         ]);
         if (cancelled) return;
 
         setProducts(productsResponse.data || []);
         setPosts(postsResponse.data || []);
+        setReviews(reviewsResponse.data || []);
       } catch (requestError) {
         if (!cancelled) {
           setError(requestError.message || "Failed to load home content");
@@ -202,6 +205,28 @@ export function HomePage({ onNavigate }) {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="reviews-section page-shell">
+        <SectionTitle title="What Customers Say" />
+        {reviews.length === 0 ? (
+          <p>No reviews yet.</p>
+        ) : (
+          <div className="reviews-grid">
+            {reviews.slice(0, 3).map((review) => (
+              <article key={review.id || review.name} className="review-card">
+                <div className="review-card__stars" aria-label={`${review.rating || 5} out of 5 stars`}>
+                  {'*'.repeat(Number(review.rating || 5))}
+                </div>
+                <p>{review.quote}</p>
+                <div>
+                  <h3>{review.name}</h3>
+                  <span>{review.role || 'Customer'}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       <NewsletterBand />

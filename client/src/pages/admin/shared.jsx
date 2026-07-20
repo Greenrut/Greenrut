@@ -7,6 +7,7 @@ const adminNav = [
   { label: 'Products', href: '/admin/products/new', icon: 'products' },
   { label: 'Research', href: '/admin/research/new', icon: 'research' },
   { label: 'Library', href: '/admin/library/new', icon: 'library' },
+  { label: 'Reviews', href: '/admin/reviews', icon: 'reviews' },
   { section: 'Store' },
   { label: 'Categories', href: '/admin/categories', icon: 'categories' },
   { label: 'Tags', href: '/admin/tags', icon: 'tags' },
@@ -150,6 +151,7 @@ export function AdminShell({ pathname, onNavigate, children }) {
       !pathname.startsWith('/admin/blog/new') &&
       !pathname.startsWith('/admin/research/new') &&
       !pathname.startsWith('/admin/library/new') &&
+      !pathname.startsWith('/admin/reviews') &&
       !pathname.startsWith('/admin/users') &&
       !pathname.startsWith('/admin/categories') &&
       !pathname.startsWith('/admin/tags') &&

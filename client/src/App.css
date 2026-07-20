@@ -1067,6 +1067,50 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.reviews-section {
+  padding: clamp(42px, 6vw, 70px) 0;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.review-card {
+  min-height: 220px;
+  border: 1px solid #ececec;
+  background: #fff;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.review-card__stars {
+  color: #4ca60b;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.review-card p {
+  color: #626262;
+  line-height: 1.8;
+}
+
+.review-card h3 {
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.review-card span {
+  color: #888;
+  font-size: 13px;
+}
+
 
 
 .blog-card {
@@ -3362,6 +3406,7 @@
   .product-grid--home,
   .product-grid--related,
   .blog-grid__list,
+  .reviews-grid,
   .team-grid__list,
   .cart-panels,
   .badge-row,
@@ -3404,6 +3449,7 @@
   .product-grid--home,
   .product-grid--related,
   .blog-grid__list,
+  .reviews-grid,
   .cart-panels,
   .catalog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3547,6 +3593,7 @@
   .cart-panels,
   .stats-band__list,
   .catalog-grid,
+  .reviews-grid,
   .product-grid,
   .product-grid--home,
   .product-grid--related {
