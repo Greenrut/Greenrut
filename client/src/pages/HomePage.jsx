@@ -4,6 +4,8 @@ import { publicRequest } from "../lib/publicApi.js";
 import { NewsletterBand, SectionTitle } from "./shared.jsx";
 import heroImage from '../assets/hero.png'
 import bannerImage from '../assets/banna.png'
+import leafSaleImage from '../assets/leaf1.png'
+import bowlSaleImage from '../assets/leaf2.png'
 
 function mapProduct(product, index = 0) {
   return {
@@ -175,6 +177,31 @@ export function HomePage({ onNavigate }) {
               </button>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="home-promo-band">
+        <div className="home-promo-grid">
+          <article className="home-promo-card">
+            <div className="home-promo-card__copy">
+              <h2>-50% Sale</h2>
+              <p>SUMMER VACATION</p>
+            </div>
+            <img src={leafSaleImage} alt="Green tea powder and leaves" />
+          </article>
+          <article className="home-promo-card">
+            <div className="home-promo-card__copy">
+              <h2>-20% Sale</h2>
+              <p>WINTER VACATION</p>
+            </div>
+            <img src={bowlSaleImage} alt="Green tea powder in a bowl" />
+          </article>
+        </div>
+        <div className="home-promo-quote">
+          <span className="sprout" aria-hidden="true" />
+          <p>Pure herbal blends made for calm routines, steady energy, and everyday wellness.</p>
+          <strong>GREENRUT WELLNESS</strong>
+          <small>Customer</small>
         </div>
       </section>
 
