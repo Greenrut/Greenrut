@@ -40,6 +40,10 @@ export const config = {
     pass: process.env.SMTP_PASS || '',
     from: process.env.SMTP_FROM || process.env.MAIL_FROM || 'Greenrut <no-reply@greenrut.com>',
   },
+  resend: {
+    apiKey: process.env.RESEND_API_KEY || '',
+    from: process.env.RESEND_FROM || process.env.SMTP_FROM || 'Greenrut <onboarding@resend.dev>',
+  },
   paystack: {
     publicKey: process.env.PAYSTACK_PUBLIC_KEY || '',
     secretKey: process.env.PAYSTACK_SECRET_KEY || '',

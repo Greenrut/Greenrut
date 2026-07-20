@@ -79,6 +79,9 @@ async function sendPasswordResetEmail({ user, token, role }) {
       role,
       message: error?.message,
     })
+    if (config.resend.apiKey) {
+      throw createHttpError(502, 'Password reset email could not be sent')
+    }
   }
 
   return resetLink
