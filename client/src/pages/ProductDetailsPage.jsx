@@ -6,6 +6,7 @@ import { accountRequest } from '../lib/accountApi.js'
 import { hasUserAuth } from '../lib/auth.js'
 import { SectionTitle } from './shared.jsx'
 import bannaImage from '../assets/banna.png'
+import { fallbackProducts } from '../data.js'
 
 function getProductId() {
   const params = new URLSearchParams(window.location.search)
@@ -45,6 +46,9 @@ export function ProductDetailsPage({ onNavigate }) {
   const [selectedQty, setSelectedQty] = useState(1)
   const [addedMessage, setAddedMessage] = useState('')
   const [wishlistMessage, setWishlistMessage] = useState('')
+  const [reviews, setReviews] = useState([])
+  const [reviewForm, setReviewForm] = useState({ name: '', email: '', rating: '5', comment: '' })
+  const [reviewMessage, setReviewMessage] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -54,13 +58,33 @@ export function ProductDetailsPage({ onNavigate }) {
         setLoading(true)
         const response = await publicRequest('/products')
         const items = response.data || []
-        const selectedProduct = items.find((item) => String(item.id) === String(productId)) || items[0] || null
+        let selectedProduct = null
+
+        if (productId && String(productId).startsWith('fallback-')) {
+          selectedProduct = fallbackProducts.find((item) => String(item.id) === String(productId)) || null
+        } else {
+          selectedProduct = items.find((item) => String(item.id) === String(productId)) || null
+        }
+
+        if (!selectedProduct) {
+          selectedProduct = items[0] || fallbackProducts[0] || null
+        }
+
         if (cancelled) return
 
         setProduct(selectedProduct)
         const images = Array.isArray(selectedProduct?.images) ? selectedProduct.images : []
         setSelectedImage(getImageUrl(images[0]) || '')
-        setRelatedProducts(selectedProduct ? items.filter((item) => String(item.id) !== String(selectedProduct.id)).slice(0, 4) : [])
+
+        const sourceList = items.length ? items : fallbackProducts
+        setRelatedProducts(selectedProduct ? sourceList.filter((item) => String(item.id) !== String(selectedProduct.id)).slice(0, 4) : [])
+
+        if (selectedProduct?.id && !String(selectedProduct.id).startsWith('fallback-')) {
+          const reviewsResponse = await publicRequest(`/products/${selectedProduct.id}/reviews`)
+          if (!cancelled) setReviews(reviewsResponse.data || [])
+        } else {
+          setReviews([])
+        }
       } catch (requestError) {
         if (!cancelled) {
           setError(requestError.message || 'Failed to load product')
@@ -92,9 +116,9 @@ export function ProductDetailsPage({ onNavigate }) {
   )
   const details = useMemo(
     () => [
-      'A refined herbal product crafted for daily use, with a clean and natural presentation.',
-      'Made to feel premium on the page while still being simple to scan on mobile.',
-      'Use the gallery to switch between product variations and view each image clearly.',
+      'Unlock the power of natural ingredients selected for therapeutic relevance and everyday wellness support.',
+      'Greenrut products are shaped by research, quality assurance, and a commitment to transparent safety standards.',
+      'Every formulation is presented with clear directions, benefit-led information, and room for scientific validation.',
     ],
     [],
   )
@@ -108,6 +132,10 @@ export function ProductDetailsPage({ onNavigate }) {
     [product],
   )
   const quantityOptions = [1, 2, 3]
+
+  const updateReviewField = (field) => (event) => {
+    setReviewForm((current) => ({ ...current, [field]: event.target.value }))
+  }
 
   function handleAddToCart() {
     if (!product) return
@@ -143,6 +171,26 @@ export function ProductDetailsPage({ onNavigate }) {
     } catch (requestError) {
       setWishlistMessage(requestError.message || 'Failed to add to wishlist')
       setTimeout(() => setWishlistMessage(''), 3500)
+    }
+  }
+
+  async function handleReviewSubmit(event) {
+    event.preventDefault()
+    if (!product) return
+
+    try {
+      const response = await publicRequest(`/products/${product.id}/reviews`, {
+        method: 'POST',
+        body: {
+          ...reviewForm,
+          rating: Number(reviewForm.rating || 5),
+        },
+      })
+      setReviews((current) => [response.data, ...current])
+      setReviewForm({ name: '', email: '', rating: '5', comment: '' })
+      setReviewMessage('Review submitted. Thank you.')
+    } catch (requestError) {
+      setReviewMessage(requestError.message || 'Failed to submit review')
     }
   }
 
@@ -198,7 +246,7 @@ export function ProductDetailsPage({ onNavigate }) {
               {loading ? <p>Loading product...</p> : null}
               {error ? <p className="text-sm text-red-600">{error}</p> : null}
               <h2>{product.name}</h2>
-              <p className="rating">32 Reviews | Add Your Reviews</p>
+              <p className="rating">{reviews.length} Reviews | Add Your Reviews</p>
               <div className="product-detail__meta-row">
                 {quickFacts.map((fact) => (
                   <span key={fact}>{fact}</span>
@@ -210,12 +258,12 @@ export function ProductDetailsPage({ onNavigate }) {
               </p>
               <p className="summary">
                 {product.description ||
-                  'A clean herbal product page with room for ingredients, benefits, and variation images.'}
+                  'A 100% herbal solution crafted for purity, potency, and peace of mind.'}
               </p>
               <ul className="feature-list">
-                <li>Premium herbal formulation</li>
-                <li>Multiple product images</li>
-                <li>Designed for easy browsing</li>
+                <li>100% herbal formulation</li>
+                <li>Scientifically guided product development</li>
+                <li>Zero toxicology incidence commitment</li>
               </ul>
               <div className="purchase-row">
                 <div className="product-detail__selector">
@@ -266,14 +314,33 @@ export function ProductDetailsPage({ onNavigate }) {
               {tab === 'Description' ? (
                 <div className="product-description">
                   <p>{product.description || 'No description added yet.'}</p>
+                  {product.benefits ? (
+                    <>
+                      <h3>Key Benefits</h3>
+                      <p>{product.benefits}</p>
+                    </>
+                  ) : null}
                   {details.map((line) => (
                     <p key={line}>{line}</p>
                   ))}
+                  <h3>Nature's Finest, Backed by Science</h3>
+                  <p>
+                    {product.ingredients || 'Key ingredients are selected for traditional relevance and investigated for modern therapeutic potential. Greenrut emphasizes potency, standardization, and safe use across its formulations.'}
+                  </p>
+                  <h3>The Greenrut Promise: Proven Efficacy, Zero Toxicity</h3>
+                  <p>
+                    {product.scientificValidation || 'Every product has room for clear scientific validation notes, potency summaries, and toxicology assurance from the admin panel.'}
+                  </p>
+                  <h3>Simple Steps for Optimal Results</h3>
+                  <p>
+                    {product.directions || 'Follow product directions carefully, use consistently as recommended, and consult a healthcare professional if you are pregnant, nursing, or currently taking medication.'}
+                  </p>
                   <h3>Important Information</h3>
+                  {product.warnings ? <p>{product.warnings}</p> : null}
                   <ul>
-                    <li>Great for a clean, modern product presentation.</li>
-                    <li>Supports multiple product photos for variations.</li>
-                    <li>Designed to stay readable on mobile and desktop.</li>
+                    <li>Review all usage instructions before taking any herbal product.</li>
+                    <li>Keep products sealed, dry, and away from direct sunlight.</li>
+                    <li>Greenrut prioritizes safety, transparency, and evidence-led claims.</li>
                   </ul>
                 </div>
               ) : tab === 'Tags' ? (
@@ -284,8 +351,31 @@ export function ProductDetailsPage({ onNavigate }) {
                 </div>
               ) : (
                 <div className="product-reviews">
-                  <p>No reviews yet.</p>
-                  <p>Be the first to leave a review for this product.</p>
+                  {reviews.length ? (
+                    reviews.map((review) => (
+                      <article key={review.id || `${review.name}-${review.createdAt}`} className="product-review-card">
+                        <strong>{review.name}</strong>
+                        <span>{'*'.repeat(Number(review.rating || 5))}</span>
+                        <p>{review.comment}</p>
+                      </article>
+                    ))
+                  ) : (
+                    <p>No reviews yet. Be the first to leave a review for this product.</p>
+                  )}
+                  <form className="product-review-form" onSubmit={handleReviewSubmit}>
+                    <input value={reviewForm.name} onChange={updateReviewField('name')} type="text" placeholder="Your name" required />
+                    <input value={reviewForm.email} onChange={updateReviewField('email')} type="email" placeholder="Email address" />
+                    <select value={reviewForm.rating} onChange={updateReviewField('rating')}>
+                      <option value="5">5 Stars</option>
+                      <option value="4">4 Stars</option>
+                      <option value="3">3 Stars</option>
+                      <option value="2">2 Stars</option>
+                      <option value="1">1 Star</option>
+                    </select>
+                    <textarea value={reviewForm.comment} onChange={updateReviewField('comment')} placeholder="Write your review" rows={4} required />
+                    <button type="submit" className="primary-button">Submit Review</button>
+                    {reviewMessage ? <p>{reviewMessage}</p> : null}
+                  </form>
                 </div>
               )}
             </div>

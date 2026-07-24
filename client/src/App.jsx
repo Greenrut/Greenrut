@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   AboutPage,
   AccountAddressBookPage,
@@ -54,7 +54,7 @@ function useLocationState() {
 }
 
 function App() {
-  const { pathname } = useLocationState()
+  const { pathname, search } = useLocationState()
   const isAdminRoute = pathname.startsWith('/admin')
   const adminLoginRoute = pathname === '/admin/login'
   const userLoginRoute = pathname === '/login'
@@ -101,7 +101,7 @@ function App() {
   if (pathname === '/login') page = <LoginPage onNavigate={navigate} />
   if (pathname === '/forgot-password') page = <ForgotPasswordPage onNavigate={navigate} />
   if (pathname === '/reset-password') page = <ResetPasswordPage onNavigate={navigate} />
-  if (pathname === '/blog') page = <BlogPage onNavigate={navigate} />
+  if (pathname === '/blog') page = <BlogPage onNavigate={navigate} search={search} />
   if (pathname === '/library') page = <LibraryPage onNavigate={navigate} />
   if (pathname === '/research') page = <ResearchPage onNavigate={navigate} />
   if (pathname === '/account' || pathname === '/account/dashboard') page = <AccountDashboardPage pathname={pathname} onNavigate={navigate} />

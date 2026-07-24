@@ -1,42 +1,8 @@
-﻿import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { publicRequest } from '../lib/publicApi.js'
 import heroImage from '../assets/hero.png'
 import bannerImage from '../assets/banna.png'
-
-const fallbackResources = [
-  {
-    id: 'fallback-1',
-    title: 'Greenrut Product Guide',
-    section: 'Product Guides',
-    type: 'Guide',
-    excerpt: 'Overview notes for the current product line, intended for quick reference across the storefront.',
-    image: heroImage,
-  },
-  {
-    id: 'fallback-2',
-    title: 'Research Summary Pack',
-    section: 'Herbal Research Papers',
-    type: 'Paper',
-    excerpt: 'Short-form summaries of ongoing and concluded research topics tied to the catalog.',
-    image: bannerImage,
-  },
-  {
-    id: 'fallback-3',
-    title: 'Usage and Storage Notes',
-    section: 'Clinical Notes',
-    type: 'Notes',
-    excerpt: 'Practical guidance for handling, storing, and presenting the Greenrut range.',
-    image: heroImage,
-  },
-  {
-    id: 'fallback-4',
-    title: 'Brand Assets Index',
-    section: 'Brand Library',
-    type: 'Assets',
-    excerpt: 'Logos, references, and lightweight brand assets gathered in one place.',
-    image: bannerImage,
-  },
-]
+import { fallbackResources } from '../data.js'
 
 function getImageUrl(image) {
   if (!image) return ''
@@ -53,6 +19,11 @@ function normalizeResource(item) {
     section: item.section || item.category || 'General',
     type: item.type || item.resourceType || '',
     excerpt: item.excerpt || item.description || '',
+    localName: item.localName || item.local_name || '',
+    therapeuticUse: item.therapeuticUse || item.therapeutic_use || item.use || '',
+    preparationMethod: item.preparationMethod || item.preparation_method || item.preparation || '',
+    dosage: item.dosage || item.dose || '',
+    constituents: item.constituents || item.majorConstituents || item.api || '',
     image: getImageUrl(item.image || item.thumbnail || (Array.isArray(item.images) ? item.images[0] : '')),
     linkedProductId: item.linkedProductId || item.productId || '',
   }
@@ -69,6 +40,11 @@ function LibraryCard({ item, onOpen }) {
           <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">{item.type || item.section}</p>
           <h3 className="mt-2 text-[15px] font-medium text-[#2e2a26]">{item.title}</h3>
           <p className="mt-2 text-[13px] leading-6 text-[#645f59]">{item.excerpt}</p>
+          <dl className="mt-3 grid gap-1 text-[11px] leading-5 text-[#6b655f]">
+            {item.localName ? <div><dt className="font-semibold">Local name:</dt><dd>{item.localName}</dd></div> : null}
+            {item.therapeuticUse ? <div><dt className="font-semibold">Use:</dt><dd>{item.therapeuticUse}</dd></div> : null}
+            {item.constituents ? <div><dt className="font-semibold">Constituents:</dt><dd>{item.constituents}</dd></div> : null}
+          </dl>
           <span className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-[#1f1c19]">
             Open resource <span aria-hidden="true">&rarr;</span>
           </span>
@@ -81,6 +57,8 @@ function LibraryCard({ item, onOpen }) {
 export function LibraryPage({ onNavigate }) {
   const [resources, setResources] = useState([])
   const [activeSection, setActiveSection] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [activeUse, setActiveUse] = useState('All')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const selectedId = new URLSearchParams(window.location.search).get('id')
@@ -120,7 +98,32 @@ export function LibraryPage({ onNavigate }) {
     }
   }, [activeSection, sections])
 
-  const filteredResources = useMemo(() => libraryItems.filter((item) => item.section === activeSection), [libraryItems, activeSection])
+  const therapeuticUses = useMemo(() => {
+    const uses = libraryItems
+      .flatMap((item) => String(item.therapeuticUse || '').split(','))
+      .map((item) => item.trim())
+      .filter(Boolean)
+    return ['All', ...Array.from(new Set(uses))]
+  }, [libraryItems])
+
+  const filteredResources = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase()
+    return libraryItems.filter((item) => {
+      const matchesSection = item.section === activeSection
+      const haystack = [
+        item.title,
+        item.localName,
+        item.therapeuticUse,
+        item.preparationMethod,
+        item.dosage,
+        item.constituents,
+        item.excerpt,
+      ].join(' ').toLowerCase()
+      const matchesSearch = !query || haystack.includes(query)
+      const matchesUse = activeUse === 'All' || String(item.therapeuticUse || '').toLowerCase().includes(activeUse.toLowerCase())
+      return matchesSection && matchesSearch && matchesUse
+    })
+  }, [libraryItems, activeSection, searchTerm, activeUse])
 
   const selectedItem = useMemo(() => {
     if (!selectedId) return null
@@ -139,9 +142,9 @@ export function LibraryPage({ onNavigate }) {
           }}
         >
           <div className="max-w-[520px] text-white">
-            <p className="text-[10px] uppercase tracking-[0.24em] text-white/70">Library</p>
-            <h1 className="mt-2 font-serif text-[30px] leading-none xs:text-[34px]">Greenrut Library</h1>
-            <p className="mt-3 text-[12px] leading-6 text-white/80 xs:text-[13px]">Browse product references, research notes, and brand assets from one place.</p>
+            <p className="text-[10px] uppercase tracking-[0.24em] text-white/70">Herb Library</p>
+            <h1 className="mt-2 font-serif text-[30px] leading-none xs:text-[34px]">Dynamic Herbal Catalogue</h1>
+            <p className="mt-3 text-[12px] leading-6 text-white/80 xs:text-[13px]">Browse herbs by local name, therapeutic use, preparation method, dosage notes, and major active constituents.</p>
           </div>
         </div>
       </div>
@@ -176,7 +179,19 @@ export function LibraryPage({ onNavigate }) {
         </aside>
 
         <div>
-          <div className="mb-3 flex items-center justify-between border border-[#efefef] bg-white px-4 py-3 text-[13px] text-[#5a544c]">
+          <div className="mb-3 grid gap-3 border border-[#efefef] bg-white px-4 py-3 text-[13px] text-[#5a544c] lg:grid-cols-[1fr_180px_auto] lg:items-center">
+            <input
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              type="search"
+              placeholder="Search herb, local name, use, dosage, constituent..."
+              className="border border-[#efefef] px-3 py-2"
+            />
+            <select value={activeUse} onChange={(event) => setActiveUse(event.target.value)} className="border border-[#efefef] px-3 py-2">
+              {therapeuticUses.map((use) => (
+                <option key={use} value={use}>{use}</option>
+              ))}
+            </select>
             <span className="font-semibold text-[#2e2a26]">{activeSection || sections[0]}</span>
             <span>{filteredResources.length} resources</span>
           </div>

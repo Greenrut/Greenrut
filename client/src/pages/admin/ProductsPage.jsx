@@ -15,6 +15,11 @@ const initialForm = {
   stock: "",
   category: "Uncategorized",
   status: "draft",
+  benefits: "",
+  ingredients: "",
+  scientificValidation: "",
+  directions: "",
+  warnings: "",
   images: [],
 };
 
@@ -71,6 +76,11 @@ export function AdminProductsPage({ pathname, onNavigate }) {
       stock: String(product.stock ?? ""),
       category: product.category || "Uncategorized",
       status: product.status || "draft",
+      benefits: product.benefits || "",
+      ingredients: product.ingredients || "",
+      scientificValidation: product.scientificValidation || "",
+      directions: product.directions || "",
+      warnings: product.warnings || "",
       images: Array.isArray(product.images) ? product.images : [],
     });
   };
@@ -217,6 +227,56 @@ export function AdminProductsPage({ pathname, onNavigate }) {
                   onChange={updateField("description")}
                   placeholder="Write a product description..."
                   rows={8}
+                />
+              </label>
+            </div>
+          </AdminCard>
+
+          <AdminCard title="Blueprint Product Details">
+            <div className="admin-form-grid admin-form-grid--single">
+              <label>
+                Key Benefits
+                <textarea
+                  value={form.benefits}
+                  onChange={updateField("benefits")}
+                  placeholder="List the main health or wellness benefits."
+                  rows={5}
+                />
+              </label>
+              <label>
+                Key Ingredients
+                <textarea
+                  value={form.ingredients}
+                  onChange={updateField("ingredients")}
+                  placeholder="Describe important herbs, traditional use, and active properties."
+                  rows={6}
+                />
+              </label>
+              <label>
+                Scientific Validation
+                <textarea
+                  value={form.scientificValidation}
+                  onChange={updateField("scientificValidation")}
+                  placeholder="Summarize studies, quality assurance, toxicology, and research notes."
+                  rows={6}
+                />
+              </label>
+              <label>
+                Directions
+                <textarea
+                  value={form.directions}
+                  onChange={updateField("directions")}
+                  placeholder="Dosage, frequency, timing, and usage guidance."
+                  rows={4}
+                />
+              </label>
+              <label>
+                Warnings & Contraindications
+                <textarea
+                  value={form.warnings}
+                  onChange={updateField("warnings")}
+                  placeholder="Safety notes, contraindications, or consult-a-doctor guidance."
+                  rows={4}
                 />
               </label>
             </div>

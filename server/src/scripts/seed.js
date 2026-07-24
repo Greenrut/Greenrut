@@ -1,56 +1,9 @@
-export const navItems = [
-  { label: 'HOME', href: '/' },
-  { label: 'ABOUT US', href: '/about-us' },
-  { label: 'PRODUCT', href: '/product' },
-  { label: 'LIBRARY', href: '/library' },
-  { label: 'RESEARCH', href: '/research' },
-  { label: 'PROFILE', href: '/account' },
-  { label: 'BLOG', href: '/blog' },
-  { label: 'CONTACT', href: '/contact' },
-]
+import { connectDatabase, disconnectDatabase } from '../config/db.js'
+import { Product } from '../models/Product.js'
+import { LibraryItem } from '../models/LibraryItem.js'
 
-export const socialLinks = [
+const seedProducts = [
   {
-    label: 'Facebook',
-    href: 'https://www.facebook.com/share/1Dc7Nfhoy3/?mibextid=wwXIfr',
-    icon: 'facebook',
-  },
-  {
-    label: 'X (Twitter)',
-    href: 'https://x.com/green_rut?s=11',
-    icon: 'x',
-  },
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/green-rut-020b003b5?utm_source=share_via&utm_content=profile&utm_medium=member_ios',
-    icon: 'linkedin',
-  },
-  {
-    label: 'TikTok',
-    href: 'https://www.tiktok.com/@greenrut_herbals?_r=1&_t=ZS-97gMsRA0T3J',
-    icon: 'tiktok',
-  },
-  {
-    label: 'YouTube',
-    href: 'https://youtube.com/@green_rut?si=mbw3lEbKszjvM7fD',
-    icon: 'youtube',
-  },
-]
-
-
-export const homeProducts = []
-
-export const relatedProducts = []
-
-export const cartItems = []
-
-export const team = []
-
-export const stats = []
-
-export const fallbackProducts = [
-  {
-    id: 'fallback-1',
     name: 'Greenrut Revitalize Daily Supplement',
     sku: 'GR-REV-SUP',
     category: 'Vitamins & Supplements',
@@ -65,7 +18,6 @@ export const fallbackProducts = [
     scientificValidation: 'Standardized extracts tested for heavy metals and toxicology. Active ginsenosides and withanolides verified via chromatography.'
   },
   {
-    id: 'fallback-2',
     name: 'Greenrut Soothe & Restore Herbal Balm',
     sku: 'GR-SOT-BLM',
     category: 'Skin & Hair Care',
@@ -80,7 +32,6 @@ export const fallbackProducts = [
     scientificValidation: 'Dermatologically tested. Zero toxicology incidence reported. Phytochemical assays verify high concentrations of triterpenoid saponins.'
   },
   {
-    id: 'fallback-3',
     name: 'Greenrut Detox Tea',
     sku: 'GR-DTX-TEA',
     category: 'Targeted Health',
@@ -95,7 +46,6 @@ export const fallbackProducts = [
     scientificValidation: 'In-vitro liver cell antioxidant assays confirmed high protective indices. Heavy metal clearance certified.'
   },
   {
-    id: 'fallback-4',
     name: 'Greenrut Herbal Black Soap',
     sku: 'GR-BLK-SOP',
     category: 'Skin & Hair Care',
@@ -110,7 +60,6 @@ export const fallbackProducts = [
     scientificValidation: 'Phytochemical screenings confirm high alkaloid content showing anti-microbial properties without disrupting natural skin pH.'
   },
   {
-    id: 'fallback-5',
     name: 'Greenrut Monarch',
     sku: 'GR-MNR-MON',
     category: 'Men & Women',
@@ -126,9 +75,8 @@ export const fallbackProducts = [
   }
 ]
 
-export const fallbackResources = [
+const seedLibraryItems = [
   {
-    id: 'fallback-1',
     title: 'Moringa Leaf (Zogale)',
     slug: 'moringa-leaf-zogale',
     section: 'Herb Catalogue',
@@ -138,10 +86,10 @@ export const fallbackResources = [
     constituents: 'Flavonoids, vitamins, minerals, glucosinolates',
     preparationMethod: 'Dried leaf powder, water infusion (tea), or standardized capsule form',
     dosage: 'Take 1-2 teaspoons of powder daily in warm water, or use according to product directions',
-    excerpt: 'Moringa oleifera, locally known as Zogale, is a nutrient-dense powerhouse used traditionally and validated scientifically for vitality and metabolic balance.'
+    excerpt: 'Moringa oleifera, locally known as Zogale, is a nutrient-dense powerhouse used traditionally and validated scientifically for vitality and metabolic balance.',
+    status: 'published'
   },
   {
-    id: 'fallback-2',
     title: 'Ewe Asuwon (Senna alata)',
     slug: 'ewe-asuwon-senna-alata',
     section: 'Herb Catalogue',
@@ -151,10 +99,10 @@ export const fallbackResources = [
     constituents: 'Anthraquinones, rhein, chrysophanic acid, flavonoids',
     preparationMethod: 'Fresh leaf paste for topical application, or decoction (boiling leaves) for internal use',
     dosage: 'Apply leaf paste to skin twice daily; or drink 1/2 cup of mild tea occasionally',
-    excerpt: 'Senna alata (Ewe Asuwon) is famous in traditional dermatology for treating eczema and ringworm, verified in assays for strong anti-microbial activities.'
+    excerpt: 'Senna alata (Ewe Asuwon) is famous in traditional dermatology for treating eczema and ringworm, verified in assays for strong anti-microbial activities.',
+    status: 'published'
   },
   {
-    id: 'fallback-3',
     title: 'Ewe Ato (Chasmanthera dependens)',
     slug: 'ewe-ato-chasmanthera-dependens',
     section: 'Herb Catalogue',
@@ -164,10 +112,10 @@ export const fallbackResources = [
     constituents: 'Alkaloids, columbin, tinosporaside, saponins',
     preparationMethod: 'Boil sliced stem or roots in water to make a decoction, or grind into a paste for joint poultices',
     dosage: 'Drink 1/3 cup of decoction daily, or apply paste to painful joints',
-    excerpt: 'Chasmanthera dependens (Ewe Ato) is a traditional climbing shrub documented by generations for physical rehabilitation, stroke recovery, and bone mending.'
+    excerpt: 'Chasmanthera dependens (Ewe Ato) is a traditional climbing shrub documented by generations for physical rehabilitation, stroke recovery, and bone mending.',
+    status: 'published'
   },
   {
-    id: 'fallback-4',
     title: 'Ewe Lapalapa (Jatropha curcas)',
     slug: 'ewe-lapalapa-jatropha-curcas',
     section: 'Herb Catalogue',
@@ -177,6 +125,50 @@ export const fallbackResources = [
     constituents: 'Tannins, curcin, phorbol esters, phytosterols',
     preparationMethod: 'Extract fresh leaf sap and apply directly onto minor wounds or cuts',
     dosage: 'Apply 2-3 drops of fresh leaf sap topically',
-    excerpt: 'Jatropha curcas (Ewe Lapalapa) is widely recognized for its fast-acting anti-septic sap, used to stop bleeding on fresh wounds and prevent infections.'
+    excerpt: 'Jatropha curcas (Ewe Lapalapa) is widely recognized for its fast-acting anti-septic sap, used to stop bleeding on fresh wounds and prevent infections.',
+    status: 'published'
   }
 ]
+
+async function seed() {
+  console.log('Connecting to database...')
+  await connectDatabase()
+  console.log('Connected.')
+
+  // Seed Products
+  console.log('\n--- Seeding Products ---')
+  for (const prodData of seedProducts) {
+    const existing = await Product.findOne({ name: prodData.name })
+    if (existing) {
+      console.log(`Product "${prodData.name}" already exists, skipping.`)
+    } else {
+      await Product.create(prodData)
+      console.log(`Created product: "${prodData.name}"`)
+    }
+  }
+
+  // Seed Library Items
+  console.log('\n--- Seeding Herb Library ---')
+  for (const libData of seedLibraryItems) {
+    const existing = await LibraryItem.findOne({ title: libData.title })
+    if (existing) {
+      console.log(`Library item "${libData.title}" already exists, skipping.`)
+    } else {
+      await LibraryItem.create(libData)
+      console.log(`Created library item: "${libData.title}"`)
+    }
+  }
+
+  console.log('\nDatabase seeding completed successfully.')
+}
+
+seed()
+  .then(() => {
+    disconnectDatabase()
+    process.exit(0)
+  })
+  .catch((err) => {
+    console.error('Error during seeding:', err)
+    disconnectDatabase()
+    process.exit(1)
+  })

@@ -9,6 +9,10 @@ const initialForm = {
   status: 'published',
   excerpt: '',
   content: '',
+  researchArea: '',
+  methodology: '',
+  keyFindings: '',
+  publicationUrl: '',
   linkedProductId: '',
   image: null,
 }
@@ -64,6 +68,10 @@ export function AdminResearchPage({ pathname, onNavigate }) {
       status: item.status || 'published',
       excerpt: item.excerpt || '',
       content: item.content || '',
+      researchArea: item.researchArea || '',
+      methodology: item.methodology || '',
+      keyFindings: item.keyFindings || '',
+      publicationUrl: item.publicationUrl || '',
       linkedProductId: item.linkedProductId || '',
       image: item.image || null,
     })
@@ -175,6 +183,22 @@ export function AdminResearchPage({ pathname, onNavigate }) {
               <label>
                 Excerpt
                 <textarea value={form.excerpt} onChange={updateField('excerpt')} placeholder="Short summary for the card" rows={4} />
+              </label>
+              <label>
+                Research Area
+                <input value={form.researchArea} onChange={updateField('researchArea')} type="text" placeholder="Example: Digestive & Gut Health" />
+              </label>
+              <label>
+                Methodology
+                <textarea value={form.methodology} onChange={updateField('methodology')} placeholder="Briefly describe the approach, assay, screening, or study method" rows={4} />
+              </label>
+              <label>
+                Key Findings
+                <textarea value={form.keyFindings} onChange={updateField('keyFindings')} placeholder="Summarize the main research outcome" rows={4} />
+              </label>
+              <label>
+                Publication URL
+                <input value={form.publicationUrl} onChange={updateField('publicationUrl')} type="url" placeholder="https://example.com/research-paper" />
               </label>
               <label>
                 Content

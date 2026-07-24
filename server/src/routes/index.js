@@ -17,6 +17,7 @@ import { listPosts, getPost, createPost, updatePost, deletePost } from '../contr
 import { listResearchItems, createAdminResearchItem, deleteAdminResearchItem, listAdminResearchItems, updateAdminResearchItem } from '../controllers/researchController.js'
 import { listLibraryItems, createAdminLibraryItem, deleteAdminLibraryItem, listAdminLibraryItems, updateAdminLibraryItem } from '../controllers/libraryController.js'
 import { createAdminReview, deleteAdminReview, listAdminReviews, listReviews, updateAdminReview } from '../controllers/reviewController.js'
+import { createProductReview, listProductReviews } from '../controllers/productReviewController.js'
 import { listUsers } from '../controllers/userController.js'
 import { listCategories } from '../controllers/categoryController.js'
 import { listTags } from '../controllers/tagController.js'
@@ -94,6 +95,8 @@ router.get('/admin/tags', requireAuth, requireRole('Administrator'), listAdminTa
 
 router.route('/products').get(listProducts).post(requireAuth, requireRole('Administrator'), createProduct)
 router.get('/products/:id', getProduct)
+router.get('/products/:productId/reviews', listProductReviews)
+router.post('/products/:productId/reviews', createProductReview)
 router.route('/products/:id').put(requireAuth, requireRole('Administrator'), updateProduct).delete(requireAuth, requireRole('Administrator'), deleteProduct)
 router.route('/posts').get(listPosts).post(requireAuth, requireRole('Administrator'), createPost)
 router.get('/posts/:id', getPost)

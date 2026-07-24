@@ -11,6 +11,11 @@ function serializeProduct(product) {
     stock: product.stock,
     status: product.status,
     description: product.description,
+    benefits: product.benefits || '',
+    ingredients: product.ingredients || '',
+    scientificValidation: product.scientificValidation || '',
+    directions: product.directions || '',
+    warnings: product.warnings || '',
     images: product.images || [],
     createdAt: product.createdAt,
     updatedAt: product.updatedAt,
@@ -48,6 +53,11 @@ export async function createProduct(req, res, next) {
       stock: Number(body.stock || 0),
       status: body.status || 'draft',
       description: body.description || '',
+      benefits: body.benefits || '',
+      ingredients: body.ingredients || '',
+      scientificValidation: body.scientificValidation || '',
+      directions: body.directions || '',
+      warnings: body.warnings || '',
       images: Array.isArray(body.images) ? body.images : [],
     })
 
@@ -70,6 +80,11 @@ export async function updateProduct(req, res, next) {
     product.stock = body.stock ?? product.stock
     product.status = body.status ?? product.status
     product.description = body.description ?? product.description
+    product.benefits = body.benefits ?? product.benefits
+    product.ingredients = body.ingredients ?? product.ingredients
+    product.scientificValidation = body.scientificValidation ?? product.scientificValidation
+    product.directions = body.directions ?? product.directions
+    product.warnings = body.warnings ?? product.warnings
     if (Array.isArray(body.images)) {
       product.images = body.images
     }

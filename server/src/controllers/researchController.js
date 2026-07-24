@@ -10,6 +10,10 @@ function serializeResearchItem(item) {
     status: item.status,
     excerpt: item.excerpt,
     content: item.content,
+    researchArea: item.researchArea || '',
+    methodology: item.methodology || '',
+    keyFindings: item.keyFindings || '',
+    publicationUrl: item.publicationUrl || '',
     image: item.image || null,
     linkedProductId: item.linkedProductId || '',
     createdAt: item.createdAt,
@@ -54,6 +58,10 @@ export async function createAdminResearchItem(req, res, next) {
       status: body.status || 'published',
       excerpt: body.excerpt || '',
       content: body.content || '',
+      researchArea: body.researchArea || '',
+      methodology: body.methodology || '',
+      keyFindings: body.keyFindings || '',
+      publicationUrl: body.publicationUrl || '',
       image: body.image || null,
       linkedProductId: body.linkedProductId || '',
     })
@@ -76,6 +84,10 @@ export async function updateAdminResearchItem(req, res, next) {
     item.status = body.status ?? item.status
     item.excerpt = body.excerpt ?? item.excerpt
     item.content = body.content ?? item.content
+    item.researchArea = body.researchArea ?? item.researchArea
+    item.methodology = body.methodology ?? item.methodology
+    item.keyFindings = body.keyFindings ?? item.keyFindings
+    item.publicationUrl = body.publicationUrl ?? item.publicationUrl
     if (body.image) item.image = body.image
     item.linkedProductId = body.linkedProductId ?? item.linkedProductId
 
