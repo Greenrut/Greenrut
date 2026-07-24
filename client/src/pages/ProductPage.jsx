@@ -52,20 +52,28 @@ function ProductCard({ product, onView, onOrder }) {
 }
 
 const productCategoryOverview = [
-  ['Vitamins & Supplements', 'Internal health support, therapeutic benefits, and targeted daily wellness.'],
-  ['Nutrition & Metabolism', 'Functional herbal nutrition for metabolic balance and healthy living.'],
-  ['Skin & Hair Care', 'Natural beauty care with gentle botanical and dermatological support.'],
-  ['Men & Women', 'Gender-focused herbal support for immune, hormonal, reproductive, and vitality needs.'],
-  ['Targeted Health', 'Directional wellness for brain, heart, joints, digestion, immunity, and aging support.'],
+  ['SKIN & BODY CARE', 'Anti-Aging care, beauty bars, moisturizers, hair oil, body oil, sunscreen, african soaps, toners'],
+  ['DAILY SUPPLEMENTS (Nutrition)', 'Vitamins, Minerals, Stress reliever, Sleep, Focus, Energy, Performance.'],
+  ['IMMUNITY & METABOLISM', 'Detoxifier, Anti-oxidants, Blood sugar, Digestion, Cholesterol, Circulation.'],
+  ['TARGETED HEALTH', 'Weight Management, Heart & Brain Health, Bone & Eye care, Diabetes, Respiratory health'],
+  ['MEN & WOMEN', 'Fertility, Menopause, Prostate, Stamina, Hormonal balances, Menstrual comfort, libido.'],
+  ['HERBAL INSTANTS', 'Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action.'],
 ]
 
-export function ProductPage({ onNavigate }) {
+export function ProductPage({ onNavigate, search }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    return new URLSearchParams(search || window.location.search).get('category') || 'All'
+  })
   const [sortBy, setSortBy] = useState('newest')
+
+  useEffect(() => {
+    const cat = new URLSearchParams(search || window.location.search).get('category')
+    setSelectedCategory(cat || 'All')
+  }, [search])
 
   useEffect(() => {
     let cancelled = false
@@ -94,7 +102,15 @@ export function ProductPage({ onNavigate }) {
     }
   }, [])
 
-  const categories = ['All', 'Vitamins & Supplements', 'Nutrition & Metabolism', 'Skin & Hair Care', 'Men & Women', 'Targeted Health']
+  const categories = [
+    'All',
+    'SKIN & BODY CARE',
+    'DAILY SUPPLEMENTS (Nutrition)',
+    'IMMUNITY & METABOLISM',
+    'TARGETED HEALTH',
+    'MEN & WOMEN',
+    'HERBAL INSTANTS',
+  ]
 
   const filteredProducts = useMemo(() => {
     const term = searchTerm.trim().toLowerCase()

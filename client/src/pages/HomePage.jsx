@@ -7,6 +7,12 @@ import bannerImage from '../assets/banna.png'
 import leafSaleImage from '../assets/leaf1.png'
 import bowlSaleImage from '../assets/leaf2.png'
 import { fallbackProducts } from "../data.js";
+import catSkinImg from '../assets/category_skin_body_care.png'
+import catSupplementsImg from '../assets/category_daily_supplements.png'
+import catImmunityImg from '../assets/category_immunity_metabolism.png'
+import catTargetedImg from '../assets/category_targeted_health.png'
+import catMenWomenImg from '../assets/category_men_women.png'
+import catHerbalImg from '../assets/category_herbal_instants.png'
 
 function mapProduct(product, index = 0) {
   return {
@@ -71,20 +77,34 @@ const heroSlides = [
 
 const productCategories = [
   {
-    title: 'Vitamins & Supplements',
-    text: 'Internal wellness support designed around therapeutic herbal benefits and daily vitality.',
+    title: 'SKIN & BODY CARE',
+    text: 'Anti-Aging care, beauty bars, moisturizers, hair oil, body oil, sunscreen, soaps, toners.',
+    image: catSkinImg,
   },
   {
-    title: 'Nutrition & Metabolism',
-    text: 'Functional herbal nutrition created to support balance, metabolism, and sustained wellbeing.',
+    title: 'DAILY SUPPLEMENTS (Nutrition)',
+    text: 'Vitamins, Minerals, Stress reliever, Sleep, Focus, Energy, Performance.',
+    image: catSupplementsImg,
   },
   {
-    title: 'Skin & Hair Care',
-    text: 'Gentle botanical care for natural beauty, dermatological support, and everyday confidence.',
+    title: 'IMMUNITY & METABOLISM',
+    text: 'Detoxifier, Anti-oxidants, Blood sugar, Digestion, Cholesterol, Circulation.',
+    image: catImmunityImg,
   },
   {
-    title: 'Targeted Health',
-    text: 'Focused solutions for immune support, brain health, joints, heart, digestion, and healthy aging.',
+    title: 'TARGETED HEALTH',
+    text: 'Weight Management, Heart & Brain Health, Bone & Eye care, Diabetes, Respiratory health.',
+    image: catTargetedImg,
+  },
+  {
+    title: 'MEN & WOMEN',
+    text: 'Fertility, Menopause, Prostate, Stamina, Hormonal balances, Menstrual comfort, libido.',
+    image: catMenWomenImg,
+  },
+  {
+    title: 'HERBAL INSTANTS',
+    text: 'Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action.',
+    image: catHerbalImg,
   },
 ]
 
@@ -216,27 +236,6 @@ export function HomePage({ onNavigate }) {
         </div>
       </section>
 
-      <section className="home-category-section page-shell">
-        <SectionTitle title="Our Comprehensive Range of Herbal Innovations" />
-        <p className="home-category-section__intro">
-          Every Greenrut category is shaped by scientific validation, transparent formulation, and a commitment to safe natural living.
-        </p>
-        <div className="home-category-grid">
-          {productCategories.map((category) => (
-            <button
-              key={category.title}
-              type="button"
-              className="home-category-card"
-              onClick={() => onNavigate?.('/product')}
-            >
-              <span className="sprout" aria-hidden="true" />
-              <h3>{category.title}</h3>
-              <p>{category.text}</p>
-            </button>
-          ))}
-        </div>
-      </section>
-
       <section className="section-band">
         <div className="page-shell">
           <SectionTitle title="Our Bestsellers" />
@@ -263,7 +262,7 @@ export function HomePage({ onNavigate }) {
       </section>
 
       <section className="home-promo-band">
-        <div className="home-promo-grid">
+        {/* <div className="home-promo-grid">
           <article className="home-promo-card">
             <div className="home-promo-card__copy">
               <h2>-50% Sale</h2>
@@ -278,12 +277,37 @@ export function HomePage({ onNavigate }) {
             </div>
             <img src={bowlSaleImage} alt="Green tea powder in a bowl" />
           </article>
-        </div>
+        </div> */}
         <div className="home-promo-quote">
           <span className="sprout" aria-hidden="true" />
           <p>Pure herbal blends made for calm routines, steady energy, and everyday wellness.</p>
           <strong>GREENRUT WELLNESS</strong>
           <small>Customer</small>
+        </div>
+      </section>
+
+      <section className="home-category-section page-shell">
+        <SectionTitle title="Our Comprehensive Range of Herbal Innovations" />
+        <p className="home-category-section__intro">
+          Every Greenrut category is shaped by scientific validation, transparent formulation, and a commitment to safe natural living.
+        </p>
+        <div className="home-category-grid">
+          {productCategories.map((category) => (
+            <button
+              key={category.title}
+              type="button"
+              className="home-category-card"
+              onClick={() => onNavigate?.(`/product?category=${encodeURIComponent(category.title)}`)}
+            >
+              <div className="home-category-card__image">
+                <img src={category.image} alt={category.title} loading="lazy" />
+              </div>
+              <div className="home-category-card__body">
+                <h3>{category.title}</h3>
+                <p>{category.text}</p>
+              </div>
+            </button>
+          ))}
         </div>
       </section>
 

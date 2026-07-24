@@ -94,7 +94,7 @@ function App() {
 
   let page = <HomePage onNavigate={navigate} />
   if (pathname === '/about-us') page = <AboutPage />
-  if (pathname === '/product') page = <ProductPage onNavigate={navigate} />
+  if (pathname === '/product') page = <ProductPage onNavigate={navigate} search={search} />
   if (pathname === '/product-details') page = <ProductDetailsPage onNavigate={navigate} />
   if (pathname === '/cart') page = <CartPage onNavigate={navigate} />
   if (pathname === '/contact') page = <ContactPage />
