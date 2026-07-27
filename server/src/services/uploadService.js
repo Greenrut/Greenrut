@@ -34,7 +34,7 @@ function toUploadFile(file, index = 0) {
 }
 
 function buildLocalUrl(baseUrl, folder, filename) {
-  const origin = String(baseUrl || 'https://greenrut.onrender.com').replace(/\/$/, '')
+  const origin = String(baseUrl || 'https://greenrut-vd7c.onrender.com').replace(/\/$/, '')
   const safeFolder = String(folder || 'uploads').replace(/^\/+|\/+$/g, '')
   return `${origin}/uploads/${safeFolder}/${filename}`
 }

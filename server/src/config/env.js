@@ -12,7 +12,7 @@ function parseOrigins(value) {
 const defaultClientOrigins = [
   'https://www.greenrut.com',
   'https://greenrut.com',
-  'https://greenrut.onrender.com',
+  'https://greenrut-vd7c.onrender.com',
   'http://localhost:5173',
 ]
 
