@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { ProductCard } from "../components/SiteChrome.jsx";
 import { publicRequest } from "../lib/publicApi.js";
 import { NewsletterBand, SectionTitle } from "./shared.jsx";
-import heroImage from '../assets/hero.png'
-import bannerImage from '../assets/banna.png'
+import bannerOneImage from '../assets/1.png'
+import bannerTwoImage from '../assets/second.png'
+import bannerThreeImage from '../assets/3.png'
+import bannerFourImage from '../assets/4.png'
 import leafSaleImage from '../assets/leaf1.png'
 import bowlSaleImage from '../assets/leaf2.png'
 import { fallbackProducts } from "../data.js";
@@ -26,52 +28,33 @@ function mapProduct(product, index = 0) {
 
 const heroSlides = [
   {
-    eyebrow: '100% herbal',
-    title: 'Scientifically Proven, Therapeutically Potent.',
-    text:
-      'Explore herbal products crafted for purity, potency, and peace of mind with a strong commitment to zero adverse effect.',
-    image: heroImage,
-    alt: 'Herbal products hero',
-    primaryLabel: 'Explore Our Products',
-    primaryPath: '/product',
-    secondaryLabel: 'Learn About Our Research',
-    secondaryPath: '/research',
-  },
-  {
-    eyebrow: 'Greenrut',
-    title: 'Pure, Potent, Proven.',
-    text:
-      'Harnessing ancient herbal wisdom with modern scientific research to create natural solutions you can trust.',
-    image: bannerImage,
-    alt: 'Greenrut wellness banner',
-    primaryLabel: 'Our Story',
-    primaryPath: '/about-us',
-    secondaryLabel: 'View Products',
-    secondaryPath: '/product',
-  },
-  {
-    eyebrow: 'Product categories',
     title: 'Every Health Problem Has a Natural Solution.',
-    text:
-      'Discover supplements, nutraceuticals, skin and body care, and targeted herbal solutions for everyday wellbeing.',
-    image: heroImage,
-    alt: 'Greenrut product categories',
+    image: bannerOneImage,
+    alt: 'Greenrut product category banner',
     primaryLabel: 'Shop Products',
     primaryPath: '/product',
-    secondaryLabel: 'Browse Library',
-    secondaryPath: '/library',
   },
   {
-    eyebrow: 'The science',
-    title: 'Research-Backed Herbal Solutions.',
-    text:
-      'Greenrut is committed to rigorous research, quality assurance, product development, and transparent scientific validation.',
-    image: bannerImage,
-    alt: 'Greenrut research and quality',
+    title: '100% Herbal: Scientifically Proven, Therapeutically Potent.',
+    image: bannerTwoImage,
+    alt: 'Greenrut scientifically proven herbal products banner',
+    primaryLabel: 'Explore Our Products',
+    secondaryPath: '/product',
+    primaryPath: '/product',
+  },
+  {
+    title: 'Science-Backed Herbal Solutions.',
+    image: bannerThreeImage,
+    alt: 'Greenrut research and clinical study banner',
     primaryLabel: 'View Research',
     primaryPath: '/research',
-    secondaryLabel: 'Join Community',
-    secondaryPath: '/contact',
+  },
+  {
+    title: 'The Greenrut Difference: Pure, Potent, Proven.',
+    image: bannerFourImage,
+    alt: 'Greenrut pure potent proven banner',
+    primaryLabel: 'Learn More About Our Story',
+    primaryPath: '/about-us',
   },
 ]
 
@@ -116,6 +99,7 @@ export function HomePage({ onNavigate }) {
   const [products, setProducts] = useState([]);
   const [posts, setPosts] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeHero, setActiveHero] = useState(0);
@@ -127,19 +111,23 @@ export function HomePage({ onNavigate }) {
     async function loadHomeData() {
       try {
         setLoading(true);
-        const [productsResponse, postsResponse, reviewsResponse] = await Promise.all([
+        const [productsResponse, postsResponse, reviewsResponse, bannersResponse] = await Promise.all([
           publicRequest("/products"),
           publicRequest("/posts"),
           publicRequest("/reviews"),
+          publicRequest("/banners").catch(() => ({ data: [] })),
         ]);
         if (cancelled) return;
 
         setProducts(productsResponse.data || []);
         setPosts(postsResponse.data || []);
         setReviews(reviewsResponse.data || []);
+        const fetchedBanners = bannersResponse.data || [];
+        setBanners(fetchedBanners.length > 0 ? fetchedBanners : heroSlides);
       } catch (requestError) {
         if (!cancelled) {
           setError(requestError.message || "Failed to load home content");
+          setBanners(heroSlides);
         }
       } finally {
         if (!cancelled) {
@@ -155,12 +143,13 @@ export function HomePage({ onNavigate }) {
   }, []);
 
   useEffect(() => {
+    const slidesToUse = banners.length > 0 ? banners : heroSlides;
     const timer = window.setInterval(() => {
-      setActiveHero((current) => (current + 1) % heroSlides.length);
+      setActiveHero((current) => (current + 1) % slidesToUse.length);
     }, 5500);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [banners.length]);
 
   useEffect(() => {
     if (reviews.length === 0) return;
@@ -171,37 +160,45 @@ export function HomePage({ onNavigate }) {
   }, [reviews.length]);
 
   const bestsellers = products.length ? products.slice(0, 8) : fallbackProducts;
-  const heroSlide = heroSlides[activeHero];
+  const slidesToUse = banners.length > 0 ? banners : heroSlides;
+  const heroSlide = slidesToUse[activeHero];
 
   return (
     <>
-      <section className="home-hero page-shell">
-        <div className="home-hero__copy">
-          <p className="home-hero__eyebrow">{heroSlide.eyebrow}</p>
-          <h1>
-            {heroSlide.title}
-          </h1>
-          <p>{heroSlide.text}</p>
-          <div className="actions">
-            <button
-              type="button"
-              className="primary-button"
-              onClick={() => onNavigate?.(heroSlide.primaryPath)}
-            >
-              {heroSlide.primaryLabel}
-            </button>
-            <button
-              type="button"
-              className="secondary-button secondary-button--dark"
-              onClick={() => onNavigate?.(heroSlide.secondaryPath)}
-            >
-              {heroSlide.secondaryLabel}
-            </button>
-          </div>
+      <section className="home-hero home-hero--banner page-shell">
+        <div className="home-hero__art home-hero__art--banner">
+          <button
+            type="button"
+            className="home-hero__nav home-hero__nav--prev"
+            aria-label="Previous slide"
+            onClick={() => setActiveHero((current) => (current - 1 + slidesToUse.length) % slidesToUse.length)}
+          >
+            &#8249;
+          </button>
+          <button
+            type="button"
+            className="home-hero__slide"
+            onClick={() => onNavigate?.(heroSlide.primaryPath || '/product')}
+            aria-label={heroSlide.title || heroSlide.alt || 'Open banner'}
+          >
+            <img
+              src={heroSlide.image?.url || heroSlide.image}
+              alt={heroSlide.alt || heroSlide.title || 'Greenrut banner'}
+              className="home-hero__image"
+            />
+          </button>
+          <button
+            type="button"
+            className="home-hero__nav home-hero__nav--next"
+            aria-label="Next slide"
+            onClick={() => setActiveHero((current) => (current + 1) % slidesToUse.length)}
+          >
+            &#8250;
+          </button>
           <div className="home-hero__dots" aria-label="Hero slides">
-            {heroSlides.map((slide, index) => (
+            {slidesToUse.map((slide, index) => (
               <button
-                key={slide.title}
+                key={slide.id || slide.title || index}
                 type="button"
                 className={index === activeHero ? 'is-active' : ''}
                 aria-label={`Show slide ${index + 1}`}
@@ -210,29 +207,6 @@ export function HomePage({ onNavigate }) {
               />
             ))}
           </div>
-        </div>
-        <div className="home-hero__art">
-          <button
-            type="button"
-            className="home-hero__nav home-hero__nav--prev"
-            aria-label="Previous slide"
-            onClick={() => setActiveHero((current) => (current - 1 + heroSlides.length) % heroSlides.length)}
-          >
-            &#8249;
-          </button>
-          <img
-            src={heroSlide.image}
-            alt={heroSlide.alt}
-            className="home-hero__image"
-          />
-          <button
-            type="button"
-            className="home-hero__nav home-hero__nav--next"
-            aria-label="Next slide"
-            onClick={() => setActiveHero((current) => (current + 1) % heroSlides.length)}
-          >
-            &#8250;
-          </button>
         </div>
       </section>
 

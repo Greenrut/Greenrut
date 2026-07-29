@@ -534,6 +534,59 @@
   filter: blur(0.2px);
 }
 
+.home-hero.home-hero--banner {
+  display: block;
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 0 0 clamp(30px, 5vw, 54px);
+}
+
+.home-hero--banner .home-hero__art {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 0;
+  background: #f4faf2;
+  box-shadow: none;
+}
+
+.home-hero__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home-hero--banner .home-hero__image {
+  object-fit: contain;
+  object-position: center;
+  background: #f4faf2;
+}
+
+.home-hero--banner .home-hero__dots {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 2;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.home-hero--banner .home-hero__dots button {
+  width: 8px;
+  height: 8px;
+}
+
 .section-band {
   background: #f4f4f1;
   padding: clamp(40px, 6vw, 60px) 0;
@@ -1231,6 +1284,16 @@
   height: 64px;
   display: block;
   object-fit: contain;
+}
+
+.badge-row__icon--development {
+  width: 88px;
+  height: 88px;
+}
+
+.badge-row__icon--development img {
+  width: 84px;
+  height: 84px;
 }
 
 .badge-row p {
@@ -4446,5 +4509,55 @@
   .admin-table__head,
   .admin-table__row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  html,
+  body,
+  #root,
+  .site-frame {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .site-header {
+    margin-top: 0;
+  }
+
+  .site-header__inner {
+    min-height: 58px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .home-hero.home-hero--banner {
+    padding-top: 0;
+    padding-bottom: 24px;
+  }
+
+  .home-hero--banner .home-hero__art {
+    aspect-ratio: 16 / 9;
+    min-height: 168px;
+  }
+
+  .home-hero--banner .home-hero__nav {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
+
+  .home-hero--banner .home-hero__nav--prev {
+    left: 6px;
+  }
+
+  .home-hero--banner .home-hero__nav--next {
+    right: 6px;
+  }
+
+  .home-hero--banner .home-hero__dots {
+    bottom: 8px;
+    gap: 6px;
+    padding: 6px 8px;
   }
 }

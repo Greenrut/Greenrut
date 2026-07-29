@@ -9,7 +9,7 @@ export function SectionTitle({ title, subtitle }) {
 
 import certificationIcon from '../assets/certification64.png'
 import microscopeIcon from '../assets/microscope64.png'
-import developmentIcon from '../assets/devloment.png'
+import biodiversityIcon from '../assets/biodiversity64.png'
 import madeInNigeriaIcon from '../assets/madeinnigeria64.png'
 
 export function BadgeRow() {
@@ -28,8 +28,8 @@ export function BadgeRow() {
         <p>Scientifically Verified</p>
       </div>
       <div>
-        <span className="badge-row__icon">
-          <img src={developmentIcon} alt="" aria-hidden="true" />
+        <span className="badge-row__icon badge-row__icon--development">
+          <img src={biodiversityIcon} alt="" aria-hidden="true" />
         </span>
         <p>12 Years Of Research &amp; Development</p>
       </div>

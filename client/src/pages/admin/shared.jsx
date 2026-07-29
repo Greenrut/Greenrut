@@ -3,6 +3,7 @@
 const adminNav = [
   { label: 'Dashboard', href: '/admin', icon: 'dashboard' },
   { section: 'Content' },
+  { label: 'Banners', href: '/admin/banners', icon: 'banners' },
   { label: 'Blog Posts', href: '/admin/blog/new', icon: 'blog' },
   { label: 'Products', href: '/admin/products/new', icon: 'products' },
   { label: 'Research', href: '/admin/research/new', icon: 'research' },
@@ -17,6 +18,15 @@ const adminNav = [
 ]
 
 function Icon({ type }) {
+  if (type === 'banners') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="10" rx="1" fill="none" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M3 15h18" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      </svg>
+    )
+  }
+
   if (type === 'blog') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -32,6 +42,31 @@ function Icon({ type }) {
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 9h10v11H7z" fill="none" stroke="currentColor" strokeWidth="1.7" />
         <path d="M9 9a3 3 0 0 1 6 0" fill="none" stroke="currentColor" strokeWidth="1.7" />
+      </svg>
+    )
+  }
+
+  if (type === 'research') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M11 4c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7m8.5 14.5l3 3" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    )
+  }
+
+  if (type === 'library') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 4h6v16H4zM12 4h6v16h-6zM7 7h2M7 11h2M7 15h2M15 7h2M15 11h2M15 15h2" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    )
+  }
+
+  if (type === 'reviews') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 3h18a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2" fill="none" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M3 7h18M7 11h4M7 15h10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
       </svg>
     )
   }
@@ -148,6 +183,7 @@ export function AdminShell({ pathname, onNavigate, children }) {
     (pathname.startsWith('/admin/') &&
       !pathname.startsWith('/admin/login') &&
       !pathname.startsWith('/admin/products/new') &&
+      !pathname.startsWith('/admin/banners') &&
       !pathname.startsWith('/admin/blog/new') &&
       !pathname.startsWith('/admin/research/new') &&
       !pathname.startsWith('/admin/library/new') &&

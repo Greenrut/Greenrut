@@ -17,7 +17,7 @@ function normalizeApiBase(value) {
 const envApiBase = normalizeApiBase(import.meta.env.VITE_API_BASE_URL);
 const defaultApiBase = runtimeIsLocal
   ? `http://${runtimeHost}:4000/api`
-  : "https://greenrut-vd7c.onrender.com/api";
+  : "https://greenrut.onrender.com/api";
 
 const API_BASE_URL = envApiBase || defaultApiBase;
 
