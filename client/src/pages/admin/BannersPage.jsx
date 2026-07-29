@@ -1,37 +1,37 @@
-import { useEffect, useState } from 'react'
-import { adminRequest } from '../../lib/adminApi.js'
-import { AdminCard, AdminPageHeader, AdminShell } from './shared.jsx'
+import { useEffect, useState } from "react";
+import { adminRequest } from "../../lib/adminApi.js";
+import { AdminCard, AdminPageHeader, AdminShell } from "./shared.jsx";
 
 export function AdminBannersPage({ pathname, onNavigate }) {
-  const [banners, setBanners] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [banners, setBanners] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const loadBanners = async () => {
     try {
-      setLoading(true)
-      const response = await adminRequest('/admin/banners')
-      setBanners(response.data || [])
+      setLoading(true);
+      const response = await adminRequest("/admin/banners");
+      setBanners(response.data || []);
     } catch (requestError) {
-      setError(requestError.message || 'Failed to load banners')
+      setError(requestError.message || "Failed to load banners");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    loadBanners()
-  }, [])
+    loadBanners();
+  }, []);
 
   const handleDeleteBanner = async (id) => {
-    if (!id || !window.confirm('Delete this banner?')) return
+    if (!id || !window.confirm("Delete this banner?")) return;
     try {
-      await adminRequest(`/admin/banners/${id}`, { method: 'DELETE' })
-      await loadBanners()
+      await adminRequest(`/admin/banners/${id}`, { method: "DELETE" });
+      await loadBanners();
     } catch (requestError) {
-      setError(requestError.message || 'Failed to delete banner')
+      setError(requestError.message || "Failed to delete banner");
     }
-  }
+  };
 
   return (
     <AdminShell pathname={pathname} onNavigate={onNavigate}>
@@ -48,7 +48,7 @@ export function AdminBannersPage({ pathname, onNavigate }) {
           <button
             type="button"
             className="admin-primary-button"
-            onClick={() => onNavigate('/admin/banners/new')}
+            onClick={() => onNavigate("/admin/banners/new")}
           >
             <span className="admin-inline-icon">+</span> Add Banner
           </button>
@@ -72,7 +72,9 @@ export function AdminBannersPage({ pathname, onNavigate }) {
                   <strong>{banner.title}</strong>
                 </span>
                 <span className="admin-table__cell">
-                  <span className={`admin-pill admin-pill--${banner.status === 'published' ? 'green' : 'gray'}`}>
+                  <span
+                    className={`admin-pill admin-pill--${banner.status === "published" ? "green" : "gray"}`}
+                  >
                     {banner.status}
                   </span>
                 </span>
@@ -99,5 +101,5 @@ export function AdminBannersPage({ pathname, onNavigate }) {
         </div>
       </AdminCard>
     </AdminShell>
-  )
+  );
 }

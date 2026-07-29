@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 import {
   AboutPage,
   AccountAddressBookPage,
@@ -31,122 +31,193 @@ import {
   ProductDetailsPage,
   ProductPage,
   ResetPasswordPage,
-} from './pages/index.js'
-import { SiteFrame } from './components/SiteChrome.jsx'
-import { hasAdminAuth, hasUserAuth } from './lib/auth.js'
-import './App.css'
+} from "./pages/index.js";
+import { SiteFrame } from "./components/SiteChrome.jsx";
+import { hasAdminAuth, hasUserAuth } from "./lib/auth.js";
+import "./App.css";
 
 function useLocationState() {
   const [locationState, setLocationState] = useState(() => ({
     pathname: window.location.pathname,
     search: window.location.search,
-  }))
+  }));
 
   useEffect(() => {
     const update = () =>
       setLocationState({
         pathname: window.location.pathname,
         search: window.location.search,
-      })
-    window.addEventListener('popstate', update)
-    return () => window.removeEventListener('popstate', update)
-  }, [])
+      });
+    window.addEventListener("popstate", update);
+    return () => window.removeEventListener("popstate", update);
+  }, []);
 
-  return locationState
+  return locationState;
 }
 
 function App() {
-  const { pathname, search } = useLocationState()
-  const isAdminRoute = pathname.startsWith('/admin')
-  const adminLoginRoute = pathname === '/admin/login'
-  const userLoginRoute = pathname === '/login'
-  const hasAdminToken = hasAdminAuth()
-  const hasUserToken = hasUserAuth()
+  const { pathname, search } = useLocationState();
+  const isAdminRoute = pathname.startsWith("/admin");
+  const adminLoginRoute = pathname === "/admin/login";
+  const userLoginRoute = pathname === "/login";
+  const hasAdminToken = hasAdminAuth();
+  const hasUserToken = hasUserAuth();
 
   const navigate = (href) => {
-    if (href === `${window.location.pathname}${window.location.search}`) return
-    window.history.pushState({}, '', href)
-    window.dispatchEvent(new PopStateEvent('popstate'))
-  }
+    if (href === `${window.location.pathname}${window.location.search}`) return;
+    window.history.pushState({}, "", href);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
 
   useEffect(() => {
-    if (pathname.startsWith('/account') && !hasUserToken && !userLoginRoute) {
-      window.history.replaceState({}, '', '/login')
-      window.dispatchEvent(new PopStateEvent('popstate'))
-      return
+    if (pathname.startsWith("/account") && !hasUserToken && !userLoginRoute) {
+      window.history.replaceState({}, "", "/login");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+      return;
     }
 
-    if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !hasAdminToken) {
-      window.history.replaceState({}, '', '/admin/login')
-      window.dispatchEvent(new PopStateEvent('popstate'))
-      return
+    if (
+      pathname.startsWith("/admin") &&
+      pathname !== "/admin/login" &&
+      !hasAdminToken
+    ) {
+      window.history.replaceState({}, "", "/admin/login");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+      return;
     }
 
     if (userLoginRoute && hasUserToken) {
-      window.history.replaceState({}, '', '/account')
-      window.dispatchEvent(new PopStateEvent('popstate'))
-      return
+      window.history.replaceState({}, "", "/account");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+      return;
     }
 
     if (adminLoginRoute && hasAdminToken) {
-      window.history.replaceState({}, '', '/admin')
-      window.dispatchEvent(new PopStateEvent('popstate'))
+      window.history.replaceState({}, "", "/admin");
+      window.dispatchEvent(new PopStateEvent("popstate"));
     }
-  }, [pathname, userLoginRoute, adminLoginRoute, hasUserToken, hasAdminToken])
+  }, [pathname, userLoginRoute, adminLoginRoute, hasUserToken, hasAdminToken]);
 
-  let page = <HomePage onNavigate={navigate} />
-  if (pathname === '/about-us') page = <AboutPage />
-  if (pathname === '/product') page = <ProductPage onNavigate={navigate} search={search} />
-  if (pathname === '/product-details') page = <ProductDetailsPage onNavigate={navigate} />
-  if (pathname === '/cart') page = <CartPage onNavigate={navigate} />
-  if (pathname === '/contact') page = <ContactPage />
-  if (pathname === '/login') page = <LoginPage onNavigate={navigate} />
-  if (pathname === '/forgot-password') page = <ForgotPasswordPage onNavigate={navigate} />
-  if (pathname === '/reset-password') page = <ResetPasswordPage onNavigate={navigate} />
-  if (pathname === '/blog') page = <BlogPage onNavigate={navigate} search={search} />
-  if (pathname === '/library') page = <LibraryPage onNavigate={navigate} />
-  if (pathname === '/research') page = <ResearchPage onNavigate={navigate} />
-  if (pathname === '/account' || pathname === '/account/dashboard') page = <AccountDashboardPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/account/address-book') page = <AccountAddressBookPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/account/address-book/edit') page = <AccountAddressEditPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/account/wishlist') page = <AccountWishlistPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/account/inbox') page = <AccountInboxPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/account/orders') page = <AccountOrdersPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/account/payment-settings') page = <AccountPaymentSettingsPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/account/close-account') page = <AccountCloseAccountPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/login') page = <AdminLoginPage onNavigate={navigate} />
-  if (pathname === '/admin' || pathname === '/admin/dashboard') page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/products/new') page = <AdminProductsPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/banners') page = <AdminBannersPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/banners/new' || pathname.match(/^\/admin\/banners\/[^/]+$/)) {
-    const params = { id: pathname.split('/').pop() }
-    page = <AdminBannerEditPage pathname={pathname} params={params} onNavigate={navigate} />
+  let page = <HomePage onNavigate={navigate} />;
+  if (pathname === "/about-us") page = <AboutPage />;
+  if (pathname === "/product")
+    page = <ProductPage onNavigate={navigate} search={search} />;
+  if (pathname === "/product-details")
+    page = <ProductDetailsPage onNavigate={navigate} />;
+  if (pathname === "/cart") page = <CartPage onNavigate={navigate} />;
+  if (pathname === "/contact") page = <ContactPage />;
+  if (pathname === "/login") page = <LoginPage onNavigate={navigate} />;
+  if (pathname === "/forgot-password")
+    page = <ForgotPasswordPage onNavigate={navigate} />;
+  if (pathname === "/reset-password")
+    page = <ResetPasswordPage onNavigate={navigate} />;
+  if (pathname === "/blog")
+    page = <BlogPage onNavigate={navigate} search={search} />;
+  if (pathname === "/library") page = <LibraryPage onNavigate={navigate} />;
+  if (pathname === "/research") page = <ResearchPage onNavigate={navigate} />;
+  if (pathname === "/account" || pathname === "/account/dashboard")
+    page = <AccountDashboardPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/account/address-book")
+    page = <AccountAddressBookPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/account/address-book/edit")
+    page = <AccountAddressEditPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/account/wishlist")
+    page = <AccountWishlistPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/account/inbox")
+    page = <AccountInboxPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/account/orders")
+    page = <AccountOrdersPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/account/payment-settings")
+    page = (
+      <AccountPaymentSettingsPage pathname={pathname} onNavigate={navigate} />
+    );
+  if (pathname === "/account/close-account")
+    page = (
+      <AccountCloseAccountPage pathname={pathname} onNavigate={navigate} />
+    );
+  if (pathname === "/admin/login")
+    page = <AdminLoginPage onNavigate={navigate} />;
+  if (pathname === "/admin" || pathname === "/admin/dashboard")
+    page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/products/new")
+    page = <AdminProductsPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/banners")
+    page = <AdminBannersPage pathname={pathname} onNavigate={navigate} />;
+  if (
+    pathname === "/admin/banners/new" ||
+    pathname.match(/^\/admin\/banners\/[^/]+$/)
+  ) {
+    const params = { id: pathname.split("/").pop() };
+    page = (
+      <AdminBannerEditPage
+        pathname={pathname}
+        params={params}
+        onNavigate={navigate}
+      />
+    );
   }
-  if (pathname === '/admin/blog/new') page = <AdminBlogPostPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/research/new') page = <AdminResearchPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/library/new') page = <AdminLibraryPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/reviews') page = <AdminReviewsPage pathname={pathname} onNavigate={navigate} />
-  if (pathname === '/admin/users') page = <AdminUsersPage pathname={pathname} onNavigate={navigate} />
-  if (pathname.startsWith('/admin/') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/admin/products/new') && !pathname.startsWith('/admin/banners') && !pathname.startsWith('/admin/blog/new') && !pathname.startsWith('/admin/research/new') && !pathname.startsWith('/admin/library/new') && !pathname.startsWith('/admin/reviews') && !pathname.startsWith('/admin/users')) {
-    page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />
+  if (pathname === "/admin/blog/new")
+    page = <AdminBlogPostPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/research/new")
+    page = <AdminResearchPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/library/new")
+    page = <AdminLibraryPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/reviews")
+    page = <AdminReviewsPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/users")
+    page = <AdminUsersPage pathname={pathname} onNavigate={navigate} />;
+  if (
+    pathname.startsWith("/admin/") &&
+    !pathname.startsWith("/admin/login") &&
+    !pathname.startsWith("/admin/products/new") &&
+    !pathname.startsWith("/admin/banners") &&
+    !pathname.startsWith("/admin/blog/new") &&
+    !pathname.startsWith("/admin/research/new") &&
+    !pathname.startsWith("/admin/library/new") &&
+    !pathname.startsWith("/admin/reviews") &&
+    !pathname.startsWith("/admin/users")
+  ) {
+    page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />;
   }
 
   if (!isAdminRoute) {
-    const knownUserRoutes = new Set(['/', '/about-us', '/product', '/product-details', '/cart', '/contact', '/login', '/forgot-password', '/reset-password', '/blog', '/library', '/research', '/account', '/account/dashboard', '/account/address-book', '/account/address-book/edit', '/account/wishlist', '/account/inbox', '/account/orders', '/account/payment-settings', '/account/close-account'])
+    const knownUserRoutes = new Set([
+      "/",
+      "/about-us",
+      "/product",
+      "/product-details",
+      "/cart",
+      "/contact",
+      "/login",
+      "/forgot-password",
+      "/reset-password",
+      "/blog",
+      "/library",
+      "/research",
+      "/account",
+      "/account/dashboard",
+      "/account/address-book",
+      "/account/address-book/edit",
+      "/account/wishlist",
+      "/account/inbox",
+      "/account/orders",
+      "/account/payment-settings",
+      "/account/close-account",
+    ]);
     if (!knownUserRoutes.has(pathname)) {
-      page = <NotFoundPage onNavigate={navigate} />
+      page = <NotFoundPage onNavigate={navigate} />;
     }
   }
 
   if (isAdminRoute) {
-    return page
+    return page;
   }
 
   return (
     <SiteFrame pathname={pathname} onNavigate={navigate}>
       {page}
     </SiteFrame>
-  )
+  );
 }
 
-export default App
+export default App;

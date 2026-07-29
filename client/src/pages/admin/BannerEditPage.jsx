@@ -1,65 +1,65 @@
-import { useEffect, useState } from 'react'
-import { adminRequest } from '../../lib/adminApi.js'
-import { AdminPageHeader, AdminShell } from './shared.jsx'
+import { useEffect, useState } from "react";
+import { adminRequest } from "../../lib/adminApi.js";
+import { AdminPageHeader, AdminShell } from "./shared.jsx";
 
 export function AdminBannerEditPage({ pathname, params, onNavigate }) {
-  const bannerId = params?.id
-  const isNew = bannerId === 'new'
+  const bannerId = params?.id;
+  const isNew = bannerId === "new";
 
   const [banner, setBanner] = useState({
-    eyebrow: '',
-    title: '',
-    text: '',
-    primaryLabel: 'Learn More',
-    primaryPath: '/product',
-    secondaryLabel: '',
-    secondaryPath: '',
+    eyebrow: "",
+    title: "",
+    text: "",
+    primaryLabel: "Learn More",
+    primaryPath: "/product",
+    secondaryLabel: "",
+    secondaryPath: "",
     image: null,
-    alt: '',
+    alt: "",
     position: 0,
-    status: 'published',
-  })
-  const [loading, setLoading] = useState(!isNew)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
-  const [uploading, setUploading] = useState(false)
+    status: "published",
+  });
+  const [loading, setLoading] = useState(!isNew);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    if (isNew) return
+    if (isNew) return;
 
     const loadBanner = async () => {
       try {
-        setLoading(true)
-        const response = await adminRequest(`/admin/banners/${bannerId}`)
-        setBanner(response.data || {})
+        setLoading(true);
+        const response = await adminRequest(`/admin/banners/${bannerId}`);
+        setBanner(response.data || {});
       } catch (requestError) {
-        setError(requestError.message || 'Failed to load banner')
+        setError(requestError.message || "Failed to load banner");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadBanner()
-  }, [bannerId, isNew])
+    loadBanner();
+  }, [bannerId, isNew]);
 
   const handleInputChange = (field, value) => {
-    setBanner((prev) => ({ ...prev, [field]: value }))
-  }
+    setBanner((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     try {
-      setUploading(true)
-      setError('')
-      const formData = new FormData()
-      formData.append('image', file)
+      setUploading(true);
+      setError("");
+      const formData = new FormData();
+      formData.append("image", file);
 
-      const result = await adminRequest('/admin/uploads/image', {
-        method: 'POST',
+      const result = await adminRequest("/admin/uploads/image", {
+        method: "POST",
         body: formData,
-      })
+      });
 
       setBanner((prev) => ({
         ...prev,
@@ -67,49 +67,52 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
           url: result.data.url,
           publicId: result.data.publicId,
         },
-      }))
+      }));
     } catch (uploadError) {
-      setError(uploadError.message || 'Failed to upload image')
+      setError(uploadError.message || "Failed to upload image");
     } finally {
-      setUploading(false)
+      setUploading(false);
     }
-  }
+  };
 
   const handleSave = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!banner.title.trim()) {
-      setError('Banner title is required')
-      return
+      setError("Banner title is required");
+      return;
     }
 
     try {
-      setSaving(true)
-      setError('')
+      setSaving(true);
+      setError("");
 
       if (isNew) {
-        await adminRequest('/admin/banners', { method: 'POST', body: banner })
+        await adminRequest("/admin/banners", { method: "POST", body: banner });
       } else {
-        await adminRequest(`/admin/banners/${bannerId}`, { method: 'PUT', body: banner })
+        await adminRequest(`/admin/banners/${bannerId}`, {
+          method: "PUT",
+          body: banner,
+        });
       }
 
-      onNavigate('/admin/banners')
+      onNavigate("/admin/banners");
     } catch (requestError) {
-      setError(requestError.message || 'Failed to save banner')
+      setError(requestError.message || "Failed to save banner");
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   return (
     <AdminShell pathname={pathname} onNavigate={onNavigate}>
       <AdminPageHeader
-        title={isNew ? 'Create Banner' : 'Edit Banner'}
+        title={isNew ? "Create Banner" : "Edit Banner"}
         subtitle="Manage your homepage carousel banner."
       />
 
       {error ? <p className="text-sm text-red-600 mb-4">{error}</p> : null}
 
-      <div className="admin-form-container" style={{ maxWidth: '600px' }}>
+      <div className="admin-form-container" style={{ maxWidth: "600px" }}>
         <form onSubmit={handleSave} className="admin-form">
           <div className="form-group">
             <label htmlFor="title">Banner Title *</label>
@@ -117,7 +120,7 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
               id="title"
               type="text"
               value={banner.title}
-              onChange={(e) => handleInputChange('title', e.target.value)}
+              onChange={(e) => handleInputChange("title", e.target.value)}
               placeholder="e.g., 100% Herbal"
               required
             />
@@ -129,7 +132,7 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
               id="eyebrow"
               type="text"
               value={banner.eyebrow}
-              onChange={(e) => handleInputChange('eyebrow', e.target.value)}
+              onChange={(e) => handleInputChange("eyebrow", e.target.value)}
               placeholder="e.g., 100% herbal"
             />
           </div>
@@ -139,7 +142,7 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
             <textarea
               id="text"
               value={banner.text}
-              onChange={(e) => handleInputChange('text', e.target.value)}
+              onChange={(e) => handleInputChange("text", e.target.value)}
               placeholder="Banner description text"
               rows="4"
             />
@@ -151,7 +154,7 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
               id="alt"
               type="text"
               value={banner.alt}
-              onChange={(e) => handleInputChange('alt', e.target.value)}
+              onChange={(e) => handleInputChange("alt", e.target.value)}
               placeholder="Describe the banner image"
             />
           </div>
@@ -159,11 +162,15 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
           <div className="form-group">
             <label>Banner Image</label>
             {banner.image?.url && (
-              <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+              <div style={{ marginBottom: "1rem", textAlign: "center" }}>
                 <img
                   src={banner.image.url}
-                  alt={banner.alt || 'Banner'}
-                  style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '4px' }}
+                  alt={banner.alt || "Banner"}
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "300px",
+                    borderRadius: "4px",
+                  }}
                 />
               </div>
             )}
@@ -182,7 +189,9 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
               id="primaryLabel"
               type="text"
               value={banner.primaryLabel}
-              onChange={(e) => handleInputChange('primaryLabel', e.target.value)}
+              onChange={(e) =>
+                handleInputChange("primaryLabel", e.target.value)
+              }
               placeholder="e.g., Explore Products"
             />
           </div>
@@ -193,7 +202,7 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
               id="primaryPath"
               type="text"
               value={banner.primaryPath}
-              onChange={(e) => handleInputChange('primaryPath', e.target.value)}
+              onChange={(e) => handleInputChange("primaryPath", e.target.value)}
               placeholder="e.g., /product"
             />
           </div>
@@ -204,7 +213,9 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
               id="secondaryLabel"
               type="text"
               value={banner.secondaryLabel}
-              onChange={(e) => handleInputChange('secondaryLabel', e.target.value)}
+              onChange={(e) =>
+                handleInputChange("secondaryLabel", e.target.value)
+              }
               placeholder="e.g., Learn More (optional)"
             />
           </div>
@@ -215,7 +226,9 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
               id="secondaryPath"
               type="text"
               value={banner.secondaryPath}
-              onChange={(e) => handleInputChange('secondaryPath', e.target.value)}
+              onChange={(e) =>
+                handleInputChange("secondaryPath", e.target.value)
+              }
               placeholder="e.g., /about-us (optional)"
             />
           </div>
@@ -226,7 +239,9 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
               id="position"
               type="number"
               value={banner.position}
-              onChange={(e) => handleInputChange('position', parseInt(e.target.value) || 0)}
+              onChange={(e) =>
+                handleInputChange("position", parseInt(e.target.value) || 0)
+              }
               min="0"
             />
           </div>
@@ -236,7 +251,7 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
             <select
               id="status"
               value={banner.status}
-              onChange={(e) => handleInputChange('status', e.target.value)}
+              onChange={(e) => handleInputChange("status", e.target.value)}
             >
               <option value="published">Published</option>
               <option value="draft">Draft</option>
@@ -247,7 +262,7 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
             <button
               type="button"
               className="admin-secondary-button"
-              onClick={() => onNavigate('/admin/banners')}
+              onClick={() => onNavigate("/admin/banners")}
               disabled={saving}
             >
               Cancel
@@ -257,11 +272,11 @@ export function AdminBannerEditPage({ pathname, params, onNavigate }) {
               className="admin-primary-button"
               disabled={saving || loading}
             >
-              {saving ? 'Saving...' : isNew ? 'Create Banner' : 'Save Banner'}
+              {saving ? "Saving..." : isNew ? "Create Banner" : "Save Banner"}
             </button>
           </div>
         </form>
       </div>
     </AdminShell>
-  )
+  );
 }

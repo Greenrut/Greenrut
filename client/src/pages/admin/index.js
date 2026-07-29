@@ -1,8 +1,8 @@
-export { AdminDashboardPage } from './DashboardPage.jsx'
-export { AdminProductsPage } from './ProductsPage.jsx'
-export { AdminBlogPostPage } from './BlogPostPage.jsx'
-export { AdminUsersPage } from './UsersPage.jsx'
-export { AdminLoginPage } from './LoginPage.jsx'
-export { AdminReviewsPage } from './ReviewsPage.jsx'
-export { AdminBannersPage } from './BannersPage.jsx'
-export { AdminBannerEditPage } from './BannerEditPage.jsx'
+export { AdminDashboardPage } from "./DashboardPage.jsx";
+export { AdminProductsPage } from "./ProductsPage.jsx";
+export { AdminBlogPostPage } from "./BlogPostPage.jsx";
+export { AdminUsersPage } from "./UsersPage.jsx";
+export { AdminLoginPage } from "./LoginPage.jsx";
+export { AdminReviewsPage } from "./ReviewsPage.jsx";
+export { AdminBannersPage } from "./BannersPage.jsx";
+export { AdminBannerEditPage } from "./BannerEditPage.jsx";
