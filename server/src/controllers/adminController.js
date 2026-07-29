@@ -2,6 +2,7 @@ import { Account } from '../models/Account.js'
 import { Post } from '../models/Post.js'
 import { Product } from '../models/Product.js'
 import { User } from '../models/User.js'
+import { Banner } from '../models/Banner.js'
 import { tags } from '../data/mockDb.js'
 import { listCategories } from './categoryController.js'
 import { createHttpError } from '../utils/httpError.js'
@@ -41,6 +42,25 @@ function serializeProduct(product) {
     images: product.images || [],
     createdAt: product.createdAt,
     updatedAt: product.updatedAt,
+  }
+}
+
+function serializeBanner(banner) {
+  return {
+    id: banner._id,
+    eyebrow: banner.eyebrow || '',
+    title: banner.title,
+    text: banner.text || '',
+    primaryLabel: banner.primaryLabel || 'Learn More',
+    primaryPath: banner.primaryPath || '/product',
+    secondaryLabel: banner.secondaryLabel || '',
+    secondaryPath: banner.secondaryPath || '',
+    image: banner.image || null,
+    alt: banner.alt || 'Banner image',
+    position: banner.position || 0,
+    status: banner.status || 'published',
+    createdAt: banner.createdAt,
+    updatedAt: banner.updatedAt,
   }
 }
 
@@ -398,6 +418,113 @@ export async function uploadAdminImages(req, res, next) {
         height: result.height,
       })),
     })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function listBanners(req, res, next) {
+  try {
+    const isAdminRoute = String(req.originalUrl || req.path || '').includes('/admin/')
+    const query = isAdminRoute ? {} : { status: 'published' }
+    const banners = await Banner.find(query).sort({ position: 1, createdAt: -1 })
+    res.json({ ok: true, data: banners.map(serializeBanner) })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function getBanner(req, res, next) {
+  try {
+    const id = parseId(req.params.id)
+    if (!id) {
+      return next(createHttpError(400, 'Banner id is required'))
+    }
+
+    const banner = await Banner.findById(id)
+    if (!banner) {
+      return next(createHttpError(404, 'Banner not found'))
+    }
+
+    res.json({ ok: true, data: serializeBanner(banner) })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function createBanner(req, res, next) {
+  try {
+    const body = req.body || {}
+    const banner = await Banner.create({
+      eyebrow: body.eyebrow || '',
+      title: body.title || 'Untitled Banner',
+      text: body.text || '',
+      primaryLabel: body.primaryLabel || 'Learn More',
+      primaryPath: body.primaryPath || '/product',
+      secondaryLabel: body.secondaryLabel || '',
+      secondaryPath: body.secondaryPath || '',
+      image: body.image || null,
+      alt: body.alt || 'Banner image',
+      position: Number(body.position || 0),
+      status: body.status || 'published',
+    })
+
+    res.status(201).json({ ok: true, data: serializeBanner(banner) })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function updateBanner(req, res, next) {
+  try {
+    const id = parseId(req.params.id)
+    if (!id) {
+      return next(createHttpError(400, 'Banner id is required'))
+    }
+
+    const banner = await Banner.findById(id)
+    if (!banner) {
+      return next(createHttpError(404, 'Banner not found'))
+    }
+
+    const body = req.body || {}
+    banner.eyebrow = body.eyebrow ?? banner.eyebrow
+    banner.title = body.title ?? banner.title
+    banner.text = body.text ?? banner.text
+    banner.primaryLabel = body.primaryLabel ?? banner.primaryLabel
+    banner.primaryPath = body.primaryPath ?? banner.primaryPath
+    banner.secondaryLabel = body.secondaryLabel ?? banner.secondaryLabel
+    banner.secondaryPath = body.secondaryPath ?? banner.secondaryPath
+    if (body.image) {
+      banner.image = body.image
+    }
+    banner.alt = body.alt ?? banner.alt
+    if (body.position !== undefined) {
+      banner.position = Number(body.position)
+    }
+    banner.status = body.status ?? banner.status
+
+    await banner.save()
+    res.json({ ok: true, data: serializeBanner(banner) })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function deleteBanner(req, res, next) {
+  try {
+    const id = parseId(req.params.id)
+    if (!id) {
+      return next(createHttpError(400, 'Banner id is required'))
+    }
+
+    const banner = await Banner.findById(id)
+    if (!banner) {
+      return next(createHttpError(404, 'Banner not found'))
+    }
+
+    await banner.deleteOne()
+    res.json({ ok: true, data: serializeBanner(banner) })
   } catch (error) {
     next(error)
   }

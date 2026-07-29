@@ -44,6 +44,11 @@ import {
   updateAdminUser,
   uploadAdminImage,
   uploadAdminImages,
+  listBanners,
+  getBanner,
+  createBanner,
+  updateBanner,
+  deleteBanner,
 } from '../controllers/adminController.js'
 import {
   getAccountOverview,
@@ -82,6 +87,8 @@ router.route('/admin/products').get(requireAuth, requireRole('Administrator'), l
 router.route('/admin/products/:id').get(requireAuth, requireRole('Administrator'), getAdminProduct).put(requireAuth, requireRole('Administrator'), updateAdminProduct).delete(requireAuth, requireRole('Administrator'), deleteAdminProduct)
 router.route('/admin/posts').get(requireAuth, requireRole('Administrator'), listAdminPosts).post(requireAuth, requireRole('Administrator'), createAdminPost)
 router.route('/admin/posts/:id').get(requireAuth, requireRole('Administrator'), getAdminPost).put(requireAuth, requireRole('Administrator'), updateAdminPost).delete(requireAuth, requireRole('Administrator'), deleteAdminPost)
+router.route('/admin/banners').get(requireAuth, requireRole('Administrator'), listBanners).post(requireAuth, requireRole('Administrator'), createBanner)
+router.route('/admin/banners/:id').get(requireAuth, requireRole('Administrator'), getBanner).put(requireAuth, requireRole('Administrator'), updateBanner).delete(requireAuth, requireRole('Administrator'), deleteBanner)
 router.route('/admin/research-items').get(requireAuth, requireRole('Administrator'), listAdminResearchItems).post(requireAuth, requireRole('Administrator'), createAdminResearchItem)
 router.route('/admin/research-items/:id').put(requireAuth, requireRole('Administrator'), updateAdminResearchItem).delete(requireAuth, requireRole('Administrator'), deleteAdminResearchItem)
 router.route('/admin/library-items').get(requireAuth, requireRole('Administrator'), listAdminLibraryItems).post(requireAuth, requireRole('Administrator'), createAdminLibraryItem)
@@ -101,6 +108,7 @@ router.route('/products/:id').put(requireAuth, requireRole('Administrator'), upd
 router.route('/posts').get(listPosts).post(requireAuth, requireRole('Administrator'), createPost)
 router.get('/posts/:id', getPost)
 router.route('/posts/:id').put(requireAuth, requireRole('Administrator'), updatePost).delete(requireAuth, requireRole('Administrator'), deletePost)
+router.get('/banners', listBanners)
 router.get('/research-items', listResearchItems)
 router.get('/library-items', listLibraryItems)
 router.get('/reviews', listReviews)
