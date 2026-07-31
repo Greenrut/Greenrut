@@ -1,4 +1,4 @@
-﻿const runtimeHost =
+const runtimeHost =
   typeof window !== "undefined" ? window.location.hostname : "localhost";
 const runtimeIsLocal =
   runtimeHost === "localhost" ||
@@ -6,18 +6,21 @@ const runtimeIsLocal =
   runtimeHost === "[::1]";
 
 function normalizeApiBase(value) {
-  const base = String(value || "")
+  let base = String(value || "")
     .trim()
     .replace(/\/$/, "");
   if (!base) return "";
   if (/localhost|127\.0\.0\.1|\[::1\]/i.test(base)) return "";
+  if (!base.endsWith("/api")) {
+    base += "/api";
+  }
   return base;
 }
 
-const envApiBase = normalizeApiBase(import.meta.env.VITE_API_BASE_URL);
+const envApiBase = normalizeApiBase(import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL);
 const defaultApiBase = runtimeIsLocal
   ? `http://${runtimeHost}:4000/api`
-  : "https://api.greenrut.com/api";
+  : "https://greenrut-fswe.onrender.com/api";
 
 const API_BASE_URL = envApiBase || defaultApiBase;
 
