@@ -14,6 +14,7 @@ const initialForm = {
   preparationMethod: '',
   dosage: '',
   constituents: '',
+  resourceUrl: '',
   linkedProductId: '',
   image: null,
 }
@@ -74,6 +75,7 @@ export function AdminLibraryPage({ pathname, onNavigate }) {
       preparationMethod: item.preparationMethod || '',
       dosage: item.dosage || '',
       constituents: item.constituents || '',
+      resourceUrl: item.resourceUrl || '',
       linkedProductId: item.linkedProductId || '',
       image: item.image || null,
     })
@@ -205,6 +207,10 @@ export function AdminLibraryPage({ pathname, onNavigate }) {
               <label>
                 Active Constituents
                 <textarea value={form.constituents} onChange={updateField('constituents')} placeholder="Key active compounds or phytochemicals" rows={3} />
+              </label>
+              <label>
+                Resource URL
+                <input value={form.resourceUrl} onChange={updateField('resourceUrl')} type="url" placeholder="https://example.com/resource-or-paper" />
               </label>
             </div>
           </AdminCard>

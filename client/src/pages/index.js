@@ -10,6 +10,7 @@ export { ResetPasswordPage } from "./ResetPasswordPage.jsx";
 export { BlogPage } from "./BlogPage.jsx";
 export { ResearchPage } from "./ResearchPage.jsx";
 export { LibraryPage } from "./LibraryPage.jsx";
+export { LibraryResourcePage } from "./LibraryResourcePage.jsx";
 export { AdminResearchPage } from "./admin/ResearchPage.jsx";
 export { AdminLibraryPage } from "./admin/LibraryPage.jsx";
 export { AdminReviewsPage } from "./admin/ReviewsPage.jsx";

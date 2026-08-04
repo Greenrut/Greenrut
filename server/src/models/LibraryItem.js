@@ -25,6 +25,7 @@ const libraryItemSchema = new mongoose.Schema(
     preparationMethod: { type: String, default: '' },
     dosage: { type: String, default: '' },
     constituents: { type: String, default: '' },
+    resourceUrl: { type: String, default: '' },
     image: imageSchema,
     linkedProductId: { type: String, default: '' },
   },

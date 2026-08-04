@@ -27,6 +27,7 @@ import {
   BlogPage,
   ResearchPage,
   LibraryPage,
+  LibraryResourcePage,
   NotFoundPage,
   ProductDetailsPage,
   ProductPage,
@@ -114,6 +115,8 @@ function App() {
   if (pathname === "/blog")
     page = <BlogPage onNavigate={navigate} search={search} />;
   if (pathname === "/library") page = <LibraryPage onNavigate={navigate} />;
+  if (pathname === "/library/resource")
+    page = <LibraryResourcePage onNavigate={navigate} />;
   if (pathname === "/research") page = <ResearchPage onNavigate={navigate} />;
   if (pathname === "/account" || pathname === "/account/dashboard")
     page = <AccountDashboardPage pathname={pathname} onNavigate={navigate} />;
@@ -193,6 +196,7 @@ function App() {
       "/reset-password",
       "/blog",
       "/library",
+      "/library/resource",
       "/research",
       "/account",
       "/account/dashboard",

@@ -15,6 +15,7 @@ function serializeLibraryItem(item) {
     preparationMethod: item.preparationMethod || '',
     dosage: item.dosage || '',
     constituents: item.constituents || '',
+    resourceUrl: item.resourceUrl || '',
     image: item.image || null,
     linkedProductId: item.linkedProductId || '',
     createdAt: item.createdAt,
@@ -64,6 +65,7 @@ export async function createAdminLibraryItem(req, res, next) {
       preparationMethod: body.preparationMethod || '',
       dosage: body.dosage || '',
       constituents: body.constituents || '',
+      resourceUrl: body.resourceUrl || '',
       image: body.image || null,
       linkedProductId: body.linkedProductId || '',
     })
@@ -91,6 +93,7 @@ export async function updateAdminLibraryItem(req, res, next) {
     item.preparationMethod = body.preparationMethod ?? item.preparationMethod
     item.dosage = body.dosage ?? item.dosage
     item.constituents = body.constituents ?? item.constituents
+    item.resourceUrl = body.resourceUrl ?? item.resourceUrl
     if (body.image) item.image = body.image
     item.linkedProductId = body.linkedProductId ?? item.linkedProductId
 

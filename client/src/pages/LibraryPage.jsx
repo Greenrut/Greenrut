@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { publicRequest } from '../lib/publicApi.js'
 import heroImage from '../assets/hero.png'
-import bannerImage from '../assets/banna.png'
 import { fallbackResources } from '../data.js'
 
 function getImageUrl(image) {
@@ -24,6 +23,7 @@ function normalizeResource(item) {
     preparationMethod: item.preparationMethod || item.preparation_method || item.preparation || '',
     dosage: item.dosage || item.dose || '',
     constituents: item.constituents || item.majorConstituents || item.api || '',
+    resourceUrl: item.resourceUrl || item.resource_url || item.url || item.link || '',
     image: getImageUrl(item.image || item.thumbnail || (Array.isArray(item.images) ? item.images[0] : '')),
     linkedProductId: item.linkedProductId || item.productId || '',
   }
@@ -58,10 +58,10 @@ export function LibraryPage({ onNavigate }) {
   const [resources, setResources] = useState([])
   const [activeSection, setActiveSection] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [activeHerb, setActiveHerb] = useState('All')
   const [activeUse, setActiveUse] = useState('All')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const selectedId = new URLSearchParams(window.location.search).get('id')
 
   useEffect(() => {
     let cancelled = false
@@ -106,10 +106,19 @@ export function LibraryPage({ onNavigate }) {
     return ['All', ...Array.from(new Set(uses))]
   }, [libraryItems])
 
+  const herbs = useMemo(() => {
+    const names = libraryItems
+      .filter((item) => String(item.section || '').toLowerCase().includes('herb') || item.localName)
+      .map((item) => item.localName ? `${item.title} - ${item.localName}` : item.title)
+      .filter(Boolean)
+    return ['All', ...Array.from(new Set(names))]
+  }, [libraryItems])
+
   const filteredResources = useMemo(() => {
     const query = searchTerm.trim().toLowerCase()
     return libraryItems.filter((item) => {
       const matchesSection = item.section === activeSection
+      const herbLabel = item.localName ? `${item.title} - ${item.localName}` : item.title
       const haystack = [
         item.title,
         item.localName,
@@ -120,15 +129,15 @@ export function LibraryPage({ onNavigate }) {
         item.excerpt,
       ].join(' ').toLowerCase()
       const matchesSearch = !query || haystack.includes(query)
+      const matchesHerb = activeHerb === 'All' || herbLabel === activeHerb
       const matchesUse = activeUse === 'All' || String(item.therapeuticUse || '').toLowerCase().includes(activeUse.toLowerCase())
-      return matchesSection && matchesSearch && matchesUse
+      return matchesSection && matchesSearch && matchesHerb && matchesUse
     })
-  }, [libraryItems, activeSection, searchTerm, activeUse])
+  }, [libraryItems, activeSection, searchTerm, activeHerb, activeUse])
 
-  const selectedItem = useMemo(() => {
-    if (!selectedId) return null
-    return libraryItems.find((item) => String(item.id) === String(selectedId)) || null
-  }, [libraryItems, selectedId])
+  const openResource = (item) => {
+    onNavigate?.(`/library/resource?id=${encodeURIComponent(item.id)}`)
+  }
 
   return (
     <section className="page-shell py-6 xs:py-8 lg:py-10">
@@ -149,17 +158,6 @@ export function LibraryPage({ onNavigate }) {
         </div>
       </div>
 
-      {selectedItem ? (
-        <div className="mx-auto mb-5 w-full max-w-[980px] border border-[#efefef] bg-white p-5">
-          <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">{selectedItem.type || selectedItem.section}</p>
-          <h2 className="mt-2 font-serif text-[22px] text-[#2e2a26]">{selectedItem.title}</h2>
-          <p className="mt-3 text-[13px] leading-6 text-[#4a453f]">{selectedItem.excerpt || 'No further details have been published for this resource yet.'}</p>
-          <button type="button" className="mt-4 text-[11px] font-semibold text-[#1f1c19] underline" onClick={() => onNavigate?.('/library')}>
-            BACK TO LIBRARY
-          </button>
-        </div>
-      ) : null}
-
       <div className="mx-auto grid w-full max-w-[980px] gap-5 lg:grid-cols-[200px_minmax(0,1fr)]">
         <aside className="h-fit border border-[#efefef] bg-white">
           {sections.map((section) => (
@@ -179,7 +177,7 @@ export function LibraryPage({ onNavigate }) {
         </aside>
 
         <div>
-          <div className="mb-3 grid gap-3 border border-[#efefef] bg-white px-4 py-3 text-[13px] text-[#5a544c] lg:grid-cols-[1fr_180px_auto] lg:items-center">
+          <div className="mb-3 grid gap-3 border border-[#efefef] bg-white px-4 py-3 text-[13px] text-[#5a544c] lg:grid-cols-[1fr_190px_170px_auto_auto] lg:items-center">
             <input
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
@@ -187,6 +185,11 @@ export function LibraryPage({ onNavigate }) {
               placeholder="Search herb, local name, use, dosage, constituent..."
               className="border border-[#efefef] px-3 py-2"
             />
+            <select value={activeHerb} onChange={(event) => setActiveHerb(event.target.value)} className="border border-[#efefef] px-3 py-2">
+              {herbs.map((herb) => (
+                <option key={herb} value={herb}>{herb === 'All' ? 'All herbs' : herb}</option>
+              ))}
+            </select>
             <select value={activeUse} onChange={(event) => setActiveUse(event.target.value)} className="border border-[#efefef] px-3 py-2">
               {therapeuticUses.map((use) => (
                 <option key={use} value={use}>{use}</option>
@@ -205,7 +208,7 @@ export function LibraryPage({ onNavigate }) {
                 <LibraryCard
                   key={item.id || item.slug || item.title}
                   item={item}
-                  onOpen={() => onNavigate?.(item.linkedProductId ? `/product-details?id=${item.linkedProductId}` : `/library?id=${item.id}`)}
+                  onOpen={() => openResource(item)}
                 />
               ))}
             </div>
