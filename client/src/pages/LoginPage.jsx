@@ -1,10 +1,10 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { HeroBanner } from '../components/SiteChrome.jsx'
 import { requestJson } from '../lib/api.js'
 import { saveUserAuth } from '../lib/auth.js'
 import bannaImage from '../assets/banna.png'
 
-export function LoginPage() {
+export function LoginPage({ onNavigate }) {
   const [tab, setTab] = useState('Login')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -18,6 +18,15 @@ export function LoginPage() {
     setError('')
   }
 
+  const goToForgotPassword = () => {
+    if (onNavigate) {
+      onNavigate('/forgot-password?role=user')
+      return
+    }
+    window.history.pushState({}, '', '/forgot-password?role=user')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     resetStatus()
@@ -25,10 +34,7 @@ export function LoginPage() {
 
     try {
       const endpoint = tab === 'Login' ? '/auth/login' : '/auth/signup'
-      const body =
-        tab === 'Login'
-          ? { email, password }
-          : { name, email, password }
+      const body = tab === 'Login' ? { email, password } : { name, email, password }
 
       const result = await requestJson(endpoint, {
         method: 'POST',
@@ -52,11 +58,7 @@ export function LoginPage() {
 
   return (
     <>
-      <HeroBanner
-        title="LOGIN"
-        breadcrumb="Home  /  Login"
-        backgroundPhoto={bannaImage}
-      />
+      <HeroBanner title="LOGIN" breadcrumb="Home  /  Login" backgroundPhoto={bannaImage} />
       <section className="login-shell !w-full xs:!w-[calc(100%-24px)] sm:!w-[calc(100%-48px)] !max-w-[1120px]">
         <div className="login-tabs">
           <button type="button" className={tab === 'Login' ? 'is-active' : ''} onClick={() => setTab('Login')}>
@@ -68,16 +70,16 @@ export function LoginPage() {
         </div>
         <div className="login-card !w-full !max-w-[380px]">
           <form className="login-form" onSubmit={handleSubmit}>
-            {tab === 'Register' ? (
-              <input value={name} onChange={(event) => setName(event.target.value)} type="text" placeholder="Full Name" />
-            ) : null}
+            {tab === 'Register' ? <input value={name} onChange={(event) => setName(event.target.value)} type="text" placeholder="Full Name" /> : null}
             <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" placeholder="Email Address" />
             <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" />
             <div className="login-form__row">
               <label>
                 <input type="checkbox" /> Remember me
               </label>
-              <a href="/#forgot">Forgot Password?</a>
+              <button type="button" className="bg-transparent p-0 text-inherit underline" onClick={goToForgotPassword}>
+                Forgot Password?
+              </button>
             </div>
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
             {message ? <p className="text-sm text-green-700">{message}</p> : null}

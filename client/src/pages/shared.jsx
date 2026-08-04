@@ -7,73 +7,42 @@ export function SectionTitle({ title, subtitle }) {
   )
 }
 
-function BadgeIconCertified() {
-  return (
-    <svg viewBox="0 0 44 44" aria-hidden="true">
-      <circle cx="22" cy="18" r="12" fill="none" stroke="currentColor" strokeWidth="2" />
-      <path d="M22 11.5l2.1 4.3 4.7.7-3.4 3.3.8 4.7-4.2-2.2-4.2 2.2.8-4.7-3.4-3.3 4.7-.7L22 11.5Z" fill="currentColor" />
-      <path d="M16 27.5 14 40l8-4 8 4-2-12.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function BadgeIconVerified() {
-  return (
-    <svg viewBox="0 0 44 44" aria-hidden="true">
-      <path
-        d="M22 4c5 3 8.5 4 13 4 0 16-4.5 24-13 32C13.5 32 9 24 9 8c4.5 0 8-1 13-4Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path d="M15.5 22.5 20 27l9-11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function BadgeIconResearch() {
-  return (
-    <svg viewBox="0 0 44 44" aria-hidden="true">
-      <path d="M18 6h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M19 6v9.5L11.5 30a4 4 0 0 0 3.6 5.8h13.8a4 4 0 0 0 3.6-5.8L25 15.5V6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-      <path d="M14.5 27h15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function BadgeIconNigeria() {
-  return (
-    <svg viewBox="0 0 44 44" aria-hidden="true">
-      <rect x="6" y="14" width="32" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
-      <rect x="6" y="14" width="10.6" height="16" fill="currentColor" />
-      <rect x="27.3" y="14" width="10.6" height="16" fill="currentColor" />
-    </svg>
-  )
-}
+import certificationIcon from '../assets/certification64.png'
+import microscopeIcon from '../assets/microscope64.png'
+import biodiversityIcon from '../assets/biodiversity64.png'
+import madeInNigeriaIcon from '../assets/madeinnigeria64.png'
 
 export function BadgeRow() {
   return (
     <section className="badge-row">
       <div>
-        <span className="badge-row__icon"><BadgeIconCertified /></span>
+        <span className="badge-row__icon">
+          <img src={certificationIcon} alt="" aria-hidden="true" />
+        </span>
         <p>Products Certified</p>
       </div>
       <div>
-        <span className="badge-row__icon"><BadgeIconVerified /></span>
+        <span className="badge-row__icon">
+          <img src={microscopeIcon} alt="" aria-hidden="true" />
+        </span>
         <p>Scientifically Verified</p>
       </div>
       <div>
-        <span className="badge-row__icon"><BadgeIconResearch /></span>
+        <span className="badge-row__icon badge-row__icon--development">
+          <img src={biodiversityIcon} alt="" aria-hidden="true" />
+        </span>
         <p>12 Years Of Research &amp; Development</p>
       </div>
       <div>
-        <span className="badge-row__icon"><BadgeIconNigeria /></span>
+        <span className="badge-row__icon">
+          <img src={madeInNigeriaIcon} alt="" aria-hidden="true" />
+        </span>
         <p>Made In Nigeria</p>
       </div>
     </section>
   )
 }
+
 
 export function NewsletterBand() {
   return (

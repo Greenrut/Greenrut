@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { requestJson } from '../../lib/api.js'
 import { clearAdminAuth, saveAdminAuth } from '../../lib/auth.js'
 
@@ -17,6 +17,10 @@ export function AdminLoginPage({ onNavigate }) {
     onNavigate('/admin/login')
   }
 
+  const goToForgotPassword = () => {
+    onNavigate('/forgot-password?role=admin')
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     setMessage('')
@@ -25,10 +29,7 @@ export function AdminLoginPage({ onNavigate }) {
 
     try {
       const endpoint = mode === 'login' ? '/admin/auth/login' : '/admin/auth/signup'
-      const body =
-        mode === 'login'
-          ? { email, password }
-          : { name, email, password, signupKey }
+      const body = mode === 'login' ? { email, password } : { name, email, password, signupKey }
 
       const result = await requestJson(endpoint, {
         method: 'POST',
@@ -84,7 +85,9 @@ export function AdminLoginPage({ onNavigate }) {
               <input value={signupKey} onChange={(event) => setSignupKey(event.target.value)} type="password" placeholder="Optional in development" />
             </label>
           ) : null}
-          <a href="/admin/login#forgot">Forgot password</a>
+          <button type="button" className="bg-transparent p-0 text-left underline" onClick={goToForgotPassword}>
+            Forgot password
+          </button>
           {error ? <p className="admin-login__message admin-login__message--error">{error}</p> : null}
           {message ? <p className="admin-login__message admin-login__message--success">{message}</p> : null}
           <button type="submit" className="admin-primary-button admin-login__submit" disabled={submitting}>

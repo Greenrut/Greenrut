@@ -9,6 +9,14 @@ const initialForm = {
   content: '',
   author: 'Admin',
   status: 'draft',
+  coverImage: null,
+}
+
+function getImageUrl(image) {
+  if (!image) return ''
+  if (typeof image === 'string') return image
+  if (typeof image === 'object') return image.url || image.src || image.secureUrl || image.path || ''
+  return ''
 }
 
 export function AdminBlogPostPage({ pathname, onNavigate }) {
@@ -17,6 +25,7 @@ export function AdminBlogPostPage({ pathname, onNavigate }) {
   const [selectedId, setSelectedId] = useState(null)
   const [loading, setLoading] = useState(false)
   const [listLoading, setListLoading] = useState(true)
+  const [uploading, setUploading] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
@@ -54,7 +63,30 @@ export function AdminBlogPostPage({ pathname, onNavigate }) {
       content: post.content || '',
       author: post.author || 'Admin',
       status: post.status || 'draft',
+      coverImage: post.coverImage || null,
     })
+  }
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    setMessage('')
+    setError('')
+
+    try {
+      const formData = new FormData()
+      formData.append('image', file, file.name)
+      const response = await adminRequest('/admin/uploads/image', { method: 'POST', body: formData })
+      setForm((current) => ({ ...current, coverImage: response.data || null }))
+      setMessage('Cover image uploaded.')
+    } catch (requestError) {
+      setError(requestError.message || 'Failed to upload cover image')
+    } finally {
+      setUploading(false)
+      event.target.value = ''
+    }
   }
 
   const handleSubmit = async (event) => {
@@ -144,21 +176,34 @@ export function AdminBlogPostPage({ pathname, onNavigate }) {
 
         <aside className="admin-form-layout__side">
           <AdminCard title="Publish">
-            <label>
-              Author
-              <input value={form.author} onChange={updateField('author')} type="text" />
-            </label>
-            <label>
-              Status
-              <select value={form.status} onChange={updateField('status')}>
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </select>
-            </label>
+            <div className="admin-form-grid admin-form-grid--single">
+              <label>
+                Cover Image
+                <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
+              </label>
+              {form.coverImage ? (
+                <img
+                  src={getImageUrl(form.coverImage)}
+                  alt={form.title || 'Blog cover'}
+                  style={{ width: '100%', borderRadius: '8px' }}
+                />
+              ) : null}
+              <label>
+                Author
+                <input value={form.author} onChange={updateField('author')} type="text" />
+              </label>
+              <label>
+                Status
+                <select value={form.status} onChange={updateField('status')}>
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                </select>
+              </label>
+            </div>
             {message ? <p className="text-sm text-green-700">{message}</p> : null}
             {error ? <p className="text-sm text-red-600">{error}</p> : null}
-            <button type="submit" className="admin-primary-button" disabled={loading}>
-              {loading ? 'Publishing...' : selectedId ? 'Update Post' : 'Save Post'}
+            <button type="submit" className="admin-primary-button" disabled={loading || uploading}>
+              {uploading ? 'Uploading...' : loading ? 'Publishing...' : selectedId ? 'Update Post' : 'Save Post'}
             </button>
             {selectedId ? (
               <button type="button" className="admin-secondary-button" onClick={resetForm}>
@@ -184,6 +229,7 @@ export function AdminBlogPostPage({ pathname, onNavigate }) {
             {posts.map((post) => (
               <div key={post.id || post.title} className="admin-table__row admin-table__row--blog">
                 <div className="admin-table__product">
+                  {post.coverImage?.url ? <img src={post.coverImage.url} alt={post.title} className="admin-thumb" /> : <div className="admin-thumb" />}
                   <span>{post.title}</span>
                 </div>
                 <span>{post.author}</span>

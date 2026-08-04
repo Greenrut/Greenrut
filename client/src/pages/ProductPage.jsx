@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { HeroBanner } from '../components/SiteChrome.jsx'
 import { publicRequest } from '../lib/publicApi.js'
 import bannaImage from '../assets/banna.png'
+import { fallbackProducts } from '../data.js'
 
 function getImageUrl(image) {
   if (!image) return ''
@@ -50,13 +51,29 @@ function ProductCard({ product, onView, onOrder }) {
   )
 }
 
-export function ProductPage({ onNavigate }) {
+const productCategoryOverview = [
+  ['SKIN & BODY CARE', 'Anti-Aging care, beauty bars, moisturizers, hair oil, body oil, sunscreen, african soaps, toners'],
+  ['DAILY SUPPLEMENTS (Nutrition)', 'Vitamins, Minerals, Stress reliever, Sleep, Focus, Energy, Performance.'],
+  ['IMMUNITY & METABOLISM', 'Detoxifier, Anti-oxidants, Blood sugar, Digestion, Cholesterol, Circulation.'],
+  ['TARGETED HEALTH', 'Weight Management, Heart & Brain Health, Bone & Eye care, Diabetes, Respiratory health'],
+  ['MEN & WOMEN', 'Fertility, Menopause, Prostate, Stamina, Hormonal balances, Menstrual comfort, libido.'],
+  ['HERBAL INSTANTS', 'Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action.'],
+]
+
+export function ProductPage({ onNavigate, search }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    return new URLSearchParams(search || window.location.search).get('category') || 'All'
+  })
   const [sortBy, setSortBy] = useState('newest')
+
+  useEffect(() => {
+    const cat = new URLSearchParams(search || window.location.search).get('category')
+    setSelectedCategory(cat || 'All')
+  }, [search])
 
   useEffect(() => {
     let cancelled = false
@@ -85,18 +102,20 @@ export function ProductPage({ onNavigate }) {
     }
   }, [])
 
-  const categories = useMemo(() => {
-    const unique = new Set(
-      products
-        .map((product) => product.category || product.categories?.[0] || 'Uncategorized')
-        .filter(Boolean),
-    )
-    return ['All', ...Array.from(unique)]
-  }, [products])
+  const categories = [
+    'All',
+    'SKIN & BODY CARE',
+    'DAILY SUPPLEMENTS (Nutrition)',
+    'IMMUNITY & METABOLISM',
+    'TARGETED HEALTH',
+    'MEN & WOMEN',
+    'HERBAL INSTANTS',
+  ]
 
   const filteredProducts = useMemo(() => {
     const term = searchTerm.trim().toLowerCase()
-    const filtered = products.filter((product) => {
+    const source = products.length ? products : fallbackProducts
+    const filtered = source.filter((product) => {
       const productCategory = product.category || product.categories?.[0] || 'Uncategorized'
       const matchesCategory = selectedCategory === 'All' || productCategory === selectedCategory
       const matchesSearch =
@@ -130,8 +149,25 @@ export function ProductPage({ onNavigate }) {
       />
       <section className="page-shell catalog-page">
         <div className="catalog-page__header">
-          <h2>Products</h2>
-          <p>Browse the product list and open any item for details or ordering.</p>
+          <h2>Nature's Potent Solutions for Every Aspect of Your Well-being.</h2>
+          <p>Explore 100% herbal, scientifically guided products crafted for purity, potency, and peace of mind.</p>
+        </div>
+
+        <div className="product-category-overview">
+          {productCategoryOverview.map(([title, text]) => (
+            <button
+              key={title}
+              type="button"
+              className={selectedCategory === title ? 'is-active' : ''}
+              onClick={() => {
+                setSelectedCategory(title)
+                setSearchTerm('')
+              }}
+            >
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </button>
+          ))}
         </div>
 
         {loading ? <p>Loading products...</p> : null}
@@ -185,7 +221,7 @@ export function ProductPage({ onNavigate }) {
             <div className="catalog-main">
               <div className="catalog-toolbar">
                 <p>
-                  Showing {filteredProducts.length} of {products.length} products
+                  Showing {filteredProducts.length} of {products.length || fallbackProducts.length} products
                 </p>
                 <div className="catalog-toolbar__controls">
                   <label>

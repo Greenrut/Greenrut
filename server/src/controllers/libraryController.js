@@ -10,6 +10,11 @@ function serializeLibraryItem(item) {
     type: item.type,
     status: item.status,
     excerpt: item.excerpt,
+    localName: item.localName || '',
+    therapeuticUse: item.therapeuticUse || '',
+    preparationMethod: item.preparationMethod || '',
+    dosage: item.dosage || '',
+    constituents: item.constituents || '',
     image: item.image || null,
     linkedProductId: item.linkedProductId || '',
     createdAt: item.createdAt,
@@ -54,6 +59,11 @@ export async function createAdminLibraryItem(req, res, next) {
       type: body.type || '',
       status: body.status || 'published',
       excerpt: body.excerpt || '',
+      localName: body.localName || '',
+      therapeuticUse: body.therapeuticUse || '',
+      preparationMethod: body.preparationMethod || '',
+      dosage: body.dosage || '',
+      constituents: body.constituents || '',
       image: body.image || null,
       linkedProductId: body.linkedProductId || '',
     })
@@ -76,6 +86,11 @@ export async function updateAdminLibraryItem(req, res, next) {
     item.type = body.type ?? item.type
     item.status = body.status ?? item.status
     item.excerpt = body.excerpt ?? item.excerpt
+    item.localName = body.localName ?? item.localName
+    item.therapeuticUse = body.therapeuticUse ?? item.therapeuticUse
+    item.preparationMethod = body.preparationMethod ?? item.preparationMethod
+    item.dosage = body.dosage ?? item.dosage
+    item.constituents = body.constituents ?? item.constituents
     if (body.image) item.image = body.image
     item.linkedProductId = body.linkedProductId ?? item.linkedProductId
 

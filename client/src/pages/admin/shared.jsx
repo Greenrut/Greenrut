@@ -1,67 +1,190 @@
-﻿import { clearAdminAuth } from '../../lib/auth.js'
+﻿import { clearAdminAuth } from "../../lib/auth.js";
 
 const adminNav = [
-  { label: 'Dashboard', href: '/admin', icon: 'dashboard' },
-  { section: 'Content' },
-  { label: 'Blog Posts', href: '/admin/blog/new', icon: 'blog' },
-  { label: 'Products', href: '/admin/products/new', icon: 'products' },
-  { label: 'Research', href: '/admin/research/new', icon: 'research' },
-  { label: 'Library', href: '/admin/library/new', icon: 'library' },
-  { section: 'Store' },
-  { label: 'Categories', href: '/admin/categories', icon: 'categories' },
-  { label: 'Tags', href: '/admin/tags', icon: 'tags' },
-  { section: 'Settings' },
-  { label: 'Users', href: '/admin/users', icon: 'users' },
-  { label: 'Settings', href: '/admin/settings', icon: 'settings' },
-]
+  { label: "Dashboard", href: "/admin", icon: "dashboard" },
+  { section: "Content" },
+  { label: "Banners", href: "/admin/banners", icon: "banners" },
+  { label: "Blog Posts", href: "/admin/blog/new", icon: "blog" },
+  { label: "Products", href: "/admin/products/new", icon: "products" },
+  { label: "Research", href: "/admin/research/new", icon: "research" },
+  { label: "Library", href: "/admin/library/new", icon: "library" },
+  { label: "Reviews", href: "/admin/reviews", icon: "reviews" },
+  { section: "Store" },
+  { label: "Categories", href: "/admin/categories", icon: "categories" },
+  { label: "Tags", href: "/admin/tags", icon: "tags" },
+  { section: "Settings" },
+  { label: "Users", href: "/admin/users", icon: "users" },
+  { label: "Settings", href: "/admin/settings", icon: "settings" },
+];
 
 function Icon({ type }) {
-  if (type === 'blog') {
+  if (type === "banners") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M5 4h11l3 3v13H5z" fill="none" stroke="currentColor" strokeWidth="1.7" />
-        <path d="M16 4v4h4" fill="none" stroke="currentColor" strokeWidth="1.7" />
-        <path d="M8 11h8M8 15h8" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+        <rect
+          x="3"
+          y="5"
+          width="18"
+          height="10"
+          rx="1"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        />
+        <path
+          d="M3 15h18"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'products') {
+  if (type === "blog") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M7 9h10v11H7z" fill="none" stroke="currentColor" strokeWidth="1.7" />
-        <path d="M9 9a3 3 0 0 1 6 0" fill="none" stroke="currentColor" strokeWidth="1.7" />
+        <path
+          d="M5 4h11l3 3v13H5z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
+        <path
+          d="M16 4v4h4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
+        <path
+          d="M8 11h8M8 15h8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'categories') {
+  if (type === "products") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v5H4zM13 14h7v5h-7z" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        <path
+          d="M7 9h10v11H7z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
+        <path
+          d="M9 9a3 3 0 0 1 6 0"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'tags') {
+  if (type === "research") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M5 10V5h5l9 9-5 5-9-9Z" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+        <path
+          d="M11 4c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7m8.5 14.5l3 3"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
+  if (type === "library") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M4 4h6v16H4zM12 4h6v16h-6zM7 7h2M7 11h2M7 15h2M15 7h2M15 11h2M15 15h2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
+  if (type === "reviews") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M3 3h18a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        />
+        <path
+          d="M3 7h18M7 11h4M7 15h10"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
+  if (type === "categories") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v5H4zM13 14h7v5h-7z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+      </svg>
+    );
+  }
+
+  if (type === "tags") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M5 10V5h5l9 9-5 5-9-9Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinejoin="round"
+        />
         <circle cx="8.5" cy="8.5" r="1" fill="currentColor" />
       </svg>
-    )
+    );
   }
 
-  if (type === 'users') {
+  if (type === "users") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="8" r="3" fill="none" stroke="currentColor" strokeWidth="1.7" />
-        <path d="M5 20c1.5-4 12.5-4 14 0" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+        <circle
+          cx="12"
+          cy="8"
+          r="3"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
+        <path
+          d="M5 20c1.5-4 12.5-4 14 0"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'settings') {
+  if (type === "settings") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path
@@ -72,95 +195,161 @@ function Icon({ type }) {
           strokeLinejoin="round"
         />
       </svg>
-    )
+    );
   }
 
-  if (type === 'dashboard') {
+  if (type === "dashboard") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z" fill="none" stroke="currentColor" strokeWidth="1.6" />
+        <path
+          d="M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'bell') {
+  if (type === "bell") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 4a5 5 0 0 0-5 5v3.5L5 15h14l-2-2.5V9a5 5 0 0 0-5-5Z" fill="none" stroke="currentColor" strokeWidth="1.6" />
-        <path d="M10 18a2 2 0 0 0 4 0" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        <path
+          d="M12 4a5 5 0 0 0-5 5v3.5L5 15h14l-2-2.5V9a5 5 0 0 0-5-5Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        />
+        <path
+          d="M10 18a2 2 0 0 0 4 0"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'menu') {
+  if (type === "menu") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M5 7h14M5 12h14M5 17h14" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+        <path
+          d="M5 7h14M5 12h14M5 17h14"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'plus') {
+  if (type === "plus") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <path
+          d="M12 5v14M5 12h14"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'pencil') {
+  if (type === "pencil") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M5 19h4l10-10-4-4L5 15z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+        <path
+          d="M5 19h4l10-10-4-4L5 15z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'trash') {
+  if (type === "trash") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 7h16M9 7V5h6v2m-7 0 1 12h6l1-12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        <path
+          d="M4 7h16M9 7V5h6v2m-7 0 1 12h6l1-12"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
       </svg>
-    )
+    );
   }
 
-  if (type === 'lock') {
+  if (type === "lock") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="5" y="10" width="14" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="1.6" />
-        <path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" strokeWidth="1.6" />
+        <rect
+          x="5"
+          y="10"
+          width="14"
+          height="10"
+          rx="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        />
+        <path
+          d="M8 10V8a4 4 0 0 1 8 0v2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        />
       </svg>
-    )
+    );
   }
 
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M4 4h16v16H4z" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M4 4h16v16H4z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
     </svg>
-  )
+  );
 }
 
 export function AdminShell({ pathname, onNavigate, children }) {
   const isDashboardPath =
-    pathname === '/admin' ||
-    pathname === '/admin/dashboard' ||
-    (pathname.startsWith('/admin/') &&
-      !pathname.startsWith('/admin/login') &&
-      !pathname.startsWith('/admin/products/new') &&
-      !pathname.startsWith('/admin/blog/new') &&
-      !pathname.startsWith('/admin/research/new') &&
-      !pathname.startsWith('/admin/library/new') &&
-      !pathname.startsWith('/admin/users') &&
-      !pathname.startsWith('/admin/categories') &&
-      !pathname.startsWith('/admin/tags') &&
-      !pathname.startsWith('/admin/settings'))
+    pathname === "/admin" ||
+    pathname === "/admin/dashboard" ||
+    (pathname.startsWith("/admin/") &&
+      !pathname.startsWith("/admin/login") &&
+      !pathname.startsWith("/admin/products/new") &&
+      !pathname.startsWith("/admin/banners") &&
+      !pathname.startsWith("/admin/blog/new") &&
+      !pathname.startsWith("/admin/research/new") &&
+      !pathname.startsWith("/admin/library/new") &&
+      !pathname.startsWith("/admin/reviews") &&
+      !pathname.startsWith("/admin/users") &&
+      !pathname.startsWith("/admin/categories") &&
+      !pathname.startsWith("/admin/tags") &&
+      !pathname.startsWith("/admin/settings"));
 
-  const isActive = (href) => pathname === href || (href === '/admin' && isDashboardPath)
+  const isActive = (href) =>
+    pathname === href || (href === "/admin" && isDashboardPath);
 
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">
-        <button type="button" className="admin-brand" onClick={() => onNavigate('/admin')}>
+        <button
+          type="button"
+          className="admin-brand"
+          onClick={() => onNavigate("/admin")}
+        >
           <img src="/logo.png" alt="Greenrut" />
         </button>
 
@@ -174,26 +363,26 @@ export function AdminShell({ pathname, onNavigate, children }) {
               <button
                 key={item.label}
                 type="button"
-                className={isActive(item.href) ? 'is-active' : ''}
+                className={isActive(item.href) ? "is-active" : ""}
                 onClick={() => onNavigate(item.href)}
               >
                 <Icon type={item.icon} />
                 <span>{item.label}</span>
               </button>
-            )
+            ),
           )}
         </nav>
 
         <div className="admin-sidebar__footer">
-          <button type="button" onClick={() => onNavigate('/')}>
+          <button type="button" onClick={() => onNavigate("/")}>
             <Icon type="menu" />
             <span>View Site</span>
           </button>
           <button
             type="button"
             onClick={() => {
-              clearAdminAuth()
-              onNavigate('/admin/login')
+              clearAdminAuth();
+              onNavigate("/admin/login");
             }}
           >
             <Icon type="lock" />
@@ -206,7 +395,11 @@ export function AdminShell({ pathname, onNavigate, children }) {
         <header className="admin-topbar">
           <div className="admin-topbar__spacer" />
           <div className="admin-topbar__actions">
-            <button type="button" className="admin-icon-button" aria-label="Notifications">
+            <button
+              type="button"
+              className="admin-icon-button"
+              aria-label="Notifications"
+            >
               <Icon type="bell" />
               <span className="admin-notification-dot" />
             </button>
@@ -221,10 +414,16 @@ export function AdminShell({ pathname, onNavigate, children }) {
         <main className="admin-content">{children}</main>
       </div>
     </div>
-  )
+  );
 }
 
-export function AdminPageHeader({ title, subtitle, actions, backLabel, onBack }) {
+export function AdminPageHeader({
+  title,
+  subtitle,
+  actions,
+  backLabel,
+  onBack,
+}) {
   return (
     <div className="admin-page-header">
       <div>
@@ -236,12 +435,20 @@ export function AdminPageHeader({ title, subtitle, actions, backLabel, onBack })
         <h1>{title}</h1>
         {subtitle ? <p>{subtitle}</p> : null}
       </div>
-      {actions ? <div className="admin-page-header__actions">{actions}</div> : null}
+      {actions ? (
+        <div className="admin-page-header__actions">{actions}</div>
+      ) : null}
     </div>
-  )
+  );
 }
 
-export function AdminCard({ title, subtitle, actions, children, className = '' }) {
+export function AdminCard({
+  title,
+  subtitle,
+  actions,
+  children,
+  className = "",
+}) {
   return (
     <section className={`admin-card ${className}`.trim()}>
       {(title || subtitle || actions) && (
@@ -250,23 +457,32 @@ export function AdminCard({ title, subtitle, actions, children, className = '' }
             {title ? <h2>{title}</h2> : null}
             {subtitle ? <p>{subtitle}</p> : null}
           </div>
-          {actions ? <div className="admin-card__actions">{actions}</div> : null}
+          {actions ? (
+            <div className="admin-card__actions">{actions}</div>
+          ) : null}
         </div>
       )}
       {children}
     </section>
-  )
+  );
 }
 
-export function AdminPill({ tone = 'green', children }) {
-  return <span className={`admin-pill admin-pill--${tone}`}>{children}</span>
+export function AdminPill({ tone = "green", children }) {
+  return <span className={`admin-pill admin-pill--${tone}`}>{children}</span>;
 }
 
-export function AdminStatCard({ iconTone = 'blue', title, value, description }) {
+export function AdminStatCard({
+  iconTone = "blue",
+  title,
+  value,
+  description,
+}) {
   return (
     <div className="admin-stat-card">
-      <div className={`admin-stat-card__icon admin-stat-card__icon--${iconTone}`}>
-        <Icon type={iconTone === 'green' ? 'products' : 'blog'} />
+      <div
+        className={`admin-stat-card__icon admin-stat-card__icon--${iconTone}`}
+      >
+        <Icon type={iconTone === "green" ? "products" : "blog"} />
       </div>
       <div>
         <p>{title}</p>
@@ -274,7 +490,7 @@ export function AdminStatCard({ iconTone = 'blue', title, value, description }) 
         <span>{description}</span>
       </div>
     </div>
-  )
+  );
 }
 
 export function AdminTable({ columns, rows, rowRenderer }) {
@@ -287,9 +503,7 @@ export function AdminTable({ columns, rows, rowRenderer }) {
       </div>
       <div className="admin-table__body">{rows.map(rowRenderer)}</div>
     </div>
-  )
+  );
 }
 
-export { Icon as AdminIcon }
-
-
+export { Icon as AdminIcon };

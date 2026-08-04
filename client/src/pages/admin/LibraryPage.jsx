@@ -9,6 +9,11 @@ const initialForm = {
   type: '',
   status: 'published',
   excerpt: '',
+  localName: '',
+  therapeuticUse: '',
+  preparationMethod: '',
+  dosage: '',
+  constituents: '',
   linkedProductId: '',
   image: null,
 }
@@ -64,6 +69,11 @@ export function AdminLibraryPage({ pathname, onNavigate }) {
       type: item.type || '',
       status: item.status || 'published',
       excerpt: item.excerpt || '',
+      localName: item.localName || '',
+      therapeuticUse: item.therapeuticUse || '',
+      preparationMethod: item.preparationMethod || '',
+      dosage: item.dosage || '',
+      constituents: item.constituents || '',
       linkedProductId: item.linkedProductId || '',
       image: item.image || null,
     })
@@ -175,6 +185,26 @@ export function AdminLibraryPage({ pathname, onNavigate }) {
               <label>
                 Excerpt
                 <textarea value={form.excerpt} onChange={updateField('excerpt')} placeholder="Short summary for the card" rows={5} />
+              </label>
+              <label>
+                Local Name
+                <input value={form.localName} onChange={updateField('localName')} type="text" placeholder="Example: Ewe Moringa" />
+              </label>
+              <label>
+                Therapeutic Use
+                <input value={form.therapeuticUse} onChange={updateField('therapeuticUse')} type="text" placeholder="Example: Immunity, digestion, blood sugar support" />
+              </label>
+              <label>
+                Preparation Method
+                <textarea value={form.preparationMethod} onChange={updateField('preparationMethod')} placeholder="How this herb or material is prepared" rows={4} />
+              </label>
+              <label>
+                Dosage
+                <textarea value={form.dosage} onChange={updateField('dosage')} placeholder="Suggested dosage or usage notes" rows={3} />
+              </label>
+              <label>
+                Active Constituents
+                <textarea value={form.constituents} onChange={updateField('constituents')} placeholder="Key active compounds or phytochemicals" rows={3} />
               </label>
             </div>
           </AdminCard>
