@@ -14,6 +14,7 @@ const defaultClientOrigins = [
   "https://greenrut.com",
   "https://greenrut-vd7c.onrender.com",
   "http://localhost:5173",
+  "https://greenrut.vercel.app"
 ];
 
 const configuredClientOrigins = parseOrigins(
