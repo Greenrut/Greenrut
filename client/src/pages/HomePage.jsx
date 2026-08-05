@@ -26,6 +26,24 @@ function mapProduct(product, index = 0) {
   };
 }
 
+function getHeroImageProps(slide) {
+  const src = slide.image?.url || slide.image;
+  return {
+    src,
+    srcSet: src ? `${src} 1200w` : undefined,
+    sizes: "100vw",
+  };
+}
+
+function getCategoryImageProps(image) {
+  const src = image?.url || image;
+  return {
+    src,
+    srcSet: src ? `${src} 400w` : undefined,
+    sizes: "(max-width: 768px) 100vw, 33vw",
+  };
+}
+
 const heroSlides = [
   {
     title: "Every Health Problem Has a Natural Solution.",
@@ -192,9 +210,12 @@ export function HomePage({ onNavigate }) {
             aria-label={heroSlide.title || heroSlide.alt || "Open banner"}
           >
             <img
-              src={heroSlide.image?.url || heroSlide.image}
+              src={getHeroImageProps(heroSlide).src}
+              srcSet={getHeroImageProps(heroSlide).srcSet}
+              sizes={getHeroImageProps(heroSlide).sizes}
               alt={heroSlide.alt || heroSlide.title || "Greenrut banner"}
               className="home-hero__image"
+              loading="lazy"
             />
           </button>
           <button
@@ -294,7 +315,13 @@ export function HomePage({ onNavigate }) {
               }
             >
               <div className="home-category-card__image">
-                <img src={category.image} alt={category.title} loading="lazy" />
+                <img
+                  src={getCategoryImageProps(category.image).src}
+                  srcSet={getCategoryImageProps(category.image).srcSet}
+                  sizes={getCategoryImageProps(category.image).sizes}
+                  alt={category.title}
+                  loading="lazy"
+                />
               </div>
               <div className="home-category-card__body">
                 <h3>{category.title}</h3>

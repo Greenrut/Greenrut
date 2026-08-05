@@ -3,6 +3,7 @@ import { HeroBanner, ProductCard } from '../components/SiteChrome.jsx'
 import { publicRequest } from '../lib/publicApi.js'
 import { addToCart } from '../lib/cart.js'
 import { accountRequest } from '../lib/accountApi.js'
+import { getImageSource } from '../lib/image.js'
 import { hasUserAuth } from '../lib/auth.js'
 import { SectionTitle } from './shared.jsx'
 import bannaImage from '../assets/banna.png'
@@ -32,7 +33,7 @@ function getImageUrl(image) {
 
 function getProductImages(product) {
   const images = Array.isArray(product?.images) ? product.images : []
-  return images.map((image) => getImageUrl(image)).filter(Boolean)
+  return images.map((image) => getImageSource(image, { width: 420 })).filter(Boolean)
 }
 
 export function ProductDetailsPage({ onNavigate }) {
@@ -74,7 +75,7 @@ export function ProductDetailsPage({ onNavigate }) {
 
         setProduct(selectedProduct)
         const images = Array.isArray(selectedProduct?.images) ? selectedProduct.images : []
-        setSelectedImage(getImageUrl(images[0]) || '')
+        setSelectedImage(getImageSource(images[0], { width: 1200 }) || '')
 
         const sourceList = items.length ? items : fallbackProducts
         setRelatedProducts(selectedProduct ? sourceList.filter((item) => String(item.id) !== String(selectedProduct.id)).slice(0, 4) : [])
@@ -231,9 +232,9 @@ export function ProductDetailsPage({ onNavigate }) {
                         key={image || index}
                         type="button"
                         className={selectedImage === image ? 'is-active' : ''}
-                        onClick={() => setSelectedImage(image)}
+                        onClick={() => setSelectedImage(getImageSource(image, { width: 1200 }) || '')}
                       >
-                        <img src={image} alt={`${product.name} ${index + 1}`} />
+                        <img src={getImageSource(image, { width: 320 })} alt={`${product.name} ${index + 1}`} loading="lazy" />
                       </button>
                     )
                   })

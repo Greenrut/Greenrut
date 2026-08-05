@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { getImageSource } from '../lib/image.js'
 import { publicRequest } from '../lib/publicApi.js'
 import heroImage from '../assets/hero.png'
 import bannerImage from '../assets/banna.png'
@@ -104,7 +105,7 @@ function getImageUrl(image) {
 
 function getProductImage(product) {
   const firstImage = Array.isArray(product.images) ? product.images[0] : product.image || product.thumbnail
-  return getImageUrl(firstImage)
+  return getImageSource(firstImage, { width: 520 })
 }
 
 function normalizeStage(value) {

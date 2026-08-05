@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { getImageSource } from '../lib/image.js'
 import { publicRequest } from '../lib/publicApi.js'
 import heroImage from '../assets/hero.png'
 import { fallbackResources } from '../data.js'
@@ -24,7 +25,7 @@ function normalizeResource(item) {
     dosage: item.dosage || item.dose || '',
     constituents: item.constituents || item.majorConstituents || item.api || '',
     resourceUrl: item.resourceUrl || item.resource_url || item.url || item.link || '',
-    image: getImageUrl(item.image || item.thumbnail || (Array.isArray(item.images) ? item.images[0] : '')),
+    image: getImageSource(item.image || item.thumbnail || (Array.isArray(item.images) ? item.images[0] : ''), { width: 760 }),
     linkedProductId: item.linkedProductId || item.productId || '',
   }
 }

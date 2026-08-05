@@ -1,19 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { HeroBanner } from '../components/SiteChrome.jsx'
 import { publicRequest } from '../lib/publicApi.js'
+import { getImageSource } from '../lib/image.js'
 import bannaImage from '../assets/banna.png'
 import { fallbackProducts } from '../data.js'
 
-function getImageUrl(image) {
-  if (!image) return ''
-  if (typeof image === 'string') return image
-  if (typeof image === 'object') return image.url || image.src || image.secureUrl || image.path || ''
-  return ''
-}
-
 function getProductImage(product) {
   const firstImage = Array.isArray(product.images) ? product.images[0] : product.image || product.thumbnail
-  return getImageUrl(firstImage)
+  return getImageSource(firstImage, { width: 520 })
 }
 
 function buildWhatsAppUrl(product) {

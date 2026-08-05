@@ -1,3 +1,5 @@
+import { getImageSource } from './image.js'
+
 const CART_KEY = 'greenrut:cart'
 
 function readCart() {
@@ -65,8 +67,5 @@ export function clearCart() {
 function getImageUrl(product) {
   const images = Array.isArray(product?.images) ? product.images : []
   const first = images[0]
-  if (!first) return ''
-  if (typeof first === 'string') return first
-  if (typeof first === 'object') return first.url || first.src || first.secureUrl || ''
-  return ''
+  return getImageSource(first, { width: 520 })
 }

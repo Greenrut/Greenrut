@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getCartCount } from "../lib/cart.js";
+import { getImageSource } from "../lib/image.js";
 import { navItems, socialLinks } from "../data.js";
 
 function SocialIcon({ icon }) {
@@ -141,13 +142,12 @@ function getImageUrl(image) {
 }
 
 export function ProductCard({ name, price, badge, tone, image, images }) {
-  const imageUrl =
-    getImageUrl(image) || getImageUrl(Array.isArray(images) ? images[0] : null);
+  const imageUrl = getImageSource(getImageUrl(image) || getImageUrl(Array.isArray(images) ? images[0] : null), { width: 520 });
   return (
     <article className="product-card">
       <div className="product-card__visual">
         {badge ? <span className="badge">{badge}</span> : null}
-        {imageUrl ? <img src={imageUrl} alt={name} /> : <div className="product-card__empty" aria-label={`${name} has no image`} />}
+        {imageUrl ? <img src={imageUrl} alt={name} loading="lazy" /> : <div className="product-card__empty" aria-label={`${name} has no image`} />}
       </div>
       <h3>{name}</h3>
       <p>{price}</p>
