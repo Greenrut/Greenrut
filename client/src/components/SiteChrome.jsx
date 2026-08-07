@@ -4,34 +4,50 @@ import { getImageSource } from "../lib/image.js";
 import { navItems, socialLinks } from "../data.js";
 
 function SocialIcon({ icon }) {
-  if (icon === 'facebook') return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-  if (icon === 'x') return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-  if (icon === 'linkedin') return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-      <rect x="2" y="9" width="4" height="12" />
-      <circle cx="4" cy="4" r="2" />
-    </svg>
-  );
-  if (icon === 'tiktok') return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.75a8.16 8.16 0 0 0 4.77 1.52V6.82a4.85 4.85 0 0 1-1-.13z" />
-    </svg>
-  );
-  if (icon === 'youtube') return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
-      <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white" />
-    </svg>
-  );
+  if (icon === "facebook")
+    return (
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+      </svg>
+    );
+  if (icon === "x")
+    return (
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    );
+  if (icon === "linkedin")
+    return (
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+        <rect x="2" y="9" width="4" height="12" />
+        <circle cx="4" cy="4" r="2" />
+      </svg>
+    );
+  if (icon === "tiktok")
+    return (
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.75a8.16 8.16 0 0 0 4.77 1.52V6.82a4.85 4.85 0 0 1-1-.13z" />
+      </svg>
+    );
+  if (icon === "youtube")
+    return (
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+        <polygon
+          points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"
+          fill="white"
+        />
+      </svg>
+    );
+  if (icon === "instagram")
+    return (
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="5" ry="5" />
+        <circle cx="12" cy="12" r="4" fill="white" />
+        <circle cx="17.5" cy="6.5" r="1.2" fill="white" />
+      </svg>
+    );
   return null;
 }
 
@@ -114,14 +130,15 @@ export function HeroBanner({ title, breadcrumb, subtle, backgroundPhoto }) {
         className="hero-banner__backdrop"
         aria-hidden="true"
         style={backdropStyle}
-      >
-        
-       
-      </div>
+      ></div>
       <div className="hero-banner__content !w-full !px-3 xs:!px-4 sm:!px-6">
         {subtle ? <p className="eyebrow">{subtle}</p> : null}
-                <h1>{title}</h1>
-        {breadcrumb ? <p className="mt-2 text-[11px] xs:text-[12px] text-white/75">{breadcrumb}</p> : null}
+        <h1>{title}</h1>
+        {breadcrumb ? (
+          <p className="mt-2 text-[11px] xs:text-[12px] text-white/75">
+            {breadcrumb}
+          </p>
+        ) : null}
       </div>
     </section>
   );
@@ -142,12 +159,22 @@ function getImageUrl(image) {
 }
 
 export function ProductCard({ name, price, badge, tone, image, images }) {
-  const imageUrl = getImageSource(getImageUrl(image) || getImageUrl(Array.isArray(images) ? images[0] : null), { width: 520 });
+  const imageUrl = getImageSource(
+    getImageUrl(image) || getImageUrl(Array.isArray(images) ? images[0] : null),
+    { width: 520 },
+  );
   return (
     <article className="product-card">
       <div className="product-card__visual">
         {badge ? <span className="badge">{badge}</span> : null}
-        {imageUrl ? <img src={imageUrl} alt={name} loading="lazy" /> : <div className="product-card__empty" aria-label={`${name} has no image`} />}
+        {imageUrl ? (
+          <img src={imageUrl} alt={name} loading="lazy" />
+        ) : (
+          <div
+            className="product-card__empty"
+            aria-label={`${name} has no image`}
+          />
+        )}
       </div>
       <h3>{name}</h3>
       <p>{price}</p>
@@ -162,8 +189,8 @@ export function SiteHeader({ pathname, onNavigate }) {
 
   useEffect(() => {
     const onCartChanged = () => setCartCount(getCartCount());
-    window.addEventListener('cart-changed', onCartChanged);
-    return () => window.removeEventListener('cart-changed', onCartChanged);
+    window.addEventListener("cart-changed", onCartChanged);
+    return () => window.removeEventListener("cart-changed", onCartChanged);
   }, []);
 
   useEffect(() => {
@@ -222,7 +249,9 @@ export function SiteHeader({ pathname, onNavigate }) {
           >
             <IconCart />
             {cartCount > 0 && (
-              <span className="cart-badge" aria-hidden="true">{cartCount}</span>
+              <span className="cart-badge" aria-hidden="true">
+                {cartCount}
+              </span>
             )}
           </button>
         </nav>
@@ -239,8 +268,9 @@ export function SiteFooter() {
           <div className="site-footer__brand">
             <img src="/logo.png" alt="Greenrut" />
             <p>
-              A clean storefront experience for the Greenrut brand, with
-              reusable components for product, cart, contact, and account pages.
+              Greenrut is a modern, research based herbal medicine company,
+              specializing in phototherapy, natural medicines, food supplements
+              and personal care products.
             </p>
           </div>
           <div className="site-footer__columns !grid !grid-cols-1 xs:!grid-cols-2 xl:!grid-cols-4 !gap-4 xs:!gap-5">
@@ -284,9 +314,15 @@ export function SiteFooter() {
             <div>
               <h2>Contact Us</h2>
               <ul>
-                <li>Your address goes here</li>
+                {/* <li>Your address goes here</li> */}
                 <li>0123456789</li>
                 <li>demo@example.com</li>
+                <li>
+                  Pharmaco-Vigilance: To report any adverse events related to
+                  products manufactured by Greenrut Laboratories, please contact
+                  us by phone or email complaints@greenrut.com. Indicate the
+                  batch number of the product.
+                </li>
               </ul>
             </div>
           </div>
@@ -308,4 +344,3 @@ export function SiteFrame({ pathname, onNavigate, children }) {
     </div>
   );
 }
-

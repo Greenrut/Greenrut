@@ -1,4 +1,5 @@
-const CLOUDINARY_UPLOAD_PATH = /^(https?:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload)(?:\/([^/]+))?(\/.*)$/i;
+const CLOUDINARY_UPLOAD_PATH =
+  /^(https?:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload)(?:\/([^/]+))?(\/.*)$/i;
 
 export function getImageUrl(image) {
   if (!image) return "";
@@ -16,8 +17,11 @@ export function getCloudinaryOptimizedUrl(url, options = {}) {
 
   const existingSegment = match[2] || "";
   const remainingPath = match[3] || "";
-  const hasExistingTransform = existingSegment && !/^v\d+$/.test(existingSegment);
-  const pathAfterUpload = hasExistingTransform ? remainingPath : `/${existingSegment}${remainingPath}`;
+  const hasExistingTransform =
+    existingSegment && !/^v\d+$/.test(existingSegment);
+  const pathAfterUpload = hasExistingTransform
+    ? remainingPath
+    : `/${existingSegment}${remainingPath}`;
 
   const transformation = [
     options.width ? `w_${options.width}` : null,
