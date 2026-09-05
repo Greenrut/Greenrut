@@ -64,7 +64,36 @@ function ProductCard({ product, onView, onOrder }) {
   );
 }
 
-
+const sidebarCategories = [
+  {
+    title: "All",
+    description: "Show all herbal products from our catalog.",
+  },
+  {
+    title: "SKIN & BODY CARE",
+    description: "Anti-Aging care, beauty bars, moisturizers, hair oil, body oil, sunscreen, african soaps, toners",
+  },
+  {
+    title: "DAILY SUPPLEMENTS (Nutrition)",
+    description: "Vitamins, Minerals, Stress reliever, Sleep, Focus, Energy, Performance.",
+  },
+  {
+    title: "IMMUNITY & METABOLISM",
+    description: "Detoxifier, Anti-oxidants, Blood sugar, Digestion, Cholesterol, Circulation.",
+  },
+  {
+    title: "TARGETED HEALTH",
+    description: "Weight Management, Heart & Brain Health, Bone & Eye care, Diabetes, Respiratory health",
+  },
+  {
+    title: "MEN & WOMEN",
+    description: "Fertility, Menopause, Prostate, Stamina, Hormonal balances, Menstrual comfort, libido.",
+  },
+  {
+    title: "HERBAL INSTANTS",
+    description: "Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action.",
+  },
+];
 
 export function ProductPage({ onNavigate, search }) {
   const [products, setProducts] = useState([]);
@@ -191,17 +220,18 @@ export function ProductPage({ onNavigate, search }) {
             <aside className="catalog-sidebar">
               <div className="filter-panel reveal-on-scroll reveal-slide-up">
                 <h2>Shop by Category</h2>
-                <ul>
-                  {categories.map((category) => (
-                    <li key={category}>
+                <ul className="sidebar-categories-list">
+                  {sidebarCategories.map((cat) => (
+                    <li key={cat.title}>
                       <button
                         type="button"
-                        className={
-                          selectedCategory === category ? "is-active" : ""
-                        }
-                        onClick={() => setSelectedCategory(category)}
+                        className={`sidebar-category-btn ${
+                          selectedCategory === cat.title ? "is-active" : ""
+                        }`}
+                        onClick={() => setSelectedCategory(cat.title)}
                       >
-                        {category}
+                        <span className="category-title">{cat.title}</span>
+                        <span className="category-desc">{cat.description}</span>
                       </button>
                     </li>
                   ))}
