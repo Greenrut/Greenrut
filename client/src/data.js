@@ -4,7 +4,7 @@ export const navItems = [
   { label: "PRODUCT", href: "/product" },
   { label: "LIBRARY", href: "/library" },
   { label: "RESEARCH", href: "/research" },
-  { label: "BLOG", href: "/blog" },
+  { label: "SELF-CARE", href: "/self-care" },
   { label: "CONTACT", href: "/contact" },
 ];
 

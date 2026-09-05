@@ -112,7 +112,7 @@ function App() {
     page = <ForgotPasswordPage onNavigate={navigate} />;
   if (pathname === "/reset-password")
     page = <ResetPasswordPage onNavigate={navigate} />;
-  if (pathname === "/blog")
+  if (pathname === "/blog" || pathname === "/self-care")
     page = <BlogPage onNavigate={navigate} search={search} />;
   if (pathname === "/library") page = <LibraryPage onNavigate={navigate} />;
   if (pathname === "/library/resource")
@@ -195,6 +195,7 @@ function App() {
       "/forgot-password",
       "/reset-password",
       "/blog",
+      "/self-care",
       "/library",
       "/library/resource",
       "/research",

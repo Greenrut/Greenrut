@@ -371,7 +371,7 @@ export function HomePage({ onNavigate }) {
                 </p>
                 <h3>{post.title}</h3>
                 <p>{getPostSummary(post)}</p>
-                <button type="button" onClick={() => onNavigate?.("/blog")}>
+                <button type="button" onClick={() => onNavigate?.("/self-care")}>
                   READ MORE
                 </button>
               </article>

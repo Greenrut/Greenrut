@@ -61,7 +61,7 @@ export function BlogPage({ onNavigate, search }) {
             <p className="blog-card__date">{selectedPost.createdAt ? new Date(selectedPost.createdAt).toLocaleDateString() : 'Blog'}</p>
             <h3>{selectedPost.title}</h3>
             <p>{getPostSummary(selectedPost)}</p>
-            <button type="button" onClick={() => onNavigate?.('/blog')}>
+            <button type="button" onClick={() => onNavigate?.('/self-care')}>
               BACK TO LIST
             </button>
           </article>
@@ -79,7 +79,7 @@ export function BlogPage({ onNavigate, search }) {
                     <p className="blog-card__date">{post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'Blog'}</p>
                     <h3>{post.title}</h3>
                     <p>{getPostSummary(post)}</p>
-                    <button type="button" onClick={() => onNavigate?.(`/blog?id=${post.id}`)}>
+                    <button type="button" onClick={() => onNavigate?.(`/self-care?id=${post.id}`)}>
                       READ MORE
                     </button>
                   </article>
