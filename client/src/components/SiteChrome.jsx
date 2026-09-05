@@ -90,6 +90,21 @@ function IconChevronDown() {
   );
 }
 
+function IconUser() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm-7 8a7 7 0 0 1 14 0"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function IconMenu() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -187,6 +202,7 @@ export function ProductCard({ name, price, badge, tone, image, images }) {
 export function SiteHeader({ pathname, onNavigate }) {
   const active = (href) => pathname === href;
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [cartCount, setCartCount] = useState(() => getCartCount());
   const [shouldBounce, setShouldBounce] = useState(false);
   const [products, setProducts] = useState(fallbackProducts);
@@ -228,6 +244,7 @@ export function SiteHeader({ pathname, onNavigate }) {
 
   useEffect(() => {
     setMenuOpen(false);
+    setProfileDropdownOpen(false);
   }, [pathname]);
 
   return (
@@ -329,6 +346,35 @@ export function SiteHeader({ pathname, onNavigate }) {
             </span>
           )}
         </button>
+
+        <div className="header-profile-container">
+          <button
+            className="icon-button profile-icon-button"
+            type="button"
+            aria-label="Profile Account Menu"
+            onClick={() => setProfileDropdownOpen((prev) => !prev)}
+          >
+            <IconUser />
+          </button>
+          
+          {profileDropdownOpen && (
+            <div className="profile-dropdown">
+              <a
+                href="/login"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setProfileDropdownOpen(false);
+                  onNavigate("/login");
+                }}
+              >
+                Sign In as User
+              </a>
+              <div className="profile-dropdown__disabled">
+                Sign In as Distributor <span className="coming-soon-tag">Soon</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
