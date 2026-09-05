@@ -64,32 +64,7 @@ function ProductCard({ product, onView, onOrder }) {
   );
 }
 
-const productCategoryOverview = [
-  [
-    "SKIN & BODY CARE",
-    "Anti-Aging care, beauty bars, moisturizers, hair oil, body oil, sunscreen, african soaps, toners",
-  ],
-  [
-    "DAILY SUPPLEMENTS (Nutrition)",
-    "Vitamins, Minerals, Stress reliever, Sleep, Focus, Energy, Performance.",
-  ],
-  [
-    "IMMUNITY & METABOLISM",
-    "Detoxifier, Anti-oxidants, Blood sugar, Digestion, Cholesterol, Circulation.",
-  ],
-  [
-    "TARGETED HEALTH",
-    "Weight Management, Heart & Brain Health, Bone & Eye care, Diabetes, Respiratory health",
-  ],
-  [
-    "MEN & WOMEN",
-    "Fertility, Menopause, Prostate, Stamina, Hormonal balances, Menstrual comfort, libido.",
-  ],
-  [
-    "HERBAL INSTANTS",
-    "Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action.",
-  ],
-];
+
 
 export function ProductPage({ onNavigate, search }) {
   const [products, setProducts] = useState([]);
@@ -207,26 +182,6 @@ export function ProductPage({ onNavigate, search }) {
             Explore 100% herbal, scientifically guided products crafted for
             purity, potency, and peace of mind.
           </p>
-        </div>
-
-        <div className="product-category-overview">
-          {productCategoryOverview.map(([title, text], index) => {
-            const delayClass = `reveal-delay-${(index % 3) * 100}`;
-            return (
-              <button
-                key={title}
-                type="button"
-                className={`reveal-on-scroll reveal-slide-up ${delayClass} ${selectedCategory === title ? "is-active" : ""}`}
-                onClick={() => {
-                  setSelectedCategory(title);
-                  setSearchTerm("");
-                }}
-              >
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </button>
-            );
-          })}
         </div>
 
         {loading ? <p>Loading products...</p> : null}
