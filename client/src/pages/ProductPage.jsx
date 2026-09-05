@@ -42,6 +42,9 @@ function ProductCard({ product, onView, onOrder }) {
       </div>
       <div className="catalog-card__body">
         <h3>{product.name}</h3>
+        <span className="catalog-card__price">
+          NGN {Number(product.price || 0).toLocaleString()}
+        </span>
         <p>{description}</p>
         <div className="catalog-card__actions">
           <button

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
 @import "tailwindcss";
 
 @theme {
@@ -8,7 +10,7 @@
 }
 
 :root {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Plus Jakarta Sans', Inter, Arial, Helvetica, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color: #4f4a44;
