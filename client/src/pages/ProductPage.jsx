@@ -64,36 +64,15 @@ function ProductCard({ product, onView, onOrder }) {
   );
 }
 
-const sidebarCategories = [
-  {
-    title: "All",
-    description: "Show all herbal products from our catalog.",
-  },
-  {
-    title: "SKIN & BODY CARE",
-    description: "Anti-Aging care, beauty bars, moisturizers, hair oil, body oil, sunscreen, african soaps, toners",
-  },
-  {
-    title: "DAILY SUPPLEMENTS (Nutrition)",
-    description: "Vitamins, Minerals, Stress reliever, Sleep, Focus, Energy, Performance.",
-  },
-  {
-    title: "IMMUNITY & METABOLISM",
-    description: "Detoxifier, Anti-oxidants, Blood sugar, Digestion, Cholesterol, Circulation.",
-  },
-  {
-    title: "TARGETED HEALTH",
-    description: "Weight Management, Heart & Brain Health, Bone & Eye care, Diabetes, Respiratory health",
-  },
-  {
-    title: "MEN & WOMEN",
-    description: "Fertility, Menopause, Prostate, Stamina, Hormonal balances, Menstrual comfort, libido.",
-  },
-  {
-    title: "HERBAL INSTANTS",
-    description: "Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action.",
-  },
-];
+const categoryDescriptions = {
+  "All": "Show all herbal products from our catalog.",
+  "SKIN & BODY CARE": "Anti-Aging care, beauty bars, moisturizers, hair oil, body oil, sunscreen, african soaps, toners",
+  "DAILY SUPPLEMENTS (Nutrition)": "Vitamins, Minerals, Stress reliever, Sleep, Focus, Energy, Performance.",
+  "IMMUNITY & METABOLISM": "Detoxifier, Anti-oxidants, Blood sugar, Digestion, Cholesterol, Circulation.",
+  "TARGETED HEALTH": "Weight Management, Heart & Brain Health, Bone & Eye care, Diabetes, Respiratory health",
+  "MEN & WOMEN": "Fertility, Menopause, Prostate, Stamina, Hormonal balances, Menstrual comfort, libido.",
+  "HERBAL INSTANTS": "Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action."
+};
 
 export function ProductPage({ onNavigate, search }) {
   const [products, setProducts] = useState([]);
@@ -142,15 +121,27 @@ export function ProductPage({ onNavigate, search }) {
     };
   }, []);
 
-  const categories = [
-    "All",
-    "SKIN & BODY CARE",
-    "DAILY SUPPLEMENTS (Nutrition)",
-    "IMMUNITY & METABOLISM",
-    "TARGETED HEALTH",
-    "MEN & WOMEN",
-    "HERBAL INSTANTS",
-  ];
+  const availableCategories = useMemo(() => {
+    const source = products.length ? products : fallbackProducts;
+    const uniqueCats = new Set();
+    source.forEach((product) => {
+      const cat = product.category || product.categories?.[0];
+      if (cat) {
+        uniqueCats.add(cat.trim());
+      }
+    });
+    const sortedCats = Array.from(uniqueCats).sort();
+    return [
+      {
+        title: "All",
+        description: categoryDescriptions["All"],
+      },
+      ...sortedCats.map((cat) => ({
+        title: cat,
+        description: categoryDescriptions[cat] || `Explore our selection of ${cat.toLowerCase()} products.`,
+      })),
+    ];
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
@@ -221,7 +212,7 @@ export function ProductPage({ onNavigate, search }) {
               <div className="filter-panel reveal-on-scroll reveal-slide-up">
                 <h2>Shop by Category</h2>
                 <ul className="sidebar-categories-list">
-                  {sidebarCategories.map((cat) => (
+                  {availableCategories.map((cat) => (
                     <li key={cat.title}>
                       <button
                         type="button"
