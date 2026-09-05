@@ -103,7 +103,7 @@ const productCategories = [
     image: catMenWomenImg,
   },
   {
-    title: "HERBAL INSTANTS",
+    title: "NUTRITION & INSTANTS",
     text: "Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action.",
     image: catHerbalImg,
   },

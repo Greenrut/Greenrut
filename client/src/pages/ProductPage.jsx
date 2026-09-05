@@ -74,7 +74,7 @@ const categoryDescriptions = {
   "IMMUNITY & METABOLISM": "Detoxifier, Anti-oxidants, Blood sugar, Digestion, Cholesterol, Circulation.",
   "TARGETED HEALTH": "Weight Management, Heart & Brain Health, Bone & Eye care, Diabetes, Respiratory health",
   "MEN & WOMEN": "Fertility, Menopause, Prostate, Stamina, Hormonal balances, Menstrual comfort, libido.",
-  "HERBAL INSTANTS": "Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action."
+  "NUTRITION & INSTANTS": "Herbal Drinks, Juice, Concentrated powders, tinctures, adaptogens for instant action."
 };
 
 export function ProductPage({ onNavigate, search }) {
