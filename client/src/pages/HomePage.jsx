@@ -189,46 +189,55 @@ export function HomePage({ onNavigate }) {
   return (
     <>
       <section className="home-hero home-hero--banner page-shell">
-        <div className="home-hero__art home-hero__art--banner">
-          <button
-            type="button"
-            className="home-hero__nav home-hero__nav--prev"
-            aria-label="Previous slide"
-            onClick={() =>
-              setActiveHero(
-                (current) =>
-                  (current - 1 + slidesToUse.length) % slidesToUse.length,
-              )
-            }
-          >
-            &#8249;
-          </button>
-          <button
-            type="button"
-            className="home-hero__slide"
-            onClick={() => onNavigate?.(heroSlide.primaryPath || "/product")}
-            aria-label={heroSlide.title || heroSlide.alt || "Open banner"}
-          >
-            <img
-              src={getHeroImageProps(heroSlide).src}
-              srcSet={getHeroImageProps(heroSlide).srcSet}
-              sizes={getHeroImageProps(heroSlide).sizes}
-              alt={heroSlide.alt || heroSlide.title || "Greenrut banner"}
-              className="home-hero__image"
-              loading="lazy"
-            />
-          </button>
-          <button
-            type="button"
-            className="home-hero__nav home-hero__nav--next"
-            aria-label="Next slide"
-            onClick={() =>
-              setActiveHero((current) => (current + 1) % slidesToUse.length)
-            }
-          >
-            &#8250;
-          </button>
-          <div className="home-hero__dots" aria-label="Hero slides">
+        <div className="home-hero__art home-hero__art--banner" style={{ position: "relative" }}>
+          
+          <div style={{ position: "relative", width: "100%", height: "100%" }}>
+            {slidesToUse.map((slide, index) => {
+              const isActive = index === activeHero;
+              const imgProps = getHeroImageProps(slide);
+              return (
+                <button
+                  key={slide.id || slide.title || index}
+                  type="button"
+                  className={`home-hero__slide${isActive ? " is-active" : ""}`}
+                  onClick={() => onNavigate?.(slide.primaryPath || "/product")}
+                  aria-label={slide.title || slide.alt || "Open banner"}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    border: 0,
+                    padding: 0,
+                    background: "transparent",
+                    cursor: "pointer",
+                    opacity: isActive ? 1 : 0,
+                    pointerEvents: isActive ? "auto" : "none",
+                    transition: "opacity 0.80s cubic-bezier(0.215, 0.61, 0.355, 1)",
+                    zIndex: isActive ? 2 : 1,
+                  }}
+                >
+                  <img
+                    src={imgProps.src}
+                    srcSet={imgProps.srcSet}
+                    sizes={imgProps.sizes}
+                    alt={slide.alt || slide.title || "Greenrut banner"}
+                    className="home-hero__image"
+                    loading={index === 0 ? "eager" : "lazy"}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      background: "#f4faf2",
+                    }}
+                  />
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="home-hero__dots" aria-label="Hero slides" style={{ zIndex: 10 }}>
             {slidesToUse.map((slide, index) => (
               <button
                 key={slide.id || slide.title || index}
@@ -245,46 +254,40 @@ export function HomePage({ onNavigate }) {
 
       <section className="section-band">
         <div className="page-shell">
-          <SectionTitle title="Our Bestsellers" />
+          <div className="reveal-on-scroll reveal-slide-up">
+            <SectionTitle title="Our Bestsellers" />
+          </div>
           {loading ? <p>Loading products...</p> : null}
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
           {!loading && !error && bestsellers.length === 0 ? (
             <p>No products yet.</p>
           ) : null}
           <div className="product-grid product-grid--home">
-            {bestsellers.map((product, index) => (
-              <button
-                key={product.id || product.name}
-                type="button"
-                className="text-left"
-                onClick={() =>
-                  onNavigate?.(`/product-details?id=${product.id}`)
-                }
-              >
-                <ProductCard {...mapProduct(product, index)} />
-              </button>
-            ))}
+            {bestsellers.map((product, index) => {
+              const delayClass = `reveal-delay-${(index % 4) * 100}`;
+              return (
+                <div
+                  key={product.id || product.name}
+                  className={`reveal-on-scroll reveal-slide-up ${delayClass}`}
+                >
+                  <button
+                    type="button"
+                    className="text-left"
+                    style={{ width: "100%", border: 0, padding: 0, background: "none" }}
+                    onClick={() =>
+                      onNavigate?.(`/product-details?id=${product.id}`)
+                    }
+                  >
+                    <ProductCard {...mapProduct(product, index)} />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      <section className="home-promo-band">
-        {/* <div className="home-promo-grid">
-          <article className="home-promo-card">
-            <div className="home-promo-card__copy">
-              <h2>-50% Sale</h2>
-              <p>SUMMER VACATION</p>
-            </div>
-            <img src={leafSaleImage} alt="Green tea powder and leaves" />
-          </article>
-          <article className="home-promo-card">
-            <div className="home-promo-card__copy">
-              <h2>-20% Sale</h2>
-              <p>WINTER VACATION</p>
-            </div>
-            <img src={bowlSaleImage} alt="Green tea powder in a bowl" />
-          </article>
-        </div> */}
+      <section className="home-promo-band reveal-on-scroll reveal-fade-in">
         <div className="home-promo-quote">
           <span className="sprout" aria-hidden="true" />
           <p>
@@ -297,89 +300,92 @@ export function HomePage({ onNavigate }) {
       </section>
 
       <section className="home-category-section page-shell">
-        <SectionTitle title="Our Comprehensive Range of Herbal Innovations" />
-        <p className="home-category-section__intro">
+        <div className="reveal-on-scroll reveal-slide-up">
+          <SectionTitle title="Our Comprehensive Range of Herbal Innovations" />
+        </div>
+        <p className="home-category-section__intro reveal-on-scroll reveal-slide-up reveal-delay-100">
           Every Greenrut category is shaped by scientific validation,
           transparent formulation, and a commitment to safe natural living.
         </p>
         <div className="home-category-grid">
-          {productCategories.map((category) => (
-            <button
-              key={category.title}
-              type="button"
-              className="home-category-card"
-              onClick={() =>
-                onNavigate?.(
-                  `/product?category=${encodeURIComponent(category.title)}`,
-                )
-              }
-            >
-              <div className="home-category-card__image">
-                <img
-                  src={getCategoryImageProps(category.image).src}
-                  srcSet={getCategoryImageProps(category.image).srcSet}
-                  sizes={getCategoryImageProps(category.image).sizes}
-                  alt={category.title}
-                  loading="lazy"
-                />
+          {productCategories.map((category, index) => {
+            const delayClass = `reveal-delay-${(index % 3) * 100}`;
+            return (
+              <div
+                key={category.title}
+                className={`reveal-on-scroll reveal-slide-up ${delayClass}`}
+                style={{ display: "flex", flex: 1 }}
+              >
+                <button
+                  type="button"
+                  className="home-category-card"
+                  style={{ width: "100%", height: "100%" }}
+                  onClick={() =>
+                    onNavigate?.(
+                      `/product?category=${encodeURIComponent(category.title)}`,
+                    )
+                  }
+                >
+                  <div className="home-category-card__image">
+                    <img
+                      src={getCategoryImageProps(category.image).src}
+                      srcSet={getCategoryImageProps(category.image).srcSet}
+                      sizes={getCategoryImageProps(category.image).sizes}
+                      alt={category.title}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="home-category-card__body">
+                    <h3>{category.title}</h3>
+                    <p>{category.text}</p>
+                  </div>
+                </button>
               </div>
-              <div className="home-category-card__body">
-                <h3>{category.title}</h3>
-                <p>{category.text}</p>
-              </div>
-            </button>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       <section className="page-shell blog-grid">
-        <SectionTitle title="From the Blog" />
+        <div className="reveal-on-scroll reveal-slide-up">
+          <SectionTitle title="From the Blog" />
+        </div>
         {!loading && !error && posts.length === 0 ? (
           <p>No blog posts yet.</p>
         ) : null}
         <div className="blog-grid__list">
-          {posts.slice(0, 3).map((post, index) => (
-            <article
-              key={post.id || post.slug || post.title}
-              className="blog-card"
-            >
-              <div
-                className={`blog-card__image blog-card__image--${index + 1}`}
-              />
-              <p className="blog-card__date">
-                {post.createdAt
-                  ? new Date(post.createdAt).toLocaleDateString()
-                  : "Blog"}
-              </p>
-              <h3>{post.title}</h3>
-              <p>{getPostSummary(post)}</p>
-              <button type="button" onClick={() => onNavigate?.("/blog")}>
-                READ MORE
-              </button>
-            </article>
-          ))}
+          {posts.slice(0, 3).map((post, index) => {
+            const delayClass = `reveal-delay-${index * 150}`;
+            return (
+              <article
+                key={post.id || post.slug || post.title}
+                className={`blog-card reveal-on-scroll reveal-slide-up ${delayClass}`}
+              >
+                <div
+                  className={`blog-card__image blog-card__image--${index + 1}`}
+                />
+                <p className="blog-card__date">
+                  {post.createdAt
+                    ? new Date(post.createdAt).toLocaleDateString()
+                    : "Blog"}
+                </p>
+                <h3>{post.title}</h3>
+                <p>{getPostSummary(post)}</p>
+                <button type="button" onClick={() => onNavigate?.("/blog")}>
+                  READ MORE
+                </button>
+              </article>
+            );
+          })}
         </div>
       </section>
 
-      <section className="reviews-section page-shell">
+      <section className="reviews-section page-shell reveal-on-scroll reveal-slide-up">
         <SectionTitle title="What Customers Say" />
         {reviews.length === 0 ? (
           <p>No reviews yet.</p>
         ) : (
           <div className="reviews-carousel">
-            <button
-              type="button"
-              className="reviews-carousel__arrow reviews-carousel__arrow--prev"
-              aria-label="Previous review"
-              onClick={() =>
-                setActiveReview(
-                  (c) => (c - 1 + reviews.length) % reviews.length,
-                )
-              }
-            >
-              &#8249;
-            </button>
-
             <div className="reviews-carousel__track">
               {reviews.map((review, index) => (
                 <article
@@ -402,15 +408,6 @@ export function HomePage({ onNavigate }) {
                 </article>
               ))}
             </div>
-
-            <button
-              type="button"
-              className="reviews-carousel__arrow reviews-carousel__arrow--next"
-              aria-label="Next review"
-              onClick={() => setActiveReview((c) => (c + 1) % reviews.length)}
-            >
-              &#8250;
-            </button>
 
             <div className="reviews-carousel__dots" aria-label="Review slides">
               {reviews.map((review, index) => (

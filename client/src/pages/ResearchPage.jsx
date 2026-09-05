@@ -431,7 +431,7 @@ export function ResearchPage({ onNavigate }) {
 
   return (
     <section className="page-shell py-6 xs:py-8 lg:py-10">
-      <div className="mb-5 overflow-hidden border border-[#efefef] bg-white">
+      <div className="mb-5 overflow-hidden border border-[#efefef] bg-white reveal-on-scroll reveal-slide-up">
         <div
           className="flex min-h-[180px] items-center justify-center px-4 text-center"
           style={{
@@ -455,7 +455,7 @@ export function ResearchPage({ onNavigate }) {
         </div>
       </div>
 
-      <div className="mx-auto mb-5 w-full max-w-[820px] border border-[#efefef] bg-white p-5">
+      <div className="mx-auto mb-5 w-full max-w-[820px] border border-[#efefef] bg-white p-5 reveal-on-scroll reveal-slide-up">
         <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">
           Advancing Herbal Science
         </p>
@@ -480,7 +480,7 @@ export function ResearchPage({ onNavigate }) {
         </div>
       </div>
 
-      <div className="mx-auto mb-5 w-full max-w-[820px] border border-[#efefef] bg-white p-5">
+      <div className="mx-auto mb-5 w-full max-w-[820px] border border-[#efefef] bg-white p-5 reveal-on-scroll reveal-slide-up reveal-delay-100">
         <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">
           Evidence-Based Efficacy
         </p>
@@ -525,7 +525,7 @@ export function ResearchPage({ onNavigate }) {
       </div>
 
       {selectedItem ? (
-        <div className="mx-auto mb-5 w-full max-w-[820px] border border-[#efefef] bg-white p-5">
+        <div className="mx-auto mb-5 w-full max-w-[820px] border border-[#efefef] bg-white p-5 reveal-on-scroll reveal-slide-up">
           <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">
             {selectedItem.phase || "Research"}
           </p>
@@ -549,7 +549,7 @@ export function ResearchPage({ onNavigate }) {
 
       <div className="mx-auto w-full max-w-[820px]">
         <div className="grid gap-[16px] sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start">
-          <aside className="w-full border border-[#efefef] bg-white">
+          <aside className="w-full border border-[#efefef] bg-white reveal-on-scroll reveal-slide-up">
             {researchPhases.map((phase, index) => (
               <button
                 key={phase.key}
@@ -568,7 +568,7 @@ export function ResearchPage({ onNavigate }) {
           </aside>
 
           <div className="min-w-0">
-            <div className="flex flex-wrap gap-2 items-center border border-[#efefef] bg-white px-3 py-2.5">
+            <div className="flex flex-wrap gap-2 items-center border border-[#efefef] bg-white px-3 py-2.5 reveal-on-scroll reveal-slide-up reveal-delay-100">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -628,19 +628,26 @@ export function ResearchPage({ onNavigate }) {
             {!loading && !error ? (
               <div className="pt-3">
                 <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-3">
-                  {researchItems.map(({ product, stage }) => (
-                    <ResearchCard
-                      key={product.id || product.slug || product.name}
-                      product={product}
-                      onOpen={() =>
-                        onNavigate?.(
-                          product.linkedProductId
-                            ? `/product-details?id=${product.linkedProductId}`
-                            : `/research?id=${product.id || product.slug || ""}`,
-                        )
-                      }
-                    />
-                  ))}
+                  {researchItems.map(({ product, stage }, index) => {
+                    const delayClass = `reveal-delay-${(index % 3) * 100}`;
+                    return (
+                      <div
+                        key={product.id || product.slug || product.name}
+                        className={`reveal-on-scroll reveal-slide-up ${delayClass}`}
+                      >
+                        <ResearchCard
+                          product={product}
+                          onOpen={() =>
+                            onNavigate?.(
+                              product.linkedProductId
+                                ? `/product-details?id=${product.linkedProductId}`
+                                : `/research?id=${product.id || product.slug || ""}`,
+                            )
+                          }
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ) : null}

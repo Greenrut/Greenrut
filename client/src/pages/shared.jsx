@@ -15,25 +15,25 @@ import madeInNigeriaIcon from '../assets/madeinnigeria64.png'
 export function BadgeRow() {
   return (
     <section className="badge-row">
-      <div>
+      <div className="reveal-on-scroll reveal-slide-up">
         <span className="badge-row__icon">
           <img src={certificationIcon} alt="" aria-hidden="true" />
         </span>
         <p>Products Certified</p>
       </div>
-      <div>
+      <div className="reveal-on-scroll reveal-slide-up reveal-delay-100">
         <span className="badge-row__icon">
           <img src={microscopeIcon} alt="" aria-hidden="true" />
         </span>
         <p>Scientifically Verified</p>
       </div>
-      <div>
+      <div className="reveal-on-scroll reveal-slide-up reveal-delay-200">
         <span className="badge-row__icon badge-row__icon--development">
           <img src={biodiversityIcon} alt="" aria-hidden="true" />
         </span>
         <p>12 Years Of Research &amp; Development</p>
       </div>
-      <div>
+      <div className="reveal-on-scroll reveal-slide-up reveal-delay-300">
         <span className="badge-row__icon">
           <img src={madeInNigeriaIcon} alt="" aria-hidden="true" />
         </span>
@@ -46,9 +46,9 @@ export function BadgeRow() {
 
 export function NewsletterBand() {
   return (
-    <section className="newsletter-band page-shell">
+    <section className="newsletter-band page-shell reveal-on-scroll reveal-slide-up">
       <div className="newsletter-band__inner">
-        <h2>Join to our Newsletter</h2>
+        <h2>Join our community</h2>
         <form className="newsletter-form" onSubmit={(event) => event.preventDefault()}>
           <input type="email" name="email" placeholder="Your Email Address*" aria-label="Your Email Address" />
           <button type="submit">SUBSCRIBE</button>

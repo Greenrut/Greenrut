@@ -11,7 +11,7 @@ export function ContactPage() {
         backgroundPhoto={bannaImage}
       />
       <section className="page-shell contact-layout !grid !grid-cols-1 lg:!grid-cols-[minmax(0,1fr)_380px] !gap-6 xl:!gap-7">
-        <div className="contact-form-panel">
+        <div className="contact-form-panel reveal-on-scroll reveal-slide-up">
           <SectionTitle
             title="Contact Form"
             subtitle="There are many variations of passages of Lorem Ipsum available, but the majority Lorem Ipsum available."
@@ -27,29 +27,28 @@ export function ContactPage() {
           </button>
         </div>
 
-        <aside className="contact-side">
+        <aside className="contact-side reveal-on-scroll reveal-slide-up reveal-delay-150">
           <SectionTitle
             title="Contact Address"
             subtitle="There are many variations of passages of Lorem Ipsum available, but the majority Lorem Ipsum available."
           />
           <div className="contact-block">
             <h3>Our Address</h3>
-            <p>Your address goes here</p>
+            <p>Lagos/Abuja</p>
           </div>
           <div className="contact-block">
             <h3>Phone Number</h3>
-            <p>0123456789</p>
-            <p>0123456789</p>
+            <p>07048005656</p>
           </div>
           <div className="contact-block">
-            <h3>Web Address</h3>
-            <p>demo@example.com</p>
-            <p>demo@example.com</p>
+            <h3>Emails</h3>
+            <p>Info@greenrut.com</p>
+            <p>Hello@greenrut.com</p>
           </div>
         </aside>
       </section>
 
-      <section className="page-shell map-panel">
+      <section className="page-shell map-panel reveal-on-scroll reveal-slide-up">
         <div className="map-panel__surface" aria-hidden="true">
           <span className="map-grid" />
           <span className="map-marker" />

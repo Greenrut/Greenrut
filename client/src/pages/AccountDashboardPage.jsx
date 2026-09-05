@@ -126,7 +126,7 @@ export function AccountDashboardPage({ pathname, onNavigate }) {
   return (
     <AccountPageShell pathname={pathname} onNavigate={onNavigate} title="MY ACCOUNT" breadcrumb="Home  /  My Account">
       <div className="account-dashboard">
-        <div className="account-dashboard__summary">
+        <div className="account-dashboard__summary reveal-on-scroll reveal-slide-up">
           <div>
             <p className="account-subtitle">TOTALS</p>
             <strong>{loading ? 'Loading...' : `${totals.addresses} addresses`}</strong>
@@ -139,7 +139,7 @@ export function AccountDashboardPage({ pathname, onNavigate }) {
           </div>
         </div>
 
-        <form className={`account-accordion__item ${activeSection === 'account-info' ? 'is-open' : ''}`} onSubmit={handleSubmit}>
+        <form className={`account-accordion__item reveal-on-scroll reveal-slide-up reveal-delay-50 ${activeSection === 'account-info' ? 'is-open' : ''}`} onSubmit={handleSubmit}>
           <button
             type="button"
             className="account-accordion__heading"
@@ -189,7 +189,7 @@ export function AccountDashboardPage({ pathname, onNavigate }) {
           </div>
         </form>
 
-        <div className={`account-accordion__item ${activeSection === 'password' ? 'is-open' : ''}`}>
+        <div className={`account-accordion__item reveal-on-scroll reveal-slide-up reveal-delay-100 ${activeSection === 'password' ? 'is-open' : ''}`}>
           <button
             type="button"
             className="account-accordion__heading"
@@ -240,7 +240,7 @@ export function AccountDashboardPage({ pathname, onNavigate }) {
           </div>
         </div>
 
-        <div className={`account-accordion__item ${activeSection === 'address-book' ? 'is-open' : ''}`}>
+        <div className={`account-accordion__item reveal-on-scroll reveal-slide-up reveal-delay-150 ${activeSection === 'address-book' ? 'is-open' : ''}`}>
           <button
             type="button"
             className="account-accordion__heading"
@@ -262,7 +262,7 @@ export function AccountDashboardPage({ pathname, onNavigate }) {
           </div>
         </div>
 
-        <div className={`account-accordion__item ${activeSection === 'wishlist' ? 'is-open' : ''}`}>
+        <div className={`account-accordion__item reveal-on-scroll reveal-slide-up reveal-delay-200 ${activeSection === 'wishlist' ? 'is-open' : ''}`}>
           <button
             type="button"
             className="account-accordion__heading"

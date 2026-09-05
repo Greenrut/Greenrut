@@ -50,12 +50,14 @@ export function BlogPage({ onNavigate, search }) {
         backgroundPhoto={bannaImage}
       />
       <section className="page-shell blog-grid">
-        <SectionTitle title={selectedPost ? selectedPost.title : 'Latest Posts'} />
+        <div className="reveal-on-scroll reveal-slide-up">
+          <SectionTitle title={selectedPost ? selectedPost.title : 'Latest Posts'} />
+        </div>
         {loading ? <p>Loading blog posts...</p> : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         {!loading && !error && posts.length === 0 ? <p>No blog posts yet.</p> : null}
         {selectedPost ? (
-          <article className="blog-card blog-card--featured">
+          <article className="blog-card blog-card--featured reveal-on-scroll reveal-slide-up">
             <p className="blog-card__date">{selectedPost.createdAt ? new Date(selectedPost.createdAt).toLocaleDateString() : 'Blog'}</p>
             <h3>{selectedPost.title}</h3>
             <p>{getPostSummary(selectedPost)}</p>
@@ -65,17 +67,25 @@ export function BlogPage({ onNavigate, search }) {
           </article>
         ) : (
           <div className="blog-grid__list !grid !grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-3 !gap-[18px]">
-            {posts.map((post, index) => (
-              <article key={post.id || post.slug || post.title} className="blog-card">
-                <div className={`blog-card__image blog-card__image--${(index % 3) + 1}`} />
-                <p className="blog-card__date">{post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'Blog'}</p>
-                <h3>{post.title}</h3>
-                <p>{getPostSummary(post)}</p>
-                <button type="button" onClick={() => onNavigate?.(`/blog?id=${post.id}`)}>
-                  READ MORE
-                </button>
-              </article>
-            ))}
+            {posts.map((post, index) => {
+              const delayClass = `reveal-delay-${(index % 3) * 150}`;
+              return (
+                <div
+                  key={post.id || post.slug || post.title}
+                  className={`reveal-on-scroll reveal-slide-up ${delayClass}`}
+                >
+                  <article className="blog-card" style={{ height: '100%' }}>
+                    <div className={`blog-card__image blog-card__image--${(index % 3) + 1}`} />
+                    <p className="blog-card__date">{post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'Blog'}</p>
+                    <h3>{post.title}</h3>
+                    <p>{getPostSummary(post)}</p>
+                    <button type="button" onClick={() => onNavigate?.(`/blog?id=${post.id}`)}>
+                      READ MORE
+                    </button>
+                  </article>
+                </div>
+              );
+            })}
           </div>
         )}
       </section>

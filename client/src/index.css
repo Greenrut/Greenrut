@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 @theme {
   --breakpoint-xs: 35rem;    /* 560px */
@@ -51,4 +51,171 @@ a {
 #root {
   min-height: 100vh;
 }
+
+/* -------------------------------------------------------------------------- */
+/* PREMIUM ANIMATIONS SYSTEM                                                  */
+/* -------------------------------------------------------------------------- */
+
+:root {
+  --ease-premium: cubic-bezier(0.215, 0.61, 0.355, 1); /* Decelerating smooth bezier */
+  --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6); /* Playful elastic curve */
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroTextReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cartBadgeBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.4) translateY(-6px);
+  }
+  50% {
+    transform: scale(0.85) translateY(0);
+  }
+  70% {
+    transform: scale(1.15) translateY(-2px);
+  }
+  85% {
+    transform: scale(0.95) translateY(0);
+  }
+}
+
+@keyframes mobileMenuSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Page transitions */
+.page-transition-enter {
+  animation: fadeInUp 0.55s var(--ease-premium) forwards;
+  will-change: transform, opacity;
+}
+
+/* Scroll Reveal classes */
+.reveal-on-scroll {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: 
+    opacity 0.8s var(--ease-premium), 
+    transform 0.8s var(--ease-premium);
+}
+
+/* Reveal types */
+.reveal-slide-up {
+  transform: translateY(32px);
+}
+
+.reveal-fade-in {
+  transform: translateY(0);
+}
+
+.reveal-slide-left {
+  transform: translateX(-32px);
+}
+
+.reveal-slide-right {
+  transform: translateX(32px);
+}
+
+/* Triggered State */
+.reveal-on-scroll.reveal-visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* Staggered transition delays */
+.reveal-delay-50 { transition-delay: 50ms; }
+.reveal-delay-100 { transition-delay: 100ms; }
+.reveal-delay-150 { transition-delay: 150ms; }
+.reveal-delay-200 { transition-delay: 200ms; }
+.reveal-delay-250 { transition-delay: 250ms; }
+.reveal-delay-300 { transition-delay: 300ms; }
+.reveal-delay-400 { transition-delay: 400ms; }
+.reveal-delay-500 { transition-delay: 500ms; }
+
+/* Micro-interactions */
+.cart-badge-bounce {
+  animation: cartBadgeBounce 0.65s var(--ease-premium) forwards;
+}
+
+/* Hero Carousel Slide-up Animate text */
+.hero-text-reveal {
+  opacity: 0;
+  animation: heroTextReveal 0.75s var(--ease-premium) forwards;
+}
+
+.hero-text-reveal-1 {
+  animation-delay: 100ms;
+}
+
+.hero-text-reveal-2 {
+  animation-delay: 250ms;
+}
+
+.hero-text-reveal-3 {
+  animation-delay: 400ms;
+}
+
+/* Mobile Nav Elastic Drawer transition */
+.site-nav-animate {
+  animation: mobileMenuSlideDown 0.4s var(--ease-premium) forwards;
+  transform-origin: top center;
+  will-change: transform, opacity;
+}
+
+/* Smooth Interactive Elements */
+a, button, .product-card, .home-category-card {
+  transition: all 0.25s var(--ease-premium);
+}
+
+.product-card {
+  overflow: hidden;
+}
+
+.product-card__visual {
+  overflow: hidden;
+  position: relative;
+  background: #f4faf2;
+}
+
+.product-card__visual img {
+  transition: transform 0.5s var(--ease-premium);
+}
+
+.product-card:hover .product-card__visual img {
+  transform: scale(1.05);
+}
+
+.product-card:hover h3 {
+  color: #63ac18;
+}
+
 

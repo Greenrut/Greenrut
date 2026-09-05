@@ -139,7 +139,7 @@ export function LibraryResourcePage({ onNavigate }) {
   return (
     <section className="page-shell py-6 xs:py-8 lg:py-10">
       <div
-        className="mb-6 flex min-h-[170px] items-center justify-center px-4 text-center"
+        className="mb-6 flex min-h-[170px] items-center justify-center px-4 text-center reveal-on-scroll reveal-slide-up"
         style={{
           backgroundImage: `linear-gradient(rgba(10, 20, 10, 0.58), rgba(10, 20, 10, 0.58)), url('${heroImage}')`,
           backgroundSize: "cover",
@@ -169,7 +169,7 @@ export function LibraryResourcePage({ onNavigate }) {
         Back to library
       </button>
 
-      <article className="grid gap-6 border border-[#efefef] bg-white p-5 sm:grid-cols-[280px_minmax(0,1fr)] lg:p-7">
+      <article className="grid gap-6 border border-[#efefef] bg-white p-5 sm:grid-cols-[280px_minmax(0,1fr)] lg:p-7 reveal-on-scroll reveal-slide-up">
         <div className="bg-[#f5f5f1]">
           {resource.image ? (
             <img
@@ -264,32 +264,39 @@ export function LibraryResourcePage({ onNavigate }) {
 
       {relatedHerbs.length ? (
         <section className="mt-8">
-          <h2 className="font-serif text-[24px] text-[#2e2a26]">
+          <h2 className="font-serif text-[24px] text-[#2e2a26] reveal-on-scroll reveal-slide-up">
             Related Resources
           </h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
-            {relatedHerbs.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className="border border-[#ece8df] bg-white p-4 text-left"
-                onClick={() =>
-                  onNavigate?.(
-                    `/library/resource?id=${encodeURIComponent(item.id)}`,
-                  )
-                }
-              >
-                <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">
-                  {item.type || item.section}
-                </p>
-                <h3 className="mt-2 text-[15px] font-semibold text-[#2e2a26]">
-                  {item.title}
-                </h3>
-                <p className="mt-2 line-clamp-3 text-[12px] leading-5 text-[#6b655f]">
-                  {item.excerpt}
-                </p>
-              </button>
-            ))}
+            {relatedHerbs.map((item, index) => {
+              const delayClass = `reveal-delay-${(index % 3) * 100}`;
+              return (
+                <div
+                  key={item.id}
+                  className={`reveal-on-scroll reveal-slide-up ${delayClass}`}
+                >
+                  <button
+                    type="button"
+                    className="border border-[#ece8df] bg-white p-4 text-left w-full h-full"
+                    onClick={() =>
+                      onNavigate?.(
+                        `/library/resource?id=${encodeURIComponent(item.id)}`,
+                      )
+                    }
+                  >
+                    <p className="text-[10px] uppercase tracking-[0.16em] text-[#73aa23]">
+                      {item.type || item.section}
+                    </p>
+                    <h3 className="mt-2 text-[15px] font-semibold text-[#2e2a26]">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 line-clamp-3 text-[12px] leading-5 text-[#6b655f]">
+                      {item.excerpt}
+                    </p>
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </section>
       ) : null}

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { getCartCount } from "../lib/cart.js";
 import { getImageSource } from "../lib/image.js";
-import { navItems, socialLinks } from "../data.js";
+import { navItems, socialLinks, fallbackProducts } from "../data.js";
+import { useScrollReveal } from "../lib/useScrollReveal.js";
+import { publicRequest } from "../lib/publicApi.js";
 
 function SocialIcon({ icon }) {
   if (icon === "facebook")
@@ -186,12 +188,43 @@ export function SiteHeader({ pathname, onNavigate }) {
   const active = (href) => pathname === href;
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(() => getCartCount());
+  const [shouldBounce, setShouldBounce] = useState(false);
+  const [products, setProducts] = useState(fallbackProducts);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await publicRequest("/products");
+      if (response && response.data) {
+        setProducts(response.data);
+      }
+    } catch (e) {
+      console.error("Failed to load products in header", e);
+    }
+  };
 
   useEffect(() => {
-    const onCartChanged = () => setCartCount(getCartCount());
+    fetchProducts();
+  }, []);
+
+  const handleProductHover = () => {
+    fetchProducts();
+  };
+
+  useEffect(() => {
+    const onCartChanged = () => {
+      setCartCount(getCartCount());
+      setShouldBounce(true);
+    };
     window.addEventListener("cart-changed", onCartChanged);
     return () => window.removeEventListener("cart-changed", onCartChanged);
   }, []);
+
+  useEffect(() => {
+    if (shouldBounce) {
+      const timer = setTimeout(() => setShouldBounce(false), 650);
+      return () => clearTimeout(timer);
+    }
+  }, [shouldBounce]);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -217,44 +250,85 @@ export function SiteHeader({ pathname, onNavigate }) {
 
         <nav
           id="primary-navigation"
-          className={`site-nav${menuOpen ? " is-open" : ""}`}
+          className={`site-nav${menuOpen ? " is-open site-nav-animate" : ""}`}
           aria-label="Primary"
         >
-          {navItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className={active(item.href) ? "is-active" : ""}
-              onClick={(event) => {
-                if (item.href.startsWith("/#")) {
+          {navItems.map((item) => {
+            const isProduct = item.label === "PRODUCT";
+            if (isProduct) {
+              return (
+                <div
+                  key={item.label}
+                  className="nav-item-dropdown-container"
+                  onMouseEnter={handleProductHover}
+                >
+                  <a
+                    href={item.href}
+                    className={active(item.href) ? "is-active" : ""}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setMenuOpen(false);
+                      onNavigate(item.href);
+                    }}
+                  >
+                    {item.label}
+                  </a>
+                  <div className="nav-dropdown">
+                    {products.map((prod) => (
+                      <a
+                        key={prod.id}
+                        href={`/product-details?id=${prod.id}`}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setMenuOpen(false);
+                          onNavigate(`/product-details?id=${prod.id}`);
+                        }}
+                      >
+                        {prod.name}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                className={active(item.href) ? "is-active" : ""}
+                onClick={(event) => {
+                  if (item.href.startsWith("/#")) {
+                    setMenuOpen(false);
+                    return;
+                  }
+                  event.preventDefault();
                   setMenuOpen(false);
-                  return;
-                }
-                event.preventDefault();
-                setMenuOpen(false);
-                onNavigate(item.href);
-              }}
-            >
-              {item.label}
-            </a>
-          ))}
+                  onNavigate(item.href);
+                }}
+              >
+                {item.label}
+              </a>
+            );
+          })}
           <a href="/#research" className="site-nav__muted">
             NGN <IconChevronDown />
           </a>
-          <button
-            className="icon-button cart-icon-button"
-            type="button"
-            aria-label={`Cart (${cartCount} items)`}
-            onClick={() => onNavigate("/cart")}
-          >
-            <IconCart />
-            {cartCount > 0 && (
-              <span className="cart-badge" aria-hidden="true">
-                {cartCount}
-              </span>
-            )}
-          </button>
         </nav>
+
+        <button
+          className="icon-button cart-icon-button"
+          type="button"
+          aria-label={`Cart (${cartCount} items)`}
+          onClick={() => onNavigate("/cart")}
+        >
+          <IconCart />
+          {cartCount > 0 && (
+            <span className={`cart-badge ${shouldBounce ? "cart-badge-bounce" : ""}`} aria-hidden="true">
+              {cartCount}
+            </span>
+          )}
+        </button>
       </div>
     </header>
   );
@@ -271,6 +345,12 @@ export function SiteFooter() {
               Greenrut is a modern, research based herbal medicine company,
               specializing in phototherapy, natural medicines, food supplements
               and personal care products.
+            </p>
+            <p>
+              Pharmaco-Vigilance: To report any adverse events related to
+              products manufactured by Greenrut Laboratories, please contact us
+              by phone or email<b> complaints@greenrut.com</b>. Indicate the
+              batch number of the product.
             </p>
           </div>
           <div className="site-footer__columns !grid !grid-cols-1 xs:!grid-cols-2 xl:!grid-cols-4 !gap-4 xs:!gap-5">
@@ -314,14 +394,13 @@ export function SiteFooter() {
             <div>
               <h2>Contact Us</h2>
               <ul>
-                {/* <li>Your address goes here</li> */}
-                <li>0123456789</li>
-                <li>demo@example.com</li>
+                <li>Lagos/Abuja</li>
+                <li>07048005656</li>
                 <li>
-                  Pharmaco-Vigilance: To report any adverse events related to
-                  products manufactured by Greenrut Laboratories, please contact
-                  us by phone or email complaints@greenrut.com. Indicate the
-                  batch number of the product.
+                  <b>Info@greenrut.com</b>
+                </li>
+                <li>
+                  <b>Hello@greenrut.com</b>
                 </li>
               </ul>
             </div>
@@ -336,10 +415,15 @@ export function SiteFooter() {
 }
 
 export function SiteFrame({ pathname, onNavigate, children }) {
+  // Bind global scroll reveal handler triggering on pathname updates
+  useScrollReveal(pathname);
+
   return (
     <div className="site-frame">
       <SiteHeader pathname={pathname} onNavigate={onNavigate} />
-      <main>{children}</main>
+      <main key={pathname} className="page-transition-enter">
+        {children}
+      </main>
       <SiteFooter />
     </div>
   );

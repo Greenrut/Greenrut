@@ -1,6 +1,6 @@
+import { useState, useEffect, useRef } from "react";
 import heroImage from "../assets/hero.png";
 import mikeAdewaraImg from "../assets/mike-adewara.png";
-import oniGbengaImg from "../assets/oni-gbenga.png";
 import waliuAlakaImg from "../assets/waliu-alaka.png";
 
 const aboutSections = [
@@ -44,8 +44,8 @@ const storyParagraphs = [
 
 const team = [
   { name: "Michael Adewara", role: "CEO", image: mikeAdewaraImg },
-  { name: "Pharm Olugbenga Oni", role: "Developer", image: oniGbengaImg },
-  { name: "Pharm Onyinye Azubogu", role: "Designer", image: waliuAlakaImg },
+  { name: "Waliu Alaka", role: "Developer", image: waliuAlakaImg },
+  { name: "Pharm Onyinye Azubogu", role: "Designer", image: null },
 ];
 
 const advisoryCouncil = [
@@ -81,7 +81,7 @@ const stats = [
 function AboutBlock({ title, body, reverse }) {
   return (
     <article
-      className={`flex flex-col items-center gap-5 py-5 text-center xs:flex-row xs:items-center xs:gap-8 xs:text-left lg:gap-12 ${
+      className={`flex flex-col items-center gap-5 py-5 text-center xs:flex-row xs:items-center xs:gap-8 xs:text-left lg:gap-12 reveal-on-scroll reveal-slide-up ${
         reverse ? "xs:flex-row-reverse" : "xs:flex-row"
       }`}
     >
@@ -109,7 +109,7 @@ function StorySection() {
   return (
     <section className="bg-[#f4f4f1] py-14 xs:py-16 lg:py-20">
       <div className="mx-auto flex w-full max-w-[820px] flex-col items-center px-4 text-center">
-        <div className="mb-6 grid justify-items-center gap-2 text-[#7fb53a]">
+        <div className="mb-6 grid justify-items-center gap-2 text-[#7fb53a] reveal-on-scroll reveal-slide-up">
           <div className="sprout" aria-hidden="true" />
           <p className="text-[10px] uppercase tracking-[0.16em] text-[#8d8d8d]">
             Our Story
@@ -119,9 +119,9 @@ function StorySection() {
           </p>
         </div>
 
-        <div className="max-w-[690px] space-y-5 font-serif text-[15px] leading-[1.8] text-[#6b655f] xs:text-[16px] xs:leading-[1.9] lg:text-[17px]">
-          {storyParagraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+        <div className="max-w-[690px] space-y-5 font-serif text-[15px] leading-[1.8] text-[#6b655f] xs:text-[16px] xs:leading-[1.9] lg:text-[17px] reveal-on-scroll reveal-slide-up reveal-delay-100">
+          {storyParagraphs.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
           ))}
         </div>
       </div>
@@ -131,8 +131,9 @@ function StorySection() {
 
 function TeamCard({ member, index }) {
   const backgrounds = ["#cfcfcf", "#eadfd6", "#d4d1cf", "#dfdbd4", "#eedfd6"];
+  const delayClass = `reveal-delay-${(index % 4) * 100}`;
   return (
-    <article className="overflow-hidden border border-[#ece8df] bg-white shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+    <article className={`overflow-hidden border border-[#ece8df] bg-white shadow-[0_1px_0_rgba(0,0,0,0.02)] reveal-on-scroll reveal-slide-up ${delayClass}`}>
       {member.image ? (
         <img
           src={member.image}
@@ -155,20 +156,78 @@ function TeamCard({ member, index }) {
   );
 }
 
+function CountUpValue({ value }) {
+  const [current, setCurrent] = useState(0);
+  const elementRef = useRef(null);
+  const [started, setStarted] = useState(false);
+
+  // Extract the numeric value and suffixes (like % or +)
+  const numericPart = parseInt(value, 10) || 0;
+  const suffix = value.replace(/[0-9]/g, "");
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!started || numericPart === 0) return;
+
+    let start = 0;
+    const duration = 1200; // Duration of count animation in ms
+    const stepTime = Math.max(Math.floor(duration / numericPart), 15);
+    
+    const timer = setInterval(() => {
+      start += Math.ceil(numericPart / (duration / stepTime));
+      if (start >= numericPart) {
+        setCurrent(numericPart);
+        clearInterval(timer);
+      } else {
+        setCurrent(start);
+      }
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, [started, numericPart]);
+
+  return (
+    <span ref={elementRef}>
+      {numericPart === 0 ? "0" : current}
+      {suffix}
+    </span>
+  );
+}
+
 function StatsBand() {
   return (
     <section className="bg-[#efefef] py-12 xs:py-14">
       <div className="mx-auto grid w-full max-w-[760px] grid-cols-2 gap-x-4 gap-y-8 px-4 sm:grid-cols-4 sm:gap-x-6">
-        {stats.map((item) => (
-          <div key={item.label} className="text-center">
-            <strong className="block font-serif text-[26px] text-[#5ca61f] xs:text-[30px]">
-              {item.value}
-            </strong>
-            <span className="mt-1 block text-[12px] text-[#5a554f]">
-              {item.label}
-            </span>
-          </div>
-        ))}
+        {stats.map((item, index) => {
+          const delayClass = `reveal-delay-${(index % 4) * 100}`;
+          return (
+            <div key={item.label} className={`text-center reveal-on-scroll reveal-slide-up ${delayClass}`}>
+              <strong className="block font-serif text-[26px] text-[#5ca61f] xs:text-[30px]">
+                <CountUpValue value={item.value} />
+              </strong>
+              <span className="mt-1 block text-[12px] text-[#5a554f]">
+                {item.label}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -213,20 +272,25 @@ export function AboutPage() {
 
       <section className="border-y border-[#ece8df] bg-[#fafaf8] py-14 xs:py-16 lg:py-20">
         <div className="mx-auto w-full max-w-[820px] px-4 xs:px-2 lg:px-0">
-          <h2 className="mb-10 text-center font-serif text-[24px] text-[#2f2b27] xs:text-[28px]">
-            Our Values & Philosophy
-          </h2>
+          <div className="reveal-on-scroll reveal-slide-up">
+            <h2 className="mb-10 text-center font-serif text-[24px] text-[#2f2b27] xs:text-[28px]">
+              Our Values & Philosophy
+            </h2>
+          </div>
           <div className="space-y-8">
-            {values.map((item) => (
-              <div key={item.title} className="border-l-4 border-[#63ac18] py-1 pl-6">
-                <h3 className="font-serif text-[19px] font-semibold text-[#2f2b27]">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-[12px] leading-6 text-[#5f5a54] sm:text-[13px]">
-                  {item.body}
-                </p>
-              </div>
-            ))}
+            {values.map((item, index) => {
+              const delayClass = `reveal-delay-${(index % 3) * 100}`;
+              return (
+                <div key={item.title} className={`border-l-4 border-[#63ac18] py-1 pl-6 reveal-on-scroll reveal-slide-up ${delayClass}`}>
+                  <h3 className="font-serif text-[19px] font-semibold text-[#2f2b27]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-[12px] leading-6 text-[#5f5a54] sm:text-[13px]">
+                    {item.body}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

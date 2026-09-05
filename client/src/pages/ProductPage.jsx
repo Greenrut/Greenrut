@@ -199,7 +199,7 @@ export function ProductPage({ onNavigate, search }) {
         backgroundPhoto={bannaImage}
       />
       <section className="page-shell catalog-page">
-        <div className="catalog-page__header">
+        <div className="catalog-page__header reveal-on-scroll reveal-slide-up">
           <h2>
             Nature's Potent Solutions for Every Aspect of Your Well-being.
           </h2>
@@ -210,20 +210,23 @@ export function ProductPage({ onNavigate, search }) {
         </div>
 
         <div className="product-category-overview">
-          {productCategoryOverview.map(([title, text]) => (
-            <button
-              key={title}
-              type="button"
-              className={selectedCategory === title ? "is-active" : ""}
-              onClick={() => {
-                setSelectedCategory(title);
-                setSearchTerm("");
-              }}
-            >
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </button>
-          ))}
+          {productCategoryOverview.map(([title, text], index) => {
+            const delayClass = `reveal-delay-${(index % 3) * 100}`;
+            return (
+              <button
+                key={title}
+                type="button"
+                className={`reveal-on-scroll reveal-slide-up ${delayClass} ${selectedCategory === title ? "is-active" : ""}`}
+                onClick={() => {
+                  setSelectedCategory(title);
+                  setSearchTerm("");
+                }}
+              >
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </button>
+            );
+          })}
         </div>
 
         {loading ? <p>Loading products...</p> : null}
@@ -231,7 +234,7 @@ export function ProductPage({ onNavigate, search }) {
         {!loading && !error ? (
           <div className="catalog-layout">
             <aside className="catalog-sidebar">
-              <div className="filter-panel">
+              <div className="filter-panel reveal-on-scroll reveal-slide-up">
                 <h2>Shop by Category</h2>
                 <ul>
                   {categories.map((category) => (
@@ -250,7 +253,7 @@ export function ProductPage({ onNavigate, search }) {
                 </ul>
               </div>
 
-              <div className="filter-panel">
+              <div className="filter-panel reveal-on-scroll reveal-slide-up">
                 <h2>Search</h2>
                 <input
                   type="search"
@@ -260,7 +263,7 @@ export function ProductPage({ onNavigate, search }) {
                 />
               </div>
 
-              <div className="filter-panel">
+              <div className="filter-panel reveal-on-scroll reveal-slide-up">
                 <h2>Price Filter</h2>
                 <div className="price-track" aria-hidden="true" />
                 <p className="catalog-help-text">
@@ -268,7 +271,7 @@ export function ProductPage({ onNavigate, search }) {
                 </p>
               </div>
 
-              <div className="filter-panel">
+              <div className="filter-panel reveal-on-scroll reveal-slide-up">
                 <h2>By Tag</h2>
                 <div className="tag-list">
                   {featureTags.map((tag) => (
@@ -279,7 +282,7 @@ export function ProductPage({ onNavigate, search }) {
             </aside>
 
             <div className="catalog-main">
-              <div className="catalog-toolbar">
+              <div className="catalog-toolbar reveal-on-scroll reveal-slide-up">
                 <p>
                   Showing {filteredProducts.length} of{" "}
                   {products.length || fallbackProducts.length} products
@@ -309,23 +312,30 @@ export function ProductPage({ onNavigate, search }) {
               {!filteredProducts.length ? <p>No products found.</p> : null}
 
               <div className="catalog-grid">
-                {filteredProducts.map((product, index) => (
-                  <ProductCard
-                    key={product.id || product.name}
-                    product={product}
-                    onView={() =>
-                      onNavigate?.(`/product-details?id=${product.id}`)
-                    }
-                    onOrder={() => {
-                      const url = buildWhatsAppUrl(product);
-                      if (url.startsWith("/")) {
-                        onNavigate?.(url);
-                        return;
-                      }
-                      window.open(url, "_blank", "noopener,noreferrer");
-                    }}
-                  />
-                ))}
+                {filteredProducts.map((product, index) => {
+                  const delayClass = `reveal-delay-${(index % 3) * 100}`;
+                  return (
+                    <div
+                      key={product.id || product.name}
+                      className={`reveal-on-scroll reveal-slide-up ${delayClass}`}
+                    >
+                      <ProductCard
+                        product={product}
+                        onView={() =>
+                          onNavigate?.(`/product-details?id=${product.id}`)
+                        }
+                        onOrder={() => {
+                          const url = buildWhatsAppUrl(product);
+                          if (url.startsWith("/")) {
+                            onNavigate?.(url);
+                            return;
+                          }
+                          window.open(url, "_blank", "noopener,noreferrer");
+                        }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

@@ -210,7 +210,7 @@ export function LibraryPage({ onNavigate }) {
 
   return (
     <section className="page-shell py-6 xs:py-8 lg:py-10">
-      <div className="mb-5 overflow-hidden border border-[#efefef] bg-white">
+      <div className="mb-5 overflow-hidden border border-[#efefef] bg-white reveal-on-scroll reveal-slide-up">
         <div
           className="flex min-h-[180px] items-center justify-center px-4 text-center"
           style={{
@@ -235,7 +235,7 @@ export function LibraryPage({ onNavigate }) {
       </div>
 
       <div className="mx-auto grid w-full max-w-[980px] gap-5 lg:grid-cols-[200px_minmax(0,1fr)]">
-        <aside className="h-fit border border-[#efefef] bg-white">
+        <aside className="h-fit border border-[#efefef] bg-white reveal-on-scroll reveal-slide-up">
           {sections.map((section) => (
             <button
               key={section}
@@ -253,7 +253,7 @@ export function LibraryPage({ onNavigate }) {
         </aside>
 
         <div>
-          <div className="mb-3 grid gap-3 border border-[#efefef] bg-white px-4 py-3 text-[13px] text-[#5a544c] lg:grid-cols-[1fr_190px_170px_auto_auto] lg:items-center">
+          <div className="mb-3 grid gap-3 border border-[#efefef] bg-white px-4 py-3 text-[13px] text-[#5a544c] lg:grid-cols-[1fr_190px_170px_auto_auto] lg:items-center reveal-on-scroll reveal-slide-up reveal-delay-100">
             <input
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
@@ -298,13 +298,20 @@ export function LibraryPage({ onNavigate }) {
 
           {!loading && !error ? (
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {filteredResources.map((item) => (
-                <LibraryCard
-                  key={item.id || item.slug || item.title}
-                  item={item}
-                  onOpen={() => openResource(item)}
-                />
-              ))}
+              {filteredResources.map((item, index) => {
+                const delayClass = `reveal-delay-${(index % 3) * 100}`;
+                return (
+                  <div
+                    key={item.id || item.slug || item.title}
+                    className={`reveal-on-scroll reveal-slide-up ${delayClass}`}
+                  >
+                    <LibraryCard
+                      item={item}
+                      onOpen={() => openResource(item)}
+                    />
+                  </div>
+                );
+              })}
             </div>
           ) : null}
         </div>

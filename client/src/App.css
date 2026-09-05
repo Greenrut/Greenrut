@@ -23,8 +23,6 @@
   padding: 14px 0;
 }
 
-
-
 .brand {
   border: 0;
   background: transparent;
@@ -46,6 +44,7 @@
   flex-wrap: wrap;
   gap: 18px;
   min-width: 0;
+  margin-left: auto;
 }
 
 .site-header__toggle {
@@ -64,8 +63,6 @@
   width: 20px;
   height: 20px;
 }
-
-
 
 .site-nav a,
 .site-nav button {
@@ -106,7 +103,9 @@
   align-items: center;
   justify-content: center;
   color: #4a453f;
-  transition: color 0.2s, transform 0.2s;
+  transition:
+    color 0.2s,
+    transform 0.2s;
 }
 
 .site-nav__social-link:hover {
@@ -120,7 +119,6 @@
   display: block;
 }
 
-
 .icon-button {
   border: 0;
   background: transparent;
@@ -131,6 +129,7 @@
 
 .cart-icon-button {
   position: relative;
+  cursor: pointer;
 }
 
 .cart-badge {
@@ -193,7 +192,9 @@
   font-size: 14px;
 }
 
-.checkout-status p { margin: 0; }
+.checkout-status p {
+  margin: 0;
+}
 
 .checkout-status--success {
   background: #f0fdf4;
@@ -213,7 +214,11 @@
   color: #1e40af;
 }
 
-@keyframes mock-spin { to { transform: rotate(360deg); } }
+@keyframes mock-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 .mock-spinner {
   width: 36px;
@@ -241,7 +246,11 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 55%, rgba(255, 220, 160, 0.15), transparent 10%),
+    radial-gradient(
+      circle at 50% 55%,
+      rgba(255, 220, 160, 0.15),
+      transparent 10%
+    ),
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 60%);
 }
 
@@ -258,7 +267,7 @@
 }
 
 .hero-banner__mug::before {
-  content: '';
+  content: "";
   position: absolute;
   right: -28px;
   top: 26px;
@@ -270,7 +279,7 @@
 }
 
 .hero-banner__mug::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0 0 0 0;
   border-radius: inherit;
@@ -281,7 +290,11 @@
   position: absolute;
   width: 200px;
   height: 110px;
-  background: linear-gradient(90deg, rgba(35, 63, 28, 0.95), rgba(10, 18, 11, 0.65));
+  background: linear-gradient(
+    90deg,
+    rgba(35, 63, 28, 0.95),
+    rgba(10, 18, 11, 0.65)
+  );
   filter: blur(6px);
 }
 
@@ -325,7 +338,7 @@
 .contact-side h2,
 .newsletter-band h2,
 .story-band h2 {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 .hero-banner h1 {
@@ -383,7 +396,7 @@
   font-size: 40px;
   line-height: 1.08;
   color: #26221f;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 .home-hero__copy span {
@@ -457,7 +470,9 @@
   display: block;
   object-fit: cover;
   object-position: center;
-  transition: opacity 240ms ease, transform 240ms ease;
+  transition:
+    opacity 240ms ease,
+    transform 240ms ease;
 }
 
 .home-hero__copy h1 {
@@ -598,7 +613,6 @@
   gap: 18px;
 }
 
-
 .product-grid--home,
 .product-grid--related {
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -630,7 +644,11 @@
   width: 100%;
   height: 100%;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(247, 245, 238, 0.95)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.6),
+      rgba(247, 245, 238, 0.95)
+    ),
     repeating-linear-gradient(
       45deg,
       rgba(99, 172, 24, 0.08) 0 12px,
@@ -678,7 +696,7 @@
 
 .catalog-page__header h2 {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 30px;
   color: #312f2b;
 }
@@ -688,14 +706,12 @@
   color: #6f6b64;
 }
 
-
-
 .catalog-card {
   background: #fff;
   border: 1px solid #ece8df;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  display: grid;
-  grid-template-rows: 208px auto;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -705,7 +721,14 @@
   display: grid;
   place-items: center;
   padding: 12px;
+  min-height: 208px;
 }
+
+.catalog-card__body {
+  position: relative;
+  z-index: 0;
+}
+
 
 .catalog-card__image img {
   width: 100%;
@@ -717,7 +740,11 @@
   width: 100%;
   height: 100%;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(247, 245, 238, 0.95)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.7),
+      rgba(247, 245, 238, 0.95)
+    ),
     repeating-linear-gradient(
       45deg,
       rgba(99, 172, 24, 0.08) 0 12px,
@@ -864,18 +891,38 @@
 
 .product-art::before,
 .product-art::after {
-  content: '';
+  content: "";
   position: absolute;
 }
 
 .product-art--leaf::before {
   inset: 24% 18% 16% 18%;
   background:
-    radial-gradient(circle at 26% 84%, rgba(117, 161, 33, 0.95) 0 18%, transparent 19%),
-    radial-gradient(circle at 41% 64%, rgba(159, 192, 73, 0.95) 0 16%, transparent 17%),
-    radial-gradient(circle at 58% 72%, rgba(79, 137, 20, 0.95) 0 18%, transparent 19%),
-    radial-gradient(circle at 69% 46%, rgba(128, 211, 42, 0.95) 0 18%, transparent 19%),
-    radial-gradient(circle at 41% 56%, rgba(224, 241, 163, 0.92) 0 30%, transparent 31%);
+    radial-gradient(
+      circle at 26% 84%,
+      rgba(117, 161, 33, 0.95) 0 18%,
+      transparent 19%
+    ),
+    radial-gradient(
+      circle at 41% 64%,
+      rgba(159, 192, 73, 0.95) 0 16%,
+      transparent 17%
+    ),
+    radial-gradient(
+      circle at 58% 72%,
+      rgba(79, 137, 20, 0.95) 0 18%,
+      transparent 19%
+    ),
+    radial-gradient(
+      circle at 69% 46%,
+      rgba(128, 211, 42, 0.95) 0 18%,
+      transparent 19%
+    ),
+    radial-gradient(
+      circle at 41% 56%,
+      rgba(224, 241, 163, 0.92) 0 30%,
+      transparent 31%
+    );
   filter: blur(0.2px);
 }
 
@@ -896,8 +943,16 @@
   top: 38%;
   height: 40%;
   background:
-    radial-gradient(circle at 50% 50%, rgba(155, 189, 71, 0.95) 0 38%, transparent 39%),
-    radial-gradient(circle at 35% 65%, rgba(195, 224, 90, 0.8) 0 16%, transparent 17%);
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(155, 189, 71, 0.95) 0 38%,
+      transparent 39%
+    ),
+    radial-gradient(
+      circle at 35% 65%,
+      rgba(195, 224, 90, 0.8) 0 16%,
+      transparent 17%
+    );
 }
 
 .product-art--bowl::after {
@@ -915,9 +970,21 @@
 .product-art--powder::before {
   inset: 34% 12% 18% 12%;
   background:
-    radial-gradient(circle at 52% 18%, rgba(153, 170, 50, 0.96) 0 25%, transparent 26%),
-    radial-gradient(circle at 48% 62%, rgba(191, 194, 122, 0.9) 0 31%, transparent 32%),
-    radial-gradient(circle at 63% 78%, rgba(110, 136, 40, 0.8) 0 14%, transparent 15%);
+    radial-gradient(
+      circle at 52% 18%,
+      rgba(153, 170, 50, 0.96) 0 25%,
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 48% 62%,
+      rgba(191, 194, 122, 0.9) 0 31%,
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 63% 78%,
+      rgba(110, 136, 40, 0.8) 0 14%,
+      transparent 15%
+    );
 }
 
 .product-art--powder::after {
@@ -933,9 +1000,21 @@
 .product-art--bundle::before {
   inset: 18% 18% 26% 18%;
   background:
-    radial-gradient(circle at 34% 76%, rgba(163, 209, 65, 0.94) 0 19%, transparent 20%),
-    radial-gradient(circle at 66% 76%, rgba(137, 182, 48, 0.94) 0 17%, transparent 18%),
-    radial-gradient(circle at 50% 30%, rgba(224, 188, 122, 0.9) 0 22%, transparent 23%);
+    radial-gradient(
+      circle at 34% 76%,
+      rgba(163, 209, 65, 0.94) 0 19%,
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 66% 76%,
+      rgba(137, 182, 48, 0.94) 0 17%,
+      transparent 18%
+    ),
+    radial-gradient(
+      circle at 50% 30%,
+      rgba(224, 188, 122, 0.9) 0 22%,
+      transparent 23%
+    );
 }
 
 .product-art--bundle::after {
@@ -951,8 +1030,16 @@
 .product-art--mix::before {
   inset: 24% 18% 18% 18%;
   background:
-    radial-gradient(circle at 50% 48%, rgba(203, 225, 82, 0.95) 0 30%, transparent 31%),
-    radial-gradient(circle at 48% 52%, rgba(112, 138, 29, 0.8) 0 18%, transparent 19%);
+    radial-gradient(
+      circle at 50% 48%,
+      rgba(203, 225, 82, 0.95) 0 30%,
+      transparent 31%
+    ),
+    radial-gradient(
+      circle at 48% 52%,
+      rgba(112, 138, 29, 0.8) 0 18%,
+      transparent 19%
+    );
 }
 
 .product-art--mix::after {
@@ -969,8 +1056,16 @@
 .product-art--tea::before {
   inset: 26% 18% 14% 18%;
   background:
-    radial-gradient(circle at 52% 52%, rgba(169, 114, 34, 0.8) 0 28%, transparent 29%),
-    radial-gradient(circle at 48% 52%, rgba(255, 228, 162, 0.96) 0 22%, transparent 23%);
+    radial-gradient(
+      circle at 52% 52%,
+      rgba(169, 114, 34, 0.8) 0 28%,
+      transparent 29%
+    ),
+    radial-gradient(
+      circle at 48% 52%,
+      rgba(255, 228, 162, 0.96) 0 22%,
+      transparent 23%
+    );
 }
 
 .product-art--tea::after {
@@ -982,8 +1077,6 @@
   background: linear-gradient(180deg, #f4cf7c, #b78640);
   box-shadow: inset -10px -14px 0 rgba(0, 0, 0, 0.12);
 }
-
-
 
 .newsletter-band {
   margin-top: 24px;
@@ -1032,7 +1125,6 @@
   box-sizing: border-box;
 }
 
-
 .newsletter-form input {
   border: 0;
   min-width: 0;
@@ -1065,7 +1157,6 @@
   font-weight: 700;
 }
 
-
 .product-art {
   position: relative;
   width: 100%;
@@ -1074,18 +1165,38 @@
 
 .product-art::before,
 .product-art::after {
-  content: '';
+  content: "";
   position: absolute;
 }
 
 .product-art--leaf::before {
   inset: 24% 18% 16% 18%;
   background:
-    radial-gradient(circle at 26% 84%, rgba(117, 161, 33, 0.95) 0 18%, transparent 19%),
-    radial-gradient(circle at 41% 64%, rgba(159, 192, 73, 0.95) 0 16%, transparent 17%),
-    radial-gradient(circle at 58% 72%, rgba(79, 137, 20, 0.95) 0 18%, transparent 19%),
-    radial-gradient(circle at 69% 46%, rgba(128, 211, 42, 0.95) 0 18%, transparent 19%),
-    radial-gradient(circle at 41% 56%, rgba(224, 241, 163, 0.92) 0 30%, transparent 31%);
+    radial-gradient(
+      circle at 26% 84%,
+      rgba(117, 161, 33, 0.95) 0 18%,
+      transparent 19%
+    ),
+    radial-gradient(
+      circle at 41% 64%,
+      rgba(159, 192, 73, 0.95) 0 16%,
+      transparent 17%
+    ),
+    radial-gradient(
+      circle at 58% 72%,
+      rgba(79, 137, 20, 0.95) 0 18%,
+      transparent 19%
+    ),
+    radial-gradient(
+      circle at 69% 46%,
+      rgba(128, 211, 42, 0.95) 0 18%,
+      transparent 19%
+    ),
+    radial-gradient(
+      circle at 41% 56%,
+      rgba(224, 241, 163, 0.92) 0 30%,
+      transparent 31%
+    );
   filter: blur(0.2px);
 }
 
@@ -1106,8 +1217,16 @@
   top: 38%;
   height: 40%;
   background:
-    radial-gradient(circle at 50% 50%, rgba(155, 189, 71, 0.95) 0 38%, transparent 39%),
-    radial-gradient(circle at 35% 65%, rgba(195, 224, 90, 0.8) 0 16%, transparent 17%);
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(155, 189, 71, 0.95) 0 38%,
+      transparent 39%
+    ),
+    radial-gradient(
+      circle at 35% 65%,
+      rgba(195, 224, 90, 0.8) 0 16%,
+      transparent 17%
+    );
 }
 
 .product-art--bowl::after {
@@ -1125,9 +1244,21 @@
 .product-art--powder::before {
   inset: 34% 12% 18% 12%;
   background:
-    radial-gradient(circle at 52% 18%, rgba(153, 170, 50, 0.96) 0 25%, transparent 26%),
-    radial-gradient(circle at 48% 62%, rgba(191, 194, 122, 0.9) 0 31%, transparent 32%),
-    radial-gradient(circle at 63% 78%, rgba(110, 136, 40, 0.8) 0 14%, transparent 15%);
+    radial-gradient(
+      circle at 52% 18%,
+      rgba(153, 170, 50, 0.96) 0 25%,
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 48% 62%,
+      rgba(191, 194, 122, 0.9) 0 31%,
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 63% 78%,
+      rgba(110, 136, 40, 0.8) 0 14%,
+      transparent 15%
+    );
 }
 
 .product-art--powder::after {
@@ -1143,9 +1274,21 @@
 .product-art--bundle::before {
   inset: 18% 18% 26% 18%;
   background:
-    radial-gradient(circle at 34% 76%, rgba(163, 209, 65, 0.94) 0 19%, transparent 20%),
-    radial-gradient(circle at 66% 76%, rgba(137, 182, 48, 0.94) 0 17%, transparent 18%),
-    radial-gradient(circle at 50% 30%, rgba(224, 188, 122, 0.9) 0 22%, transparent 23%);
+    radial-gradient(
+      circle at 34% 76%,
+      rgba(163, 209, 65, 0.94) 0 19%,
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 66% 76%,
+      rgba(137, 182, 48, 0.94) 0 17%,
+      transparent 18%
+    ),
+    radial-gradient(
+      circle at 50% 30%,
+      rgba(224, 188, 122, 0.9) 0 22%,
+      transparent 23%
+    );
 }
 
 .product-art--bundle::after {
@@ -1161,8 +1304,16 @@
 .product-art--mix::before {
   inset: 24% 18% 18% 18%;
   background:
-    radial-gradient(circle at 50% 48%, rgba(203, 225, 82, 0.95) 0 30%, transparent 31%),
-    radial-gradient(circle at 48% 52%, rgba(112, 138, 29, 0.8) 0 18%, transparent 19%);
+    radial-gradient(
+      circle at 50% 48%,
+      rgba(203, 225, 82, 0.95) 0 30%,
+      transparent 31%
+    ),
+    radial-gradient(
+      circle at 48% 52%,
+      rgba(112, 138, 29, 0.8) 0 18%,
+      transparent 19%
+    );
 }
 
 .product-art--mix::after {
@@ -1179,8 +1330,16 @@
 .product-art--tea::before {
   inset: 26% 18% 14% 18%;
   background:
-    radial-gradient(circle at 52% 52%, rgba(169, 114, 34, 0.8) 0 28%, transparent 29%),
-    radial-gradient(circle at 48% 52%, rgba(255, 228, 162, 0.96) 0 22%, transparent 23%);
+    radial-gradient(
+      circle at 52% 52%,
+      rgba(169, 114, 34, 0.8) 0 28%,
+      transparent 29%
+    ),
+    radial-gradient(
+      circle at 48% 52%,
+      rgba(255, 228, 162, 0.96) 0 22%,
+      transparent 23%
+    );
 }
 
 .product-art--tea::after {
@@ -1192,8 +1351,6 @@
   background: linear-gradient(180deg, #f4cf7c, #b78640);
   box-shadow: inset -10px -14px 0 rgba(0, 0, 0, 0.12);
 }
-
-
 
 .newsletter-band {
   margin-top: 24px;
@@ -1320,7 +1477,7 @@
 
 .promo-card h3 {
   margin: 6px 0 0;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-weight: 400;
   color: #332f2b;
 }
@@ -1387,7 +1544,7 @@
 .home-promo-card__copy h2 {
   margin: 0 0 4px;
   color: #4aa813;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 27px;
   font-weight: 400;
 }
@@ -1458,7 +1615,17 @@
     radial-gradient(circle at 30% 55%, #93d52f 0 20%, transparent 21%),
     radial-gradient(circle at 70% 55%, #8bc62d 0 20%, transparent 21%),
     linear-gradient(180deg, #6bb51b, #4f8812);
-  clip-path: polygon(48% 100%, 52% 100%, 58% 58%, 100% 30%, 64% 44%, 50% 0, 36% 44%, 0 30%, 42% 58%);
+  clip-path: polygon(
+    48% 100%,
+    52% 100%,
+    58% 58%,
+    100% 30%,
+    64% 44%,
+    50% 0,
+    36% 44%,
+    0 30%,
+    42% 58%
+  );
 }
 
 .quote-band p,
@@ -1493,7 +1660,6 @@
   gap: 20px;
 }
 
-
 .home-category-card {
   border: 1px solid #ece8df;
   background: #fff;
@@ -1501,7 +1667,10 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
   padding: 0;
 }
 
@@ -1552,7 +1721,6 @@
   margin: 0;
 }
 
-
 .blog-grid__list {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1581,7 +1749,9 @@
   opacity: 0;
   pointer-events: none;
   transform: translateY(12px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1609,7 +1779,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .reviews-carousel__arrow:hover {
@@ -1634,7 +1806,9 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  transition: background 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.2s;
 }
 
 .reviews-carousel__dot.is-active {
@@ -1648,7 +1822,7 @@
   border: 1px solid #ececec;
   background: #fff;
   padding: 36px;
-  box-shadow: 0 4px 24px rgba(76,166,11,0.07);
+  box-shadow: 0 4px 24px rgba(76, 166, 11, 0.07);
 }
 
 .review-card__stars {
@@ -1675,8 +1849,6 @@
   font-size: 13px;
 }
 
-
-
 .blog-card {
   background: #fff;
 }
@@ -1696,8 +1868,10 @@
   width: 34px;
   height: 34px;
   background: rgba(255, 255, 255, 0.75);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c5 3 8.5 4 10 4 0 12-4 18-10 22C6 24 2 18 2 6c1.5 0 5-1 10-4Z'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c5 3 8.5 4 10 4 0 12-4 18-10 22C6 24 2 18 2 6c1.5 0 5-1 10-4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c5 3 8.5 4 10 4 0 12-4 18-10 22C6 24 2 18 2 6c1.5 0 5-1 10-4Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c5 3 8.5 4 10 4 0 12-4 18-10 22C6 24 2 18 2 6c1.5 0 5-1 10-4Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
 }
 
 .blog-card__image--1 {
@@ -1796,8 +1970,6 @@
   padding: clamp(42px, 6vw, 60px) 0;
 }
 
-
-
 .team-card {
   background: #fff;
   border: 1px solid #eae6de;
@@ -1839,19 +2011,16 @@
   padding: clamp(28px, 4vw, 34px) 0;
 }
 
-
-
 .stats-band__list strong {
   display: block;
   color: #63ac18;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 32px;
 }
 
 .stats-band__list span {
   color: #4a4640;
 }
-
 
 .product-category-overview {
   display: grid;
@@ -2046,8 +2215,22 @@
 .product-detail {
   padding: clamp(42px, 6vw, 60px) 0 36px;
   display: grid;
-  grid-template-columns: minmax(360px, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(360px, 1fr) minmax(360px, 1fr);
   gap: 28px;
+  align-items: start;
+}
+
+.product-detail__gallery,
+.product-detail__content {
+  min-width: 0;
+}
+
+.product-detail__gallery {
+  grid-column: 1;
+}
+
+.product-detail__content {
+  grid-column: 2;
 }
 
 .product-breadcrumb {
@@ -2097,6 +2280,25 @@
   margin-top: 14px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+/* Prevent the product details panel from overlaying the image */
+.product-detail {
+  position: relative;
+}
+
+.product-detail__gallery {
+  position: relative;
+  z-index: 2;
+}
+
+.product-detail__content {
+  position: relative;
+  z-index: 1;
+}
+
+.product-detail__main {
+  z-index: 0;
 }
 
 .product-detail__thumbs button {
@@ -2284,7 +2486,7 @@
   margin: 10px 0 0;
   font-size: 18px;
   color: #403b35;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 .product-description ul {
@@ -2365,8 +2567,6 @@
   gap: 18px;
   margin: 22px 0 34px;
 }
-
-
 
 .panel {
   border: 1px solid #ece8df;
@@ -2459,7 +2659,7 @@
 .contact-block h3 {
   margin: 0;
   font-size: 17px;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   color: #403c37;
 }
 
@@ -2478,7 +2678,11 @@
   border: 1px solid #ece8df;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 48%, rgba(232, 235, 238, 0.78), transparent 18%),
+    radial-gradient(
+      circle at 50% 48%,
+      rgba(232, 235, 238, 0.78),
+      transparent 18%
+    ),
     linear-gradient(180deg, #95a3b7, #63748b);
 }
 
@@ -2506,7 +2710,7 @@
 }
 
 .map-marker::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 9px;
   top: 9px;
@@ -2659,7 +2863,7 @@
 
 .account-page-toolbar h2 {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 22px;
   color: #403c37;
 }
@@ -2717,7 +2921,7 @@
 .account-card__header h2 {
   margin: 0;
   font-size: 16px;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   color: #403c37;
 }
 
@@ -2777,7 +2981,7 @@
 
 .account-subtitle {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-weight: 700;
   color: #403c37;
 }
@@ -2898,7 +3102,7 @@
 .account-address-card h3 {
   margin: 0 0 10px;
   font-size: 18px;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   color: #3d3a36;
 }
 
@@ -2959,16 +3163,28 @@
   height: 64px;
   border-radius: 3px;
   background:
-    radial-gradient(circle at 48% 50%, rgba(124, 182, 45, 0.95) 0 18%, transparent 19%),
-    radial-gradient(circle at 36% 44%, rgba(170, 218, 91, 0.85) 0 15%, transparent 16%),
-    radial-gradient(circle at 60% 60%, rgba(84, 135, 23, 0.8) 0 14%, transparent 15%),
+    radial-gradient(
+      circle at 48% 50%,
+      rgba(124, 182, 45, 0.95) 0 18%,
+      transparent 19%
+    ),
+    radial-gradient(
+      circle at 36% 44%,
+      rgba(170, 218, 91, 0.85) 0 15%,
+      transparent 16%
+    ),
+    radial-gradient(
+      circle at 60% 60%,
+      rgba(84, 135, 23, 0.8) 0 14%,
+      transparent 15%
+    ),
     linear-gradient(135deg, #eef5e2, #d8e8bc);
 }
 
 .account-wishlist__copy h3 {
   margin: 0 0 12px;
   font-size: 20px;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Georgia, "Times New Roman", serif;
   color: #6d6a66;
   font-weight: 400;
 }
@@ -3076,7 +3292,7 @@
 
 .account-empty-state__flap::before,
 .account-empty-state__flap::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   width: 100%;
@@ -3184,7 +3400,10 @@
   border-radius: 50%;
   background: #eae8e2;
   color: #4a453f;
-  transition: background 0.3s, color 0.3s, transform 0.3s;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    transform 0.3s;
 }
 
 .site-footer__social-link:hover {
@@ -3277,7 +3496,11 @@
 }
 
 .admin-nav button.is-active {
-  background: linear-gradient(90deg, rgba(36, 76, 153, 0.92), rgba(31, 61, 126, 0.72));
+  background: linear-gradient(
+    90deg,
+    rgba(36, 76, 153, 0.92),
+    rgba(31, 61, 126, 0.72)
+  );
 }
 
 .admin-nav button:hover,
@@ -3411,7 +3634,9 @@
   border: 1px solid #e7ebf2;
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 1px 0 rgba(16, 24, 40, 0.02), 0 8px 24px rgba(15, 23, 42, 0.02);
+  box-shadow:
+    0 1px 0 rgba(16, 24, 40, 0.02),
+    0 8px 24px rgba(15, 23, 42, 0.02);
   overflow: hidden;
 }
 
@@ -4177,9 +4402,16 @@
     padding: 12px 0;
   }
 
+  .cart-icon-button {
+    margin-left: auto;
+    margin-right: 12px;
+    order: 1;
+  }
+
   .site-header__toggle {
     display: inline-grid;
-    margin-left: auto;
+    margin-left: 0;
+    order: 2;
   }
 
   .site-nav {
@@ -4266,8 +4498,7 @@
     font-size: 14px;
   }
 
-
-.catalog-layout {
+  .catalog-layout {
     gap: 14px;
   }
 
@@ -4559,5 +4790,65 @@
     bottom: 8px;
     gap: 6px;
     padding: 6px 8px;
+  }
+}
+
+/* Base: hide the dropdown (mobile / all screens by default) */
+.nav-dropdown {
+  display: none;
+}
+
+/* Desktop only styles */
+@media (min-width: 721px) {
+  .nav-item-dropdown-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    min-width: 240px;
+    max-width: 320px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ebebe6;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    padding: 6px 0;
+    z-index: 100;
+    margin-top: 10px;
+  }
+
+  /* Show dropdown on hover on desktop */
+  .nav-item-dropdown-container:hover .nav-dropdown {
+    display: block;
+  }
+
+  .nav-dropdown a {
+    display: block !important;
+    padding: 10px 16px;
+    color: #4a453f !important;
+    text-decoration: none;
+    font-size: 11.5px !important;
+    font-weight: 500 !important;
+    text-align: left;
+    line-height: 1.4 !important;
+    border-bottom: 1px solid #f5f5f2;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .nav-dropdown a:last-child {
+    border-bottom: 0;
+  }
+
+  .nav-dropdown a:hover {
+    background: #f4faf2;
+    color: #5ca61f !important;
   }
 }
