@@ -34,6 +34,7 @@ import {
   ResetPasswordPage,
 } from "./pages/index.js";
 import { SiteFrame } from "./components/SiteChrome.jsx";
+import { LoginPromptModal } from "./components/LoginPromptModal.jsx";
 import { hasAdminAuth, hasUserAuth } from "./lib/auth.js";
 import "./App.css";
 
@@ -58,6 +59,8 @@ function useLocationState() {
 
 function App() {
   const { pathname, search } = useLocationState();
+  const [authVersion, setAuthVersion] = useState(0);
+  const [isPromptOpen, setIsPromptOpen] = useState(false);
   const isAdminRoute = pathname.startsWith("/admin");
   const adminLoginRoute = pathname === "/admin/login";
   const userLoginRoute = pathname === "/login";
@@ -98,6 +101,70 @@ function App() {
       window.dispatchEvent(new PopStateEvent("popstate"));
     }
   }, [pathname, userLoginRoute, adminLoginRoute, hasUserToken, hasAdminToken]);
+
+  useEffect(() => {
+    if (hasUserToken || hasAdminToken) {
+      setIsPromptOpen(false);
+      return;
+    }
+
+    if (
+      pathname.startsWith("/admin") ||
+      pathname === "/login" ||
+      pathname === "/forgot-password" ||
+      pathname === "/reset-password"
+    ) {
+      setIsPromptOpen(false);
+      return;
+    }
+
+    const isHome = pathname === "/";
+    const isResearch = pathname.startsWith("/research");
+    const isLibrary = pathname.startsWith("/library");
+
+    try {
+      if (isHome) {
+        if (!sessionStorage.getItem("greenrut:dismissed_home")) {
+          setIsPromptOpen(true);
+        }
+      } else if (isResearch) {
+        if (!sessionStorage.getItem("greenrut:dismissed_research")) {
+          setIsPromptOpen(true);
+        }
+      } else if (isLibrary) {
+        if (!sessionStorage.getItem("greenrut:dismissed_library")) {
+          setIsPromptOpen(true);
+        }
+      } else {
+        if (!sessionStorage.getItem("greenrut:initial_prompt_shown")) {
+          setIsPromptOpen(true);
+        }
+      }
+    } catch {
+      // ignore storage access error
+    }
+  }, [pathname, hasUserToken, hasAdminToken, authVersion]);
+
+  const handleDismissPrompt = () => {
+    try {
+      sessionStorage.setItem("greenrut:initial_prompt_shown", "true");
+      if (pathname === "/") {
+        sessionStorage.setItem("greenrut:dismissed_home", "true");
+      } else if (pathname.startsWith("/research")) {
+        sessionStorage.setItem("greenrut:dismissed_research", "true");
+      } else if (pathname.startsWith("/library")) {
+        sessionStorage.setItem("greenrut:dismissed_library", "true");
+      }
+    } catch {
+      // ignore storage access error
+    }
+    setIsPromptOpen(false);
+  };
+
+  const handlePromptSuccess = () => {
+    setIsPromptOpen(false);
+    setAuthVersion((v) => v + 1);
+  };
 
   let page = <HomePage onNavigate={navigate} />;
   if (pathname === "/about-us") page = <AboutPage />;
@@ -219,9 +286,18 @@ function App() {
   }
 
   return (
-    <SiteFrame pathname={pathname} onNavigate={navigate}>
-      {page}
-    </SiteFrame>
+    <>
+      <SiteFrame pathname={pathname} onNavigate={navigate}>
+        {page}
+      </SiteFrame>
+      <LoginPromptModal
+        isOpen={isPromptOpen}
+        onClose={handleDismissPrompt}
+        onSuccess={handlePromptSuccess}
+        pathname={pathname}
+        onNavigate={navigate}
+      />
+    </>
   );
 }
 

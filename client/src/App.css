@@ -5011,3 +5011,387 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+/* ==========================================================================
+   Sticky Floating WhatsApp Action Button
+   ========================================================================== */
+.whatsapp-sticky-wrapper {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.whatsapp-sticky-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25D366;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.42), 0 2px 6px rgba(0, 0, 0, 0.12);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.whatsapp-sticky-btn:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.58), 0 4px 10px rgba(0, 0, 0, 0.18);
+  color: #ffffff;
+}
+
+.whatsapp-sticky-btn:active {
+  transform: scale(0.96);
+}
+
+.whatsapp-sticky-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.whatsapp-sticky-ping {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid #25D366;
+  animation: whatsappPulse 2.4s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes whatsappPulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.85;
+  }
+  60% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+.whatsapp-sticky-label {
+  position: absolute;
+  right: 68px;
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  background: #1a202c;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.whatsapp-sticky-label.is-visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+@media (max-width: 640px) {
+  .whatsapp-sticky-wrapper {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .whatsapp-sticky-btn {
+    width: 52px;
+    height: 52px;
+  }
+
+  .whatsapp-sticky-btn svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .whatsapp-sticky-label {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Login Prompt Modal (Site Access & Key Sections)
+   ========================================================================== */
+.login-prompt-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: promptFadeIn 0.22s ease-out;
+}
+
+@keyframes promptFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.login-prompt-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 32px 28px 24px;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  animation: promptSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes promptSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.login-prompt-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f4f4f2;
+  border: none;
+  color: #605c57;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+
+.login-prompt-close:hover {
+  background: #e7e6e2;
+  color: #211d18;
+  transform: scale(1.05);
+}
+
+.login-prompt-header {
+  margin-bottom: 20px;
+}
+
+.login-prompt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #f4faf2;
+  border: 1px solid #d4ebd0;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #478417;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
+.login-prompt-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5ca61f;
+}
+
+.login-prompt-title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #211d18;
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+
+.login-prompt-subtitle {
+  font-size: 13.5px;
+  color: #605c57;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.login-prompt-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #f0ede6;
+  margin-bottom: 20px;
+}
+
+.login-prompt-tab {
+  flex: 1;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #79746e;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.login-prompt-tab:hover {
+  color: #211d18;
+}
+
+.login-prompt-tab.is-active {
+  color: #5ca61f;
+  border-bottom-color: #5ca61f;
+}
+
+.login-prompt-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-prompt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.login-prompt-field label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #433f39;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.login-prompt-field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-prompt-link {
+  background: transparent;
+  border: none;
+  color: #5ca61f;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.login-prompt-link:hover {
+  color: #478417;
+}
+
+.login-prompt-field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d8d4cb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #211d18;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.login-prompt-field input:focus {
+  border-color: #5ca61f;
+  box-shadow: 0 0 0 3px rgba(92, 166, 31, 0.14);
+}
+
+.login-prompt-error {
+  font-size: 13px;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 0 0 12px;
+}
+
+.login-prompt-success {
+  font-size: 13px;
+  color: #16a34a;
+  background: #f0fdf4;
+  border: 1px solid #dcfce7;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 0 0 12px;
+}
+
+.login-prompt-submit {
+  width: 100%;
+  padding: 12px;
+  background: #5ca61f;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 4px;
+}
+
+.login-prompt-submit:hover:not(:disabled) {
+  background: #478417;
+}
+
+.login-prompt-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.login-prompt-exit-action {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.login-prompt-guest-btn {
+  background: transparent;
+  border: none;
+  color: #79746e;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.login-prompt-guest-btn:hover {
+  color: #211d18;
+  background: #f4f4f2;
+}
+

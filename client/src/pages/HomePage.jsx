@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../components/SiteChrome.jsx";
+import { WhatsAppButton } from "../components/WhatsAppButton.jsx";
 import { publicRequest } from "../lib/publicApi.js";
 import { NewsletterBand, SectionTitle } from "./shared.jsx";
 import bannerOneImage from "../assets/1.png";
@@ -426,6 +427,7 @@ export function HomePage({ onNavigate }) {
       </section>
 
       <NewsletterBand />
+      <WhatsAppButton />
     </>
   );
 }

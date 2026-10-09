@@ -13,10 +13,9 @@ function getProductImage(product) {
 }
 
 function buildWhatsAppUrl(product) {
-  const number = String(import.meta.env.VITE_WHATSAPP_NUMBER || "").replace(
-    /\D/g,
-    "",
-  );
+  const number = String(
+    import.meta.env.VITE_WHATSAPP_NUMBER || "2347048005656"
+  ).replace(/\D/g, "");
   const text = encodeURIComponent(`Hi, I'm interested in ${product.name}.`);
   return number ? `https://wa.me/${number}?text=${text}` : "/contact";
 }
