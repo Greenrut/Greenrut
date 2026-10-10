@@ -335,7 +335,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
                             type="button"
                             className="admin-action-btn"
                             title="Edit post"
-                            onClick={() => onNavigate("/admin/blog/new")}
+                            onClick={() => onNavigate(`/admin/blog?id=${post.id}`)}
                           >
                             <AdminIcon type="pencil" />
                           </button>

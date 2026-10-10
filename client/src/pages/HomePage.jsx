@@ -111,7 +111,19 @@ const productCategories = [
 ];
 
 function getPostSummary(post) {
-  return post.excerpt || post.content || "A new blog post is ready.";
+  const text = post.excerpt || post.content || "A new blog post is ready.";
+  return text.length > 130 ? text.slice(0, 130).trim() + "..." : text;
+}
+
+function getPostCover(post) {
+  if (!post) return null;
+  const img = post.coverImage || post.image;
+  if (!img) return null;
+  if (typeof img === "string") return img;
+  if (typeof img === "object") {
+    return img.url || img.secureUrl || img.src || img.path || null;
+  }
+  return null;
 }
 
 export function HomePage({ onNavigate }) {
@@ -348,8 +360,15 @@ export function HomePage({ onNavigate }) {
       </section>
 
       <section className="page-shell blog-grid">
-        <div className="reveal-on-scroll reveal-slide-up">
-          <SectionTitle title="From the Blog" />
+        <div className="reveal-on-scroll reveal-slide-up home-blog-header flex items-center justify-between flex-wrap gap-4">
+          <SectionTitle title="From the Blog & Self-Care" />
+          <button
+            type="button"
+            className="home-blog-view-all"
+            onClick={() => onNavigate?.("/self-care")}
+          >
+            Explore Self-Care Hub →
+          </button>
         </div>
         {!loading && !error && posts.length === 0 ? (
           <p>No blog posts yet.</p>
@@ -357,24 +376,50 @@ export function HomePage({ onNavigate }) {
         <div className="blog-grid__list">
           {posts.slice(0, 3).map((post, index) => {
             const delayClass = `reveal-delay-${index * 150}`;
+            const coverUrl = getPostCover(post);
+            const targetUrl = `/self-care?id=${post.id || post.slug}`;
             return (
               <article
                 key={post.id || post.slug || post.title}
-                className={`blog-card reveal-on-scroll reveal-slide-up ${delayClass}`}
+                className={`blog-card blog-card--clickable reveal-on-scroll reveal-slide-up ${delayClass}`}
+                onClick={() => onNavigate?.(targetUrl)}
+                style={{ cursor: "pointer" }}
               >
                 <div
-                  className={`blog-card__image blog-card__image--${index + 1}`}
-                />
-                <p className="blog-card__date">
-                  {post.createdAt
-                    ? new Date(post.createdAt).toLocaleDateString()
-                    : "Blog"}
-                </p>
-                <h3>{post.title}</h3>
-                <p>{getPostSummary(post)}</p>
-                <button type="button" onClick={() => onNavigate?.("/self-care")}>
-                  READ MORE
-                </button>
+                  className={`blog-card__image ${coverUrl ? "has-image" : `blog-card__image--${(index % 3) + 1}`}`}
+                >
+                  {coverUrl ? (
+                    <img
+                      src={coverUrl}
+                      alt={post.title}
+                      className="blog-card__img"
+                      loading="lazy"
+                    />
+                  ) : null}
+                </div>
+                <div className="blog-card__body">
+                  <p className="blog-card__date">
+                    {post.createdAt
+                      ? new Date(post.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "Self-Care"}
+                  </p>
+                  <h3 className="blog-card__title">{post.title}</h3>
+                  <p>{getPostSummary(post)}</p>
+                  <button
+                    type="button"
+                    className="blog-card__read-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNavigate?.(targetUrl);
+                    }}
+                  >
+                    READ ARTICLE →
+                  </button>
+                </div>
               </article>
             );
           })}

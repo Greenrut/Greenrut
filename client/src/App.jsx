@@ -182,8 +182,19 @@ function App() {
     page = <ForgotPasswordPage onNavigate={navigate} />;
   if (pathname === "/reset-password")
     page = <ResetPasswordPage onNavigate={navigate} />;
-  if (pathname === "/blog" || pathname === "/self-care")
-    page = <BlogPage onNavigate={navigate} search={search} />;
+  if (
+    pathname === "/blog" ||
+    pathname === "/self-care" ||
+    pathname.startsWith("/blog/") ||
+    pathname.startsWith("/self-care/")
+  )
+    page = (
+      <BlogPage
+        onNavigate={navigate}
+        search={search}
+        pathname={pathname}
+      />
+    );
   if (pathname === "/library") page = <LibraryPage onNavigate={navigate} />;
   if (pathname === "/library/resource")
     page = <LibraryResourcePage onNavigate={navigate} />;
@@ -234,7 +245,13 @@ function App() {
     );
   }
   if (pathname === "/admin/blog" || pathname === "/admin/blog/new")
-    page = <AdminBlogPostPage pathname={pathname} onNavigate={navigate} />;
+    page = (
+      <AdminBlogPostPage
+        pathname={pathname}
+        search={search}
+        onNavigate={navigate}
+      />
+    );
   if (pathname === "/admin/research" || pathname === "/admin/research/new")
     page = <AdminResearchPage pathname={pathname} onNavigate={navigate} />;
   if (pathname === "/admin/library" || pathname === "/admin/library/new")
