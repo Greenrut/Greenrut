@@ -19,6 +19,9 @@ import {
   AdminLibraryPage,
   AdminReviewsPage,
   AdminUsersPage,
+  AdminCategoriesPage,
+  AdminTagsPage,
+  AdminSettingsPage,
   CartPage,
   ContactPage,
   ForgotPasswordPage,
@@ -209,8 +212,12 @@ function App() {
     page = <AdminLoginPage onNavigate={navigate} />;
   if (pathname === "/admin" || pathname === "/admin/dashboard")
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />;
-  if (pathname === "/admin/products/new")
+  if (pathname === "/admin/products" || pathname === "/admin/products/new")
     page = <AdminProductsPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/categories")
+    page = <AdminCategoriesPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/tags")
+    page = <AdminTagsPage pathname={pathname} onNavigate={navigate} />;
   if (pathname === "/admin/banners")
     page = <AdminBannersPage pathname={pathname} onNavigate={navigate} />;
   if (
@@ -226,26 +233,31 @@ function App() {
       />
     );
   }
-  if (pathname === "/admin/blog/new")
+  if (pathname === "/admin/blog" || pathname === "/admin/blog/new")
     page = <AdminBlogPostPage pathname={pathname} onNavigate={navigate} />;
-  if (pathname === "/admin/research/new")
+  if (pathname === "/admin/research" || pathname === "/admin/research/new")
     page = <AdminResearchPage pathname={pathname} onNavigate={navigate} />;
-  if (pathname === "/admin/library/new")
+  if (pathname === "/admin/library" || pathname === "/admin/library/new")
     page = <AdminLibraryPage pathname={pathname} onNavigate={navigate} />;
   if (pathname === "/admin/reviews")
     page = <AdminReviewsPage pathname={pathname} onNavigate={navigate} />;
   if (pathname === "/admin/users")
     page = <AdminUsersPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/settings")
+    page = <AdminSettingsPage pathname={pathname} onNavigate={navigate} />;
   if (
     pathname.startsWith("/admin/") &&
     !pathname.startsWith("/admin/login") &&
-    !pathname.startsWith("/admin/products/new") &&
+    !pathname.startsWith("/admin/products") &&
+    !pathname.startsWith("/admin/categories") &&
+    !pathname.startsWith("/admin/tags") &&
     !pathname.startsWith("/admin/banners") &&
-    !pathname.startsWith("/admin/blog/new") &&
-    !pathname.startsWith("/admin/research/new") &&
-    !pathname.startsWith("/admin/library/new") &&
+    !pathname.startsWith("/admin/blog") &&
+    !pathname.startsWith("/admin/research") &&
+    !pathname.startsWith("/admin/library") &&
     !pathname.startsWith("/admin/reviews") &&
-    !pathname.startsWith("/admin/users")
+    !pathname.startsWith("/admin/users") &&
+    !pathname.startsWith("/admin/settings")
   ) {
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />;
   }

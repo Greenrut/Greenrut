@@ -1,11 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { adminRequest } from "../../lib/adminApi.js";
 import {
   AdminCard,
   AdminPageHeader,
   AdminPill,
   AdminShell,
+  AdminIcon,
 } from "./shared.jsx";
+
+const CATEGORIES = [
+  "NUTRITION & INSTANTS",
+  "DAILY SUPPLEMENTS",
+  "IMMUNITY & METABOLISM",
+  "SKIN & BODY CARE",
+  "TARGETED HEALTH",
+  "MEN & WOMEN",
+  "Uncategorized",
+];
 
 const initialForm = {
   name: "",
@@ -13,7 +24,7 @@ const initialForm = {
   description: "",
   price: "",
   stock: "",
-  category: "Uncategorized",
+  category: "NUTRITION & INSTANTS",
   status: "draft",
   benefits: "",
   ingredients: "",
@@ -32,9 +43,14 @@ function getImageUrl(image) {
 }
 
 export function AdminProductsPage({ pathname, onNavigate }) {
+  const isDirectNew = pathname === "/admin/products/new";
   const [form, setForm] = useState(initialForm);
   const [products, setProducts] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
+  const [viewMode, setViewMode] = useState(isDirectNew ? "editor" : "catalog");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState("ALL");
   const [loading, setLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [listLoading, setListLoading] = useState(true);
@@ -44,6 +60,7 @@ export function AdminProductsPage({ pathname, onNavigate }) {
   const loadProducts = async () => {
     try {
       setListLoading(true);
+      setError("");
       const response = await adminRequest("/admin/products");
       setProducts(response.data || []);
     } catch (requestError) {
@@ -57,6 +74,14 @@ export function AdminProductsPage({ pathname, onNavigate }) {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    if (isDirectNew) {
+      setViewMode("editor");
+      setSelectedId(null);
+      setForm(initialForm);
+    }
+  }, [isDirectNew]);
+
   const updateField = (field) => (event) => {
     setForm((current) => ({ ...current, [field]: event.target.value }));
   };
@@ -64,6 +89,17 @@ export function AdminProductsPage({ pathname, onNavigate }) {
   const resetForm = () => {
     setForm(initialForm);
     setSelectedId(null);
+    setViewMode("catalog");
+    setMessage("");
+    setError("");
+  };
+
+  const startCreate = () => {
+    setSelectedId(null);
+    setForm(initialForm);
+    setViewMode("editor");
+    setMessage("");
+    setError("");
   };
 
   const startEdit = (product) => {
@@ -74,7 +110,7 @@ export function AdminProductsPage({ pathname, onNavigate }) {
       description: product.description || "",
       price: String(product.price ?? ""),
       stock: String(product.stock ?? ""),
-      category: product.category || "Uncategorized",
+      category: product.category || "NUTRITION & INSTANTS",
       status: product.status || "draft",
       benefits: product.benefits || "",
       ingredients: product.ingredients || "",
@@ -83,6 +119,10 @@ export function AdminProductsPage({ pathname, onNavigate }) {
       warnings: product.warnings || "",
       images: Array.isArray(product.images) ? product.images : [],
     });
+    setViewMode("editor");
+    setMessage("");
+    setError("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleImageUpload = async (event) => {
@@ -106,7 +146,7 @@ export function AdminProductsPage({ pathname, onNavigate }) {
         ...current,
         images: [...current.images, ...(response.data || [])],
       }));
-      setMessage("Images uploaded.");
+      setMessage("Images uploaded successfully.");
     } catch (requestError) {
       setError(requestError.message || "Failed to upload images");
     } finally {
@@ -123,7 +163,12 @@ export function AdminProductsPage({ pathname, onNavigate }) {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    if (event) event.preventDefault();
+    if (!form.name.trim()) {
+      setError("Product name is required.");
+      return;
+    }
+
     setLoading(true);
     setMessage("");
     setError("");
@@ -141,17 +186,20 @@ export function AdminProductsPage({ pathname, onNavigate }) {
           method: "PUT",
           body: payload,
         });
-        setMessage("Product updated.");
+        setMessage("Product updated successfully.");
       } else {
         await adminRequest("/admin/products", {
           method: "POST",
           body: payload,
         });
-        setMessage("Product created.");
+        setMessage("Product published successfully.");
       }
 
-      resetForm();
       await loadProducts();
+      // Keep on screen for a moment or return to catalog
+      setTimeout(() => {
+        resetForm();
+      }, 900);
     } catch (requestError) {
       setError(requestError.message || "Failed to save product");
     } finally {
@@ -159,8 +207,9 @@ export function AdminProductsPage({ pathname, onNavigate }) {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this product?")) return;
+  const handleDelete = async (id, name) => {
+    if (!window.confirm(`Are you sure you want to delete "${name || "this product"}"?`))
+      return;
 
     setError("");
     setMessage("");
@@ -176,299 +225,476 @@ export function AdminProductsPage({ pathname, onNavigate }) {
     }
   };
 
+  // Filtered products list
+  const filteredProducts = useMemo(() => {
+    return products.filter((item) => {
+      const matchesSearch =
+        !searchQuery ||
+        (item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.sku && item.sku.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (item.category && item.category.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      const matchesCategory =
+        categoryFilter === "ALL" || item.category === categoryFilter;
+
+      const matchesStatus =
+        statusFilter === "ALL" || item.status === statusFilter;
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }, [products, searchQuery, categoryFilter, statusFilter]);
+
   return (
     <AdminShell pathname={pathname} onNavigate={onNavigate}>
+      {/* Page Header */}
       <AdminPageHeader
-        backLabel="<- Back to Products"
-        onBack={() => onNavigate("/admin")}
-        title={selectedId ? "Edit Product" : "Add New Product"}
-        subtitle="Create a new product and add all the details."
-        actions={
-          <button
-            type="button"
-            className="admin-primary-button"
-            onClick={handleSubmit}
-          >
-            {loading
-              ? "Saving..."
-              : selectedId
-                ? "Update Product"
-                : "Publish Product"}
-          </button>
+        title={
+          viewMode === "editor"
+            ? selectedId
+              ? "Edit Product"
+              : "Create New Product"
+            : "Product Catalog"
         }
-      />
-
-      <form className="admin-form-layout" onSubmit={handleSubmit}>
-        <div className="admin-form-layout__main">
-          <AdminCard title="Basic Information">
-            <div className="admin-form-grid">
-              <label>
-                Product Name
-                <input
-                  value={form.name}
-                  onChange={updateField("name")}
-                  type="text"
-                  placeholder="Enter product name"
-                />
-              </label>
-              <label>
-                SKU (Stock Keeping Unit)
-                <input
-                  value={form.sku}
-                  onChange={updateField("sku")}
-                  type="text"
-                  placeholder="Enter SKU (optional)"
-                />
-              </label>
-              <label className="admin-form-grid__full">
-                Description
-                <textarea
-                  value={form.description}
-                  onChange={updateField("description")}
-                  placeholder="Write a product description..."
-                  rows={8}
-                />
-              </label>
-            </div>
-          </AdminCard>
-
-          <AdminCard title="Blueprint Product Details">
-            <div className="admin-form-grid admin-form-grid--single">
-              <label>
-                Key Benefits
-                <textarea
-                  value={form.benefits}
-                  onChange={updateField("benefits")}
-                  placeholder="List the main health or wellness benefits."
-                  rows={5}
-                />
-              </label>
-              <label>
-                Key Ingredients
-                <textarea
-                  value={form.ingredients}
-                  onChange={updateField("ingredients")}
-                  placeholder="Describe important herbs, traditional use, and active properties."
-                  rows={6}
-                />
-              </label>
-              <label>
-                Scientific Validation
-                <textarea
-                  value={form.scientificValidation}
-                  onChange={updateField("scientificValidation")}
-                  placeholder="Summarize studies, quality assurance, toxicology, and research notes."
-                  rows={6}
-                />
-              </label>
-              <label>
-                Directions
-                <textarea
-                  value={form.directions}
-                  onChange={updateField("directions")}
-                  placeholder="Dosage, frequency, timing, and usage guidance."
-                  rows={4}
-                />
-              </label>
-              <label>
-                Warnings & Contraindications
-                <textarea
-                  value={form.warnings}
-                  onChange={updateField("warnings")}
-                  placeholder="Safety notes, contraindications, or consult-a-doctor guidance."
-                  rows={4}
-                />
-              </label>
-            </div>
-          </AdminCard>
-
-          <AdminCard
-            title="Product Images"
-            subtitle="Upload multiple photos. The first photo will be used as the main image on the storefront."
-          >
-            <div className="admin-image-uploader">
-              <label className="admin-image-uploader__dropzone">
-                <input
-                  name="images"
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleImageUpload}
-                />
-                <span>
-                  {uploadingImages ? "Uploading..." : "Choose multiple images"}
-                </span>
-                <small>
-                  PNG, JPG, WebP. You can add several photos at once.
-                </small>
-              </label>
-
-              {form.images.length ? (
-                <div className="admin-image-grid">
-                  {form.images.map((image, index) => {
-                    const imageUrl = getImageUrl(image);
-                    return (
-                      <figure
-                        key={imageUrl || index}
-                        className="admin-image-grid__item"
-                      >
-                        {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt={`Product image ${index + 1}`}
-                          />
-                        ) : (
-                          <div className="admin-image-grid__placeholder">
-                            No preview
-                          </div>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                        >
-                          Remove
-                        </button>
-                      </figure>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="admin-help-text">No images uploaded yet.</p>
-              )}
-            </div>
-          </AdminCard>
-
-          <AdminCard title="Additional Details">
-            <div className="admin-form-grid">
-              <label>
-                Category
-                <input
-                  value={form.category}
-                  onChange={updateField("category")}
-                  type="text"
-                  placeholder="Herbal"
-                />
-              </label>
-              <label>
-                Status
-                <select value={form.status} onChange={updateField("status")}>
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
-                </select>
-              </label>
-              <label>
-                Price
-                <input
-                  value={form.price}
-                  onChange={updateField("price")}
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="0.00"
-                />
-              </label>
-              <label>
-                Stock
-                <input
-                  value={form.stock}
-                  onChange={updateField("stock")}
-                  type="number"
-                  min="0"
-                  step="1"
-                  placeholder="0"
-                />
-              </label>
-            </div>
-          </AdminCard>
-        </div>
-
-        <aside className="admin-form-layout__side">
-          <AdminCard title="Publish">
-            <p className="admin-help-text">
-              Save the product as draft or publish it right away.
-            </p>
-            {message ? (
-              <p className="text-sm text-green-700">{message}</p>
-            ) : null}
-            {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        subtitle={
+          viewMode === "editor"
+            ? "Configure formulation parameters, ingredients, pricing, and high-resolution product photography."
+            : `Manage all natural wellness formulations and herbal inventory (${products.length} total items).`
+        }
+        backLabel={viewMode === "editor" ? "Back to Products Catalog" : undefined}
+        onBack={resetForm}
+        actions={
+          viewMode === "catalog" ? (
             <button
-              type="submit"
+              type="button"
               className="admin-primary-button"
-              disabled={loading || uploadingImages}
+              onClick={startCreate}
             >
-              {loading
-                ? "Saving..."
-                : selectedId
-                  ? "Update Product"
-                  : "Save Product"}
+              <AdminIcon type="plus" />
+              <span>Add New Product</span>
             </button>
-            {selectedId ? (
+          ) : (
+            <div className="admin-header-actions-group">
               <button
                 type="button"
                 className="admin-secondary-button"
                 onClick={resetForm}
               >
-                Cancel Edit
+                Cancel
               </button>
-            ) : null}
-          </AdminCard>
-        </aside>
-      </form>
-
-      <AdminCard
-        title="Existing Products"
-        subtitle="Edit or delete products from the admin API."
-      >
-        {listLoading ? <p>Loading products...</p> : null}
-        <div className="admin-table">
-          <div className="admin-table__head admin-table__head--products">
-            <span>PRODUCT</span>
-            <span>CATEGORY</span>
-            <span>PRICE</span>
-            <span>STATUS</span>
-            <span>ACTIONS</span>
-          </div>
-          <div className="admin-table__body">
-            {products.map((item) => (
-              <div
-                key={item.id || item.name}
-                className="admin-table__row admin-table__row--products"
+              <button
+                type="button"
+                className="admin-primary-button"
+                onClick={handleSubmit}
+                disabled={loading || uploadingImages}
               >
-                <div className="admin-table__product">
-                  <span>{item.name}</span>
-                </div>
-                <span>{item.category}</span>
-                <span>NGN {item.price?.toLocaleString?.() ?? item.price}</span>
-                <span>
-                  {item.status === "published" ? (
-                    <AdminPill>Published</AdminPill>
-                  ) : (
-                    <AdminPill tone="amber">Draft</AdminPill>
-                  )}
-                </span>
-                <div className="admin-actions">
-                  <button
-                    type="button"
-                    aria-label="Edit"
-                    onClick={() => startEdit(item)}
-                  >
-                    <span className="admin-action-icon">edit</span>
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Delete"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    <span className="admin-action-icon admin-action-icon--danger">
-                      del
-                    </span>
-                  </button>
+                {loading
+                  ? "Saving..."
+                  : selectedId
+                    ? "Update Product"
+                    : "Publish Product"}
+              </button>
+            </div>
+          )
+        }
+      />
+
+      {/* Alerts */}
+      {message && (
+        <div className="admin-alert admin-alert--success">
+          <span>✓ {message}</span>
+          <button type="button" onClick={() => setMessage("")}>✕</button>
+        </div>
+      )}
+      {error && (
+        <div className="admin-alert admin-alert--danger">
+          <span>{error}</span>
+          <button type="button" onClick={() => setError("")}>✕</button>
+        </div>
+      )}
+
+      {/* CATALOG VIEW */}
+      {viewMode === "catalog" && (
+        <div className="admin-catalog-view">
+          {/* Filter Bar */}
+          <div className="admin-filter-bar">
+            <div className="admin-filter-search">
+              <AdminIcon type="search" />
+              <input
+                type="text"
+                placeholder="Search products by title, SKU, or category..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  className="admin-search-clear-btn"
+                  onClick={() => setSearchQuery("")}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div className="admin-filter-group">
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="admin-select"
+              >
+                <option value="ALL">All Categories</option>
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="admin-select"
+              >
+                <option value="ALL">All Status</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Products Table Card */}
+          <AdminCard>
+            {listLoading ? (
+              <div className="admin-card-loading">Loading catalog items...</div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="admin-table__empty">
+                {products.length === 0
+                  ? "Your catalog is empty. Click '+ Add New Product' above to create one."
+                  : "No products matched your search or filters."}
+              </div>
+            ) : (
+              <div className="admin-table-container">
+                <div className="admin-table">
+                  <div className="admin-table__head admin-table__head--products">
+                    <span>PRODUCT</span>
+                    <span>CATEGORY</span>
+                    <span>PRICE</span>
+                    <span>STOCK</span>
+                    <span>STATUS</span>
+                    <span>ACTIONS</span>
+                  </div>
+                  <div className="admin-table__body">
+                    {filteredProducts.map((item) => {
+                      const firstImg =
+                        item.images && item.images.length > 0
+                          ? getImageUrl(item.images[0])
+                          : "";
+
+                      return (
+                        <div
+                          key={item.id || item.name}
+                          className="admin-table__row admin-table__row--products"
+                        >
+                          <div className="admin-table__product">
+                            <div className="admin-table__product-thumb">
+                              {firstImg ? (
+                                <img src={firstImg} alt={item.name} />
+                              ) : (
+                                <span>{(item.name?.[0] || "P").toUpperCase()}</span>
+                              )}
+                            </div>
+                            <div className="admin-table__product-info">
+                              <strong>{item.name}</strong>
+                              {item.sku && <span>SKU: {item.sku}</span>}
+                            </div>
+                          </div>
+                          <span>
+                            <span className="admin-category-tag">
+                              {item.category || "Uncategorized"}
+                            </span>
+                          </span>
+                          <span className="admin-price-tag">
+                            NGN {Number(item.price || 0).toLocaleString()}
+                          </span>
+                          <span className="admin-stock-tag">
+                            {item.stock !== undefined && item.stock !== ""
+                              ? `${item.stock} in stock`
+                              : "Unlimited"}
+                          </span>
+                          <span>
+                            {item.status === "published" ? (
+                              <AdminPill tone="green">Published</AdminPill>
+                            ) : (
+                              <AdminPill tone="amber">Draft</AdminPill>
+                            )}
+                          </span>
+                          <div className="admin-actions">
+                            <button
+                              type="button"
+                              className="admin-action-btn"
+                              title="Edit product"
+                              onClick={() => startEdit(item)}
+                            >
+                              <AdminIcon type="pencil" />
+                            </button>
+                            <button
+                              type="button"
+                              className="admin-action-btn admin-action-btn--danger"
+                              title="Delete product"
+                              onClick={() => handleDelete(item.id, item.name)}
+                            >
+                              <AdminIcon type="trash" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
+            )}
+          </AdminCard>
         </div>
-      </AdminCard>
+      )}
+
+      {/* EDITOR VIEW */}
+      {viewMode === "editor" && (
+        <form className="admin-form-layout" onSubmit={handleSubmit}>
+          <div className="admin-form-layout__main">
+            {/* General Info */}
+            <AdminCard title="Basic Information" subtitle="Primary product identifiers and descriptions.">
+              <div className="admin-form-grid">
+                <label>
+                  Product Name *
+                  <input
+                    value={form.name}
+                    onChange={updateField("name")}
+                    type="text"
+                    placeholder="e.g. Pure Bitter Leaf Extract"
+                    required
+                  />
+                </label>
+                <label>
+                  SKU (Stock Keeping Unit)
+                  <input
+                    value={form.sku}
+                    onChange={updateField("sku")}
+                    type="text"
+                    placeholder="e.g. GR-BL-001"
+                  />
+                </label>
+                <label className="admin-form-grid__full">
+                  Detailed Description
+                  <textarea
+                    value={form.description}
+                    onChange={updateField("description")}
+                    placeholder="Provide a comprehensive summary of this natural herbal formula..."
+                    rows={6}
+                  />
+                </label>
+              </div>
+            </AdminCard>
+
+            {/* Media Gallery */}
+            <AdminCard
+              title="Product Photography"
+              subtitle="Upload high-definition photos showcasing packaging and pure botanical textures."
+            >
+              <div className="admin-media-uploader">
+                <label className="admin-upload-dropzone">
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={uploadingImages}
+                  />
+                  <div className="admin-upload-dropzone__content">
+                    <AdminIcon type="plus" />
+                    <strong>{uploadingImages ? "Uploading..." : "Click to Upload Product Photos"}</strong>
+                    <span>PNG, JPG, WebP up to 5MB</span>
+                  </div>
+                </label>
+
+                {form.images && form.images.length > 0 && (
+                  <div className="admin-media-gallery">
+                    {form.images.map((img, index) => {
+                      const url = getImageUrl(img);
+                      return (
+                        <div key={index} className="admin-media-thumb">
+                          <img src={url} alt={`Photo ${index + 1}`} />
+                          <button
+                            type="button"
+                            className="admin-media-thumb__remove"
+                            onClick={() => removeImage(index)}
+                            title="Remove image"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </AdminCard>
+
+            {/* Blueprint Formulation Details */}
+            <AdminCard
+              title="Blueprint Herbal Details"
+              subtitle="Scientific monograph parameters, active ingredients, and holistic health benefits."
+            >
+              <div className="admin-form-grid admin-form-grid--single">
+                <label>
+                  Key Health Benefits
+                  <textarea
+                    value={form.benefits}
+                    onChange={updateField("benefits")}
+                    placeholder="Highlight biological systems supported, antioxidant potency, immune response, etc."
+                    rows={4}
+                  />
+                </label>
+                <label>
+                  Key Active Ingredients
+                  <textarea
+                    value={form.ingredients}
+                    onChange={updateField("ingredients")}
+                    placeholder="Full botanical nomenclature, active phytonutrients, purity assay notes..."
+                    rows={4}
+                  />
+                </label>
+                <label>
+                  Scientific Validation & Research Notes
+                  <textarea
+                    value={form.scientificValidation}
+                    onChange={updateField("scientificValidation")}
+                    placeholder="Clinical trials, peer-reviewed citations, extraction methodology..."
+                    rows={4}
+                  />
+                </label>
+                <label>
+                  Directions for Consumption
+                  <textarea
+                    value={form.directions}
+                    onChange={updateField("directions")}
+                    placeholder="Dosage, recommended frequency, morning/evening routine..."
+                    rows={3}
+                  />
+                </label>
+                <label>
+                  Safety & Warnings
+                  <textarea
+                    value={form.warnings}
+                    onChange={updateField("warnings")}
+                    placeholder="Contraindications, pregnancy advisories, storage conditions..."
+                    rows={3}
+                  />
+                </label>
+              </div>
+            </AdminCard>
+          </div>
+
+          {/* Side Panel */}
+          <aside className="admin-form-layout__side">
+            {/* Status & Actions Card */}
+            <AdminCard title="Publishing Status">
+              <div className="admin-status-radio-group">
+                <label className="admin-status-radio">
+                  <input
+                    type="radio"
+                    name="status"
+                    value="published"
+                    checked={form.status === "published"}
+                    onChange={updateField("status")}
+                  />
+                  <div>
+                    <strong>Published</strong>
+                    <span>Immediately visible to storefront visitors</span>
+                  </div>
+                </label>
+                <label className="admin-status-radio">
+                  <input
+                    type="radio"
+                    name="status"
+                    value="draft"
+                    checked={form.status === "draft"}
+                    onChange={updateField("status")}
+                  />
+                  <div>
+                    <strong>Draft</strong>
+                    <span>Hidden from public catalog</span>
+                  </div>
+                </label>
+              </div>
+
+              <div className="admin-form-side-actions">
+                <button
+                  type="submit"
+                  className="admin-primary-button"
+                  disabled={loading || uploadingImages}
+                >
+                  {loading
+                    ? "Saving..."
+                    : selectedId
+                      ? "Update Product"
+                      : "Publish Product"}
+                </button>
+                <button
+                  type="button"
+                  className="admin-secondary-button"
+                  onClick={resetForm}
+                >
+                  Cancel
+                </button>
+              </div>
+            </AdminCard>
+
+            {/* Category & Pricing */}
+            <AdminCard title="Pricing & Classification">
+              <div className="admin-form-grid admin-form-grid--single">
+                <label>
+                  Category
+                  <select
+                    value={form.category}
+                    onChange={updateField("category")}
+                    className="admin-select"
+                  >
+                    {CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  Price in NGN (₦) *
+                  <input
+                    type="number"
+                    min="0"
+                    step="100"
+                    value={form.price}
+                    onChange={updateField("price")}
+                    placeholder="e.g. 15000"
+                    required
+                  />
+                </label>
+
+                <label>
+                  Stock Inventory Count
+                  <input
+                    type="number"
+                    min="0"
+                    value={form.stock}
+                    onChange={updateField("stock")}
+                    placeholder="e.g. 50"
+                  />
+                </label>
+              </div>
+            </AdminCard>
+          </aside>
+        </form>
+      )}
     </AdminShell>
   );
 }
