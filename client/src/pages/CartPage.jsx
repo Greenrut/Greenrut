@@ -6,7 +6,7 @@ import { getUserAuth } from '../lib/auth.js'
 import { accountRequest } from '../lib/accountApi.js'
 import bannaImage from '../assets/banna.png'
 
-const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || ''
+const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || import.meta.env.PAYSTACK_PUBLIC_KEY || 'pk_test_d28059a232687f10c925b768efc12818ca754d56'
 const IS_PRODUCTION = import.meta.env.PROD
 
 function formatNGN(amount) {
