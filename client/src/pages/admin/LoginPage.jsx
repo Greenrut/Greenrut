@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { requestJson } from "../../lib/api.js";
-import { clearAdminAuth, saveAdminAuth } from "../../lib/auth.js";
+import { saveAdminAuth } from "../../lib/auth.js";
 
 export function AdminLoginPage({ onNavigate }) {
-  const [mode, setMode] = useState("login");
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signupKey, setSignupKey] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -23,16 +20,9 @@ export function AdminLoginPage({ onNavigate }) {
     setSubmitting(true);
 
     try {
-      const endpoint =
-        mode === "login" ? "/admin/auth/login" : "/admin/auth/signup";
-      const body =
-        mode === "login"
-          ? { email, password }
-          : { name, email, password, signupKey };
-
-      const result = await requestJson(endpoint, {
+      const result = await requestJson("/admin/auth/login", {
         method: "POST",
-        body,
+        body: { email, password },
       });
 
       saveAdminAuth({
@@ -40,11 +30,7 @@ export function AdminLoginPage({ onNavigate }) {
         user: result.user,
       });
 
-      setMessage(
-        mode === "login"
-          ? "Admin access verified. Redirecting..."
-          : "Admin account provisioned successfully."
-      );
+      setMessage("Admin access verified. Redirecting...");
       setTimeout(() => {
         onNavigate("/admin");
       }, 500);
@@ -75,38 +61,10 @@ export function AdminLoginPage({ onNavigate }) {
               <span className="admin-login-card__dot" />
               <span>CONTROL CONSOLE</span>
             </div>
-            <h1>{mode === "login" ? "Sign In to Admin Hub" : "Create Admin Profile"}</h1>
+            <h1>Sign In to Admin Hub</h1>
             <p>
-              {mode === "login"
-                ? "Enter your verified administrator credentials to access store operations."
-                : "Provision an executive administrative profile for catalog and CMS management."}
+              Enter your verified administrator credentials to access store operations.
             </p>
-          </div>
-
-          {/* Switcher */}
-          <div className="admin-login-card__tabs">
-            <button
-              type="button"
-              className={`admin-login-tab ${mode === "login" ? "is-active" : ""}`}
-              onClick={() => {
-                setMode("login");
-                setError("");
-                setMessage("");
-              }}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              className={`admin-login-tab ${mode === "signup" ? "is-active" : ""}`}
-              onClick={() => {
-                setMode("signup");
-                setError("");
-                setMessage("");
-              }}
-            >
-              New Admin Setup
-            </button>
           </div>
 
           {/* Alerts */}
@@ -123,25 +81,6 @@ export function AdminLoginPage({ onNavigate }) {
 
           {/* Form */}
           <form className="admin-login-form" onSubmit={handleSubmit}>
-            {mode === "signup" && (
-              <div className="admin-login-field">
-                <label>Full Name</label>
-                <div className="admin-login-input-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Alex Mfoniso"
-                    required
-                  />
-                </div>
-              </div>
-            )}
-
             <div className="admin-login-field">
               <label>Administrator Email</label>
               <div className="admin-login-input-wrap">
@@ -162,15 +101,13 @@ export function AdminLoginPage({ onNavigate }) {
             <div className="admin-login-field">
               <div className="admin-login-field__label-row">
                 <label>Password</label>
-                {mode === "login" && (
-                  <button
-                    type="button"
-                    className="admin-login-forgot-link"
-                    onClick={goToForgotPassword}
-                  >
-                    Forgot password?
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className="admin-login-forgot-link"
+                  onClick={goToForgotPassword}
+                >
+                  Forgot password?
+                </button>
               </div>
               <div className="admin-login-input-wrap">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -187,33 +124,12 @@ export function AdminLoginPage({ onNavigate }) {
               </div>
             </div>
 
-            {mode === "signup" && (
-              <div className="admin-login-field">
-                <label>Admin Security Key</label>
-                <div className="admin-login-input-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                    <path d="M21 2l-2 2m-1.5 1.5L16 7l-1.5 1.5L12 11l-4 4-2-2-4 4 3 3 4-4 2 2 4-4 2.5-2.5L18 8l1.5-1.5L21 2z" />
-                  </svg>
-                  <input
-                    type="password"
-                    value={signupKey}
-                    onChange={(e) => setSignupKey(e.target.value)}
-                    placeholder="Enter system deployment key"
-                  />
-                </div>
-              </div>
-            )}
-
             <button
               type="submit"
               className="admin-login-submit-btn"
               disabled={submitting}
             >
-              {submitting
-                ? "Verifying..."
-                : mode === "login"
-                  ? "Access Dashboard →"
-                  : "Create Administrator Account"}
+              {submitting ? "Verifying..." : "Access Dashboard →"}
             </button>
           </form>
 
