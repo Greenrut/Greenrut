@@ -1,5 +1,6 @@
 import { config } from '../config/env.js'
 import { Account } from '../models/Account.js'
+import { Order } from '../models/Order.js'
 import { createHttpError } from '../utils/httpError.js'
 import { seedAccountForUser } from './accountController.js'
 import { verifyToken } from '../utils/auth.js'
@@ -92,23 +93,55 @@ export async function verifyPaystackPayment(req, res, next) {
     const authPayload = getOptionalAuthPayload(req)
 
     let order = null
+    const productSummary = items.length
+      ? items.map((item) => `${item.name}${item.quantity > 1 ? ` (x${item.quantity})` : ''}`).join(', ')
+      : 'Cart checkout'
+
+    let account = null
     if (authPayload?.sub) {
-      const account = await seedAccountForUser(authPayload.sub)
-      order = {
-        orderNumber: account.orders.length + 1,
-        product: items.length ? items.map((item) => item.name).join(', ') : 'Cart checkout',
-        date: new Date(),
+      account = await seedAccountForUser(authPayload.sub)
+    }
+
+    const orderCount = await Order.countDocuments()
+    const orderNumber = orderCount + 1001
+
+    order = await Order.create({
+      orderNumber,
+      userId: authPayload?.sub || null,
+      accountId: account?._id || null,
+      customerName: account?.profile ? `${account.profile.firstName || ''} ${account.profile.lastName || ''}`.trim() : (verification.customer?.name || ''),
+      customerEmail: customerEmail || account?.profile?.email || 'customer@greenrut.com',
+      customerPhone: account?.profile?.phone || '',
+      items: items.map((i) => ({
+        name: i.name,
+        quantity: i.quantity || 1,
+        price: i.price || 0,
+        image: i.image || '',
+      })),
+      productSummary,
+      total: amount,
+      currency,
+      paymentReference: reference,
+      paymentGateway: 'Paystack',
+      status: 'Paid',
+      paidAt: new Date(verification.paid_at || Date.now()),
+    })
+
+    if (account) {
+      account.orders.push({
+        _id: order._id,
+        orderNumber: order.orderNumber,
+        product: productSummary,
+        date: order.createdAt || new Date(),
         status: 'Paid',
         total: amount,
         paymentReference: reference,
         paymentGateway: 'Paystack',
         currency,
         customerEmail,
-        paidAt: new Date(verification.paid_at || Date.now()),
-        items,
-      }
-
-      account.orders.push(order)
+        paidAt: order.paidAt,
+        items: order.items,
+      })
       await account.save()
     }
 

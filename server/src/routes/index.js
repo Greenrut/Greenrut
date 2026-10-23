@@ -1,4 +1,4 @@
-﻿import { Router } from "express";
+import { Router } from "express";
 import { getHealth } from "../controllers/healthController.js";
 import {
   adminForgotPassword,
@@ -55,6 +55,11 @@ import { listUsers } from "../controllers/userController.js";
 import { listCategories } from "../controllers/categoryController.js";
 import { listTags } from "../controllers/tagController.js";
 import { verifyPaystackPayment } from "../controllers/paymentController.js";
+import {
+  listAdminOrders,
+  getAdminOrder,
+  updateAdminOrderStatus,
+} from "../controllers/orderController.js";
 import { upload } from "../middleware/upload.js";
 import { requireAuth, requireRole } from "../middleware/auth.js";
 import {
@@ -185,6 +190,15 @@ router
   .route("/admin/users/:id")
   .put(requireAuth, requireRole("Administrator"), updateAdminUser)
   .delete(requireAuth, requireRole("Administrator"), deleteAdminUser);
+router
+  .route("/admin/orders")
+  .get(requireAuth, requireRole("Administrator"), listAdminOrders);
+router
+  .route("/admin/orders/:id")
+  .get(requireAuth, requireRole("Administrator"), getAdminOrder);
+router
+  .route("/admin/orders/:id/status")
+  .put(requireAuth, requireRole("Administrator"), updateAdminOrderStatus);
 router.get(
   "/admin/categories",
   requireAuth,

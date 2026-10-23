@@ -135,7 +135,13 @@ export function AccountDashboardPage({ pathname, onNavigate }) {
             <strong>{totals.wishlist} wishlist items</strong>
           </div>
           <div>
-            <strong>{totals.orders} orders</strong>
+            <button
+              type="button"
+              onClick={() => onNavigate?.('/account/orders')}
+              className="text-left hover:text-[#63ac18] transition cursor-pointer"
+            >
+              <strong>{totals.orders} orders (Order History) →</strong>
+            </button>
           </div>
         </div>
 

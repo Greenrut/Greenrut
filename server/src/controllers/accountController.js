@@ -1,5 +1,6 @@
 import { Account } from '../models/Account.js'
 import { User } from '../models/User.js'
+import { Order } from '../models/Order.js'
 import { createHttpError } from '../utils/httpError.js'
 
 function splitName(name = '') {
@@ -70,16 +71,27 @@ function getUserId(req) {
 
 export async function getAccountOverview(req, res, next) {
   try {
-    const account = await getOrCreateAccount(getUserId(req))
+    const userId = getUserId(req)
+    const account = await getOrCreateAccount(userId)
+    const userEmail = account.profile?.email
+
+    const ordersCount = await Order.countDocuments({
+      $or: [
+        { userId },
+        { accountId: account._id },
+        ...(userEmail ? [{ customerEmail: userEmail }] : []),
+      ],
+    })
+
     res.json({
       ok: true,
       data: {
         profile: account.profile,
         totals: {
-          addresses: account.addresses.length,
-          wishlist: account.wishlist.length,
-          inbox: account.inbox.length,
-          orders: account.orders.length,
+          addresses: account.addresses ? account.addresses.length : 0,
+          wishlist: account.wishlist ? account.wishlist.length : 0,
+          inbox: account.inbox ? account.inbox.length : 0,
+          orders: Math.max(ordersCount, account.orders?.length || 0),
         },
       },
     })
@@ -283,8 +295,55 @@ export async function listInbox(req, res, next) {
 
 export async function listOrders(req, res, next) {
   try {
-    const account = await getOrCreateAccount(getUserId(req))
-    res.json({ ok: true, data: account.orders })
+    const userId = getUserId(req)
+    const account = await getOrCreateAccount(userId)
+    const userEmail = account.profile?.email
+
+    // Query Order collection for this user / account / email
+    const filter = {
+      $or: [
+        { userId },
+        { accountId: account._id },
+        ...(userEmail ? [{ customerEmail: userEmail }] : []),
+      ],
+    }
+
+    const dbOrders = await Order.find(filter).sort({ createdAt: -1 }).lean()
+
+    // Map Order docs to format expected by client
+    const dbOrderRefs = new Set()
+    const unified = dbOrders.map((o) => {
+      if (o.paymentReference) dbOrderRefs.add(o.paymentReference)
+      if (o.orderNumber) dbOrderRefs.add(o.orderNumber)
+      return {
+        _id: o._id,
+        id: o.orderNumber || String(o._id).slice(-6),
+        orderNumber: o.orderNumber || String(o._id).slice(-6),
+        product: o.productSummary || (o.items && o.items[0]?.name) || "Herbal Product",
+        items: o.items || [],
+        date: o.paidAt || o.createdAt,
+        createdAt: o.createdAt,
+        status: o.status || "Paid",
+        total: o.total,
+        currency: o.currency || "NGN",
+        paymentReference: o.paymentReference,
+        paymentGateway: o.paymentGateway,
+        notes: o.notes,
+        shippingAddress: o.shippingAddress,
+      }
+    })
+
+    // Also include any legacy account.orders that were not in Order collection
+    if (Array.isArray(account.orders)) {
+      for (const legacy of account.orders) {
+        const ref = legacy.paymentReference || legacy.orderNumber || legacy.id
+        if (ref && !dbOrderRefs.has(ref)) {
+          unified.push(legacy)
+        }
+      }
+    }
+
+    res.json({ ok: true, data: unified })
   } catch (error) {
     next(error)
   }

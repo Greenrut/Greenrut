@@ -4,7 +4,7 @@ import { clearUserAuth } from '../../lib/auth.js'
 
 const accountItems = [
   { label: 'My GreenRut Account', href: '/account', icon: 'user' },
-  { label: 'Orders', href: '/account/orders', icon: 'orders' },
+  { label: 'Order History', href: '/account/orders', icon: 'orders' },
   { label: 'Inbox', href: '/account/inbox', icon: 'inbox' },
   { label: 'Wishlist', href: '/account/wishlist', icon: 'wishlist' },
   { label: 'Payment Settings', href: '/account/payment-settings', icon: 'settings' },

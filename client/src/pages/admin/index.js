@@ -6,3 +6,4 @@ export { AdminLoginPage } from "./LoginPage.jsx";
 export { AdminReviewsPage } from "./ReviewsPage.jsx";
 export { AdminBannersPage } from "./BannersPage.jsx";
 export { AdminBannerEditPage } from "./BannerEditPage.jsx";
+export { AdminOrdersPage } from "./OrdersPage.jsx";

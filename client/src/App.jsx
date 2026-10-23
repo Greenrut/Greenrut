@@ -14,6 +14,7 @@ import {
   AdminBlogPostPage,
   AdminDashboardPage,
   AdminLoginPage,
+  AdminOrdersPage,
   AdminProductsPage,
   AdminResearchPage,
   AdminLibraryPage,
@@ -209,7 +210,11 @@ function App() {
     page = <AccountWishlistPage pathname={pathname} onNavigate={navigate} />;
   if (pathname === "/account/inbox")
     page = <AccountInboxPage pathname={pathname} onNavigate={navigate} />;
-  if (pathname === "/account/orders")
+  if (
+    pathname === "/account/orders" ||
+    pathname === "/account/order-history" ||
+    pathname === "/order-history"
+  )
     page = <AccountOrdersPage pathname={pathname} onNavigate={navigate} />;
   if (pathname === "/account/payment-settings")
     page = (
@@ -223,6 +228,8 @@ function App() {
     page = <AdminLoginPage onNavigate={navigate} />;
   if (pathname === "/admin" || pathname === "/admin/dashboard")
     page = <AdminDashboardPage pathname={pathname} onNavigate={navigate} />;
+  if (pathname === "/admin/orders")
+    page = <AdminOrdersPage pathname={pathname} onNavigate={navigate} />;
   if (pathname === "/admin/products" || pathname === "/admin/products/new")
     page = <AdminProductsPage pathname={pathname} onNavigate={navigate} />;
   if (pathname === "/admin/categories")
@@ -265,6 +272,7 @@ function App() {
   if (
     pathname.startsWith("/admin/") &&
     !pathname.startsWith("/admin/login") &&
+    !pathname.startsWith("/admin/orders") &&
     !pathname.startsWith("/admin/products") &&
     !pathname.startsWith("/admin/categories") &&
     !pathname.startsWith("/admin/tags") &&
@@ -302,6 +310,8 @@ function App() {
       "/account/wishlist",
       "/account/inbox",
       "/account/orders",
+      "/account/order-history",
+      "/order-history",
       "/account/payment-settings",
       "/account/close-account",
     ]);

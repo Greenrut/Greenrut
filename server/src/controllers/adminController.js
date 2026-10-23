@@ -3,6 +3,7 @@ import { Post } from "../models/Post.js";
 import { Product } from "../models/Product.js";
 import { User } from "../models/User.js";
 import { Banner } from "../models/Banner.js";
+import { Order } from "../models/Order.js";
 import { tags } from "../data/mockDb.js";
 import { listCategories } from "./categoryController.js";
 import { createHttpError } from "../utils/httpError.js";
@@ -100,17 +101,21 @@ async function getDashboardStats() {
     postsCount,
     usersCount,
     accountsCount,
+    ordersCount,
     recentProducts,
     recentPosts,
     recentUsers,
+    recentOrders,
   ] = await Promise.all([
     Product.countDocuments(),
     Post.countDocuments(),
     User.countDocuments(),
     Account.countDocuments(),
+    Order.countDocuments(),
     Product.find().sort({ createdAt: -1 }).limit(5),
     Post.find().sort({ createdAt: -1 }).limit(5),
     User.find().sort({ createdAt: -1 }).limit(5),
+    Order.find().sort({ createdAt: -1 }).limit(5),
   ]);
 
   return {
@@ -119,10 +124,12 @@ async function getDashboardStats() {
       products: productsCount,
       users: usersCount,
       accounts: accountsCount,
+      orders: ordersCount,
     },
     products: recentProducts.map(serializeProduct),
     recentPosts: recentPosts.map(serializePost),
     users: recentUsers.map(serializeUser),
+    recentOrders,
   };
 }
 

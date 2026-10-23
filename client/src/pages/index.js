@@ -1,4 +1,4 @@
-﻿export { HomePage } from "./HomePage.jsx";
+export { HomePage } from "./HomePage.jsx";
 export { AboutPage } from "./AboutPage.jsx";
 export { ProductPage } from "./ProductPage.jsx";
 export { ProductDetailsPage } from "./ProductDetailsPage.jsx";
@@ -33,3 +33,4 @@ export { AdminSettingsPage } from "./admin/SettingsPage.jsx";
 export { AdminLoginPage } from "./admin/LoginPage.jsx";
 export { AdminBannersPage } from "./admin/BannersPage.jsx";
 export { AdminBannerEditPage } from "./admin/BannerEditPage.jsx";
+export { AdminOrdersPage } from "./admin/OrdersPage.jsx";

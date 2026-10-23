@@ -23,6 +23,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
     products: 0,
     users: 0,
     accounts: 0,
+    orders: 0,
   });
   const [products, setProducts] = useState([]);
   const [recentPosts, setRecentPosts] = useState([]);
@@ -36,7 +37,7 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
       setError("");
       const response = await adminRequest("/admin/dashboard");
       setStats(
-        response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0 }
+        response.stats || { blogPosts: 0, products: 0, users: 0, accounts: 0, orders: 0 }
       );
       setProducts(response.products || []);
       setRecentPosts(response.recentPosts || []);
@@ -143,6 +144,14 @@ export function AdminDashboardPage({ pathname, onNavigate }) {
 
       {/* KPI Stats Grid */}
       <div className="admin-stats-grid">
+        <AdminStatCard
+          iconTone="green"
+          title="Orders & Sales"
+          value={loading ? "..." : stats.orders}
+          description="Customer orders & fulfillment"
+          badge="Orders"
+          onClick={() => onNavigate("/admin/orders")}
+        />
         <AdminStatCard
           iconTone="green"
           title="Store Products"

@@ -4,6 +4,7 @@ import { getImageSource } from "../lib/image.js";
 import { navItems, socialLinks, fallbackProducts } from "../data.js";
 import { useScrollReveal } from "../lib/useScrollReveal.js";
 import { publicRequest } from "../lib/publicApi.js";
+import { getUserAuth, clearUserAuth, hasUserAuth } from "../lib/auth.js";
 
 function SocialIcon({ icon }) {
   if (icon === "facebook")
@@ -359,19 +360,81 @@ export function SiteHeader({ pathname, onNavigate }) {
           
           {profileDropdownOpen && (
             <div className="profile-dropdown">
-              <a
-                href="/login"
-                onClick={(event) => {
-                  event.preventDefault();
-                  setProfileDropdownOpen(false);
-                  onNavigate("/login");
-                }}
-              >
-                Sign In as User
-              </a>
-              <div className="profile-dropdown__disabled">
-                Sign In as Distributor <span className="coming-soon-tag">Soon</span>
-              </div>
+              {hasUserAuth() ? (
+                <>
+                  <div className="px-3 py-1.5 text-xs text-gray-500 border-b border-gray-100 font-medium truncate">
+                    {getUserAuth()?.user?.name || getUserAuth()?.user?.email || "My Account"}
+                  </div>
+                  <a
+                    href="/account/orders"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setProfileDropdownOpen(false);
+                      onNavigate("/account/orders");
+                    }}
+                  >
+                    📦 Order History
+                  </a>
+                  <a
+                    href="/account"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setProfileDropdownOpen(false);
+                      onNavigate("/account");
+                    }}
+                  >
+                    👤 Account Dashboard
+                  </a>
+                  <a
+                    href="/account/wishlist"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setProfileDropdownOpen(false);
+                      onNavigate("/account/wishlist");
+                    }}
+                  >
+                    🤍 Wishlist
+                  </a>
+                  <a
+                    href="/logout"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setProfileDropdownOpen(false);
+                      clearUserAuth();
+                      onNavigate("/login");
+                    }}
+                    style={{ color: "#dc2626" }}
+                  >
+                    🚪 Sign Out
+                  </a>
+                </>
+              ) : (
+                <>
+                  <a
+                    href="/login"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setProfileDropdownOpen(false);
+                      onNavigate("/login");
+                    }}
+                  >
+                    Sign In as User
+                  </a>
+                  <a
+                    href="/account/orders"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setProfileDropdownOpen(false);
+                      onNavigate("/account/orders");
+                    }}
+                  >
+                    📦 Order History
+                  </a>
+                  <div className="profile-dropdown__disabled">
+                    Sign In as Distributor <span className="coming-soon-tag">Soon</span>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -380,7 +443,7 @@ export function SiteHeader({ pathname, onNavigate }) {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ onNavigate }) {
   return (
     <footer className="site-footer">
       <div className="page-shell">
@@ -402,18 +465,49 @@ export function SiteFooter() {
           <div className="site-footer__columns !grid !grid-cols-1 xs:!grid-cols-2 xl:!grid-cols-4 !gap-4 xs:!gap-5">
             <div>
               <h2>My Account</h2>
-              <ul>
-                <li>My Account</li>
-                <li>Order History</li>
-                <li>WishList</li>
-                <li>Newsletter</li>
+              <ul className="space-y-1">
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate?.("/account")}
+                    className="hover:underline text-left cursor-pointer"
+                  >
+                    My Account
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate?.("/account/orders")}
+                    className="hover:underline text-left cursor-pointer font-medium text-[#63ac18]"
+                  >
+                    Order History
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate?.("/account/wishlist")}
+                    className="hover:underline text-left cursor-pointer"
+                  >
+                    WishList
+                  </button>
+                </li>
                 <li>International Orders</li>
               </ul>
             </div>
             <div>
               <h2>Information</h2>
-              <ul>
-                <li>About Us</li>
+              <ul className="space-y-1">
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate?.("/about-us")}
+                    className="hover:underline text-left cursor-pointer"
+                  >
+                    About Us
+                  </button>
+                </li>
                 <li>Delivery Information</li>
                 <li>Privacy Policy</li>
                 <li>Terms & Conditions</li>
@@ -470,7 +564,7 @@ export function SiteFrame({ pathname, onNavigate, children }) {
       <main key={pathname} className="page-transition-enter">
         {children}
       </main>
-      <SiteFooter />
+      <SiteFooter onNavigate={onNavigate} />
     </div>
   );
 }
