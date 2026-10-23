@@ -54,7 +54,7 @@ import {
 import { listUsers } from "../controllers/userController.js";
 import { listCategories } from "../controllers/categoryController.js";
 import { listTags } from "../controllers/tagController.js";
-import { verifyPaystackPayment } from "../controllers/paymentController.js";
+import { verifyPaystackPayment, getPaystackConfig } from "../controllers/paymentController.js";
 import {
   listAdminOrders,
   getAdminOrder,
@@ -286,6 +286,7 @@ router.get("/account/orders", requireAuth, listOrders);
 
 router.patch("/auth/password", requireAuth, changePassword);
 
+router.get("/payments/paystack/config", getPaystackConfig);
 router.post("/payments/paystack/verify", verifyPaystackPayment);
 
 export default router;

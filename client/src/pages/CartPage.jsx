@@ -4,9 +4,13 @@ import { SectionTitle } from './shared.jsx'
 import { getCart, removeFromCart, updateCartQty, clearCart, getCartTotal } from '../lib/cart.js'
 import { getUserAuth } from '../lib/auth.js'
 import { accountRequest } from '../lib/accountApi.js'
+import { publicRequest } from '../lib/publicApi.js'
 import bannaImage from '../assets/banna.png'
 
-const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || import.meta.env.PAYSTACK_PUBLIC_KEY || 'pk_test_d28059a232687f10c925b768efc12818ca754d56'
+const DEFAULT_PAYSTACK_KEY =
+  import.meta.env.VITE_PAYSTACK_PUBLIC_KEY ||
+  import.meta.env.PAYSTACK_PUBLIC_KEY ||
+  ''
 const IS_PRODUCTION = import.meta.env.PROD
 
 function formatNGN(amount) {
@@ -120,6 +124,22 @@ export function CartPage({ onNavigate }) {
   const [showMock, setShowMock] = useState(false)
   const [mockEmail, setMockEmail] = useState('')
   const [mockAmount, setMockAmount] = useState(0)
+  const [paystackKey, setPaystackKey] = useState(DEFAULT_PAYSTACK_KEY)
+
+  // Fetch active Paystack key from backend if not configured or to pick up live key from Render
+  useEffect(() => {
+    let active = true
+    publicRequest('/payments/paystack/config')
+      .then((res) => {
+        if (active && res?.publicKey) {
+          setPaystackKey(res.publicKey)
+        }
+      })
+      .catch(() => {})
+    return () => {
+      active = false
+    }
+  }, [])
 
   // Sync cart state when items change externally
   useEffect(() => {
@@ -202,8 +222,10 @@ export function CartPage({ onNavigate }) {
     const email = auth.user?.email || ''
     const amountKobo = Math.round(total * 100) // Paystack uses smallest currency unit
 
+    const activeKey = paystackKey || DEFAULT_PAYSTACK_KEY
+
     // In development we keep a mock fallback, but production must use a real key.
-    if (!PAYSTACK_PUBLIC_KEY) {
+    if (!activeKey) {
       if (IS_PRODUCTION) {
         setCheckoutState('error')
         setCheckoutMessage('Paystack public key is not configured for this environment.')
@@ -232,7 +254,7 @@ export function CartPage({ onNavigate }) {
     const reference = generateReference()
 
     const handler = window.PaystackPop.setup({
-      key: PAYSTACK_PUBLIC_KEY,
+      key: activeKey,
       email,
       amount: amountKobo,
       currency: 'NGN',

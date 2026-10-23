@@ -35,6 +35,15 @@ function normalizeItems(items = []) {
     .filter((item) => item.name)
 }
 
+export function getPaystackConfig(req, res) {
+  const key = config.paystack.publicKey || process.env.PAYSTACK_PUBLIC_KEY || ''
+  res.json({
+    ok: true,
+    publicKey: key,
+    isLive: Boolean(key && key.startsWith('pk_live_')),
+  })
+}
+
 async function verifyWithPaystack(reference) {
   // ── Mock / development mode ─────────────────────────────────────────────
   // If no secret key is configured and the reference is a local mock
