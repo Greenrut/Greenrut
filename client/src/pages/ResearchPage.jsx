@@ -420,7 +420,7 @@ export function ResearchPage({ onNavigate }) {
   const totalResults = Math.max(products.length || fallbackProducts.length, 30);
 
   const handleDownloadPDF = (study) => {
-    const docContent = `GREENRUT RESEARCH PUBLICATION\n============================\n\nTitle: ${study.title}\n\nKey Outcome:\n----------------------------\n${study.outcome}\n\nSummary / Abstract:\n----------------------------\n${study.summary}\n\n============================\nCertified Research Record of Greenrut Technical Advisory Council.\nApproved by Prof Akinniyi Osuntoki and Prof Moshood Akinleye.\nVerify at: https://www.greenrut.com/research`;
+    const docContent = `GREENRUT RESEARCH PUBLICATION\n============================\n\nTitle: ${study.title}\n\nKey Outcome:\n----------------------------\n${study.outcome}\n\nSummary / Abstract:\n----------------------------\n${study.summary}\n\n============================\nCertified Research Record of Greenrut Research & Scientific Team.\nVerify at: https://www.greenrut.com/research`;
     const blob = new Blob([docContent], { type: "text/plain;charset=utf-8" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);

@@ -48,11 +48,6 @@ const team = [
   { name: "Pharm Onyinye Azubogu", role: "Designer", image: null },
 ];
 
-const advisoryCouncil = [
-  { name: "Prof Akinniyi Osuntoki", role: "Technical Advisory Council" },
-  { name: "Prof Moshood Akinleye", role: "Technical Advisory Council" },
-];
-
 const values = [
   {
     title: "Integrity",
@@ -256,15 +251,6 @@ export function AboutPage() {
           <div className="grid grid-cols-1 gap-5 xs:grid-cols-3 sm:gap-6 lg:gap-8">
             {team.map((member, index) => (
               <TeamCard key={member.name} member={member} index={index} />
-            ))}
-          </div>
-
-          <h2 className="mb-8 mt-16 text-center font-serif text-[24px] text-[#2f2b27] xs:text-[28px]">
-            Technical Advisory Council
-          </h2>
-          <div className="mx-auto grid max-w-[560px] grid-cols-1 gap-5 xs:grid-cols-2 sm:gap-6 lg:gap-8">
-            {advisoryCouncil.map((member, index) => (
-              <TeamCard key={member.name} member={member} index={index + team.length} />
             ))}
           </div>
         </div>
