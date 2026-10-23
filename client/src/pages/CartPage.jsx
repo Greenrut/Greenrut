@@ -10,7 +10,7 @@ import bannaImage from '../assets/banna.png'
 const DEFAULT_PAYSTACK_KEY =
   import.meta.env.VITE_PAYSTACK_PUBLIC_KEY ||
   import.meta.env.PAYSTACK_PUBLIC_KEY ||
-  ''
+  'pk_live_e6388ea3e33c8c0009018d6e2320eda4bcea4bea'
 const IS_PRODUCTION = import.meta.env.PROD
 
 function formatNGN(amount) {
