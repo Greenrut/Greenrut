@@ -373,7 +373,7 @@ export function SiteHeader({ pathname, onNavigate }) {
                       onNavigate("/account/orders");
                     }}
                   >
-                    📦 Order History
+                    Order History
                   </a>
                   <a
                     href="/account"
@@ -383,7 +383,7 @@ export function SiteHeader({ pathname, onNavigate }) {
                       onNavigate("/account");
                     }}
                   >
-                    👤 Account Dashboard
+                    Account Dashboard
                   </a>
                   <a
                     href="/account/wishlist"
@@ -393,7 +393,7 @@ export function SiteHeader({ pathname, onNavigate }) {
                       onNavigate("/account/wishlist");
                     }}
                   >
-                    🤍 Wishlist
+                    Wishlist
                   </a>
                   <a
                     href="/logout"
@@ -405,7 +405,7 @@ export function SiteHeader({ pathname, onNavigate }) {
                     }}
                     style={{ color: "#dc2626" }}
                   >
-                    🚪 Sign Out
+                    Sign Out
                   </a>
                 </>
               ) : (
@@ -428,7 +428,7 @@ export function SiteHeader({ pathname, onNavigate }) {
                       onNavigate("/account/orders");
                     }}
                   >
-                    📦 Order History
+                    Order History
                   </a>
                   <div className="profile-dropdown__disabled">
                     Sign In as Distributor <span className="coming-soon-tag">Soon</span>
